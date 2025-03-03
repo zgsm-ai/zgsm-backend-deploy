@@ -95,7 +95,7 @@ services:
       - postgres
     networks:
       - shenma
-    
+
   portal:
     image: nginx:1.27.1
     restart: always
@@ -178,6 +178,7 @@ services:
       - ./chatgpt/server:/server
       - ./chatgpt/supervisor:/var/log/supervisor
       - ./chatgpt/logs:/server/logs
+      - ./chatgpt/custom.yml:/custom.yml
     ports:
       - "{{PORT_CHATGPT_API}}:5000/tcp"
       - "{{PORT_CHATGPT_WS}}:8765/tcp"
