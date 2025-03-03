@@ -193,7 +193,8 @@ services:
       - DATABASE_URI=postgresext+pool://keycloak:{{PASSWORD_POSTGRES}}@{{ZGSM_BACKEND}}/chatgpt
       - ES_SERVER=http://{{ZGSM_BACKEND}}:{{PORT_ES}}
       - ES_PASSWORD={{PASSWORD_ELASTIC}}
-      - DEVOPS_URL=
+      - CUSTOM_CONFIG_FILE=/custom.yml
+      - DEFAULT_MODEL_NAME=deepseek-chat
       - GEVENT_SUPPORT=True
       - NO_COLOR=1
       - DEPLOYMENT_TYPE=all

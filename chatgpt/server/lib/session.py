@@ -6,14 +6,9 @@
 """
 
 import logging
-import requests
-from urllib import parse
 import secrets
 
 from common.helpers.application_context import ApplicationContext
-from services.system.users_service import UsersService
-from config import conf
-
 
 class SessionService:
     logger = logging.getLogger(__name__)

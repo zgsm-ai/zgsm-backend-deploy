@@ -192,6 +192,8 @@ services:
       - DATABASE_URI=postgresext+pool://keycloak:sf2025~SHENMA@172.16.0.4/chatgpt
       - ES_SERVER=http://172.16.0.4:9200
       - ES_PASSWORD=4c6y4g6Z09T2w33pYRNKE3LG
+      - CUSTOM_CONFIG_FILE=/custom.yml
+      - DEFAULT_MODEL_NAME=deepseek-chat
       - GEVENT_SUPPORT=True
       - NO_COLOR=1
       - DEPLOYMENT_TYPE=all

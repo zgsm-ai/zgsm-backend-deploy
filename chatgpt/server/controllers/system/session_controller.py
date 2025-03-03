@@ -5,11 +5,9 @@
 @Date    ：2023/3/16 14:09
 """
 
-from flask import Blueprint, request, url_for, redirect, session
-from common.helpers.application_context import ApplicationContext
+from flask import Blueprint
 from controllers.response_helper import Result
 from lib.session import SessionService
-from config import conf
 
 sessions = Blueprint('sessions', __name__)
 

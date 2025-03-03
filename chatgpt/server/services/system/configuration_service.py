@@ -8,12 +8,12 @@ import json
 import logging
 from json import JSONDecodeError
 
-from common.constant import ConfigurationConstant, PromptConstant, ADConstant, AIReviewConstant, AgentConstant
+from common.constant import ConfigurationConstant, PromptConstant, ADConstant
 from dao.system.configuration_dao import ConfigurationDao
 from lib.cache.cache_anno import cache_able, cache_evict, cache_all_evict
 from services.base_service import BaseService
 from template import DEFAULT_TEMPLATE_MAP
-from template.generate_api_test import DEFAULT_PYTEST_CASE_TEMPLATE, DEFAULT_API_TEST_RANGE
+from config import conf
 
 logger = logging.getLogger(__name__)
 
@@ -124,5 +124,5 @@ class ConfigurationService(BaseService):
         if data:
             return data.attribute_value
         else:
-            return 'deepseek-chat'
+            return conf.get('default_model_name', 'deepseek-chat')
 

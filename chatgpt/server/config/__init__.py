@@ -176,6 +176,7 @@ def get_config():
         "database_uri": os.environ.get("DATABASE_URI"),
         "jwt_secret": os.environ.get("JWT_SECRET", "devopssecretversion1.3"),
         "default_cache_expire_seconds": os.environ.get("DEFAULT_CACHE_EXPIRE_SECONDS", 60 * 60 * 24),
+        "default_model_name": os.environ.get("DEFAULT_MODEL_NAME", "deepseek-chat"),
         "serve_threads": os.environ.get("SERVE_THREADS", ServeConstant.THREADS),
         "serve_connection_limit": os.environ.get("SERVE_CONNECTION_LIMIT", ServeConstant.CONNECTION_LIMIT),
         "client_id": os.environ.get("CLIENT_ID", "4114011746"),

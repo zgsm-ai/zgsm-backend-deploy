@@ -6,14 +6,10 @@
 """
 
 import tiktoken
-from flask import request
 
 from common.constant import GPTModelConstant, GPTConstant
-from config import conf
-
 
 # encoding = tiktoken.get_encoding(TikTokenEncodeType.CL100K_BASE)
-
 
 def compute_tokens(text: str) -> int:
     """计算 token 数"""
