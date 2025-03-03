@@ -1,0 +1,9 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+{% if message %}
+  <p>{{message|safe}}</p>
+{% else %}
+  <p>操作成功</p>
+{% endif %}
+{% endblock %}

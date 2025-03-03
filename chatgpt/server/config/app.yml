@@ -1,0 +1,74 @@
+# # # # # # # # # # # # # # # # # # # # #
+#           application config          #
+# # # # # # # # # # # # # # # # # # # # #
+---
+common: &common
+
+  PEDESTAL_SERVER:
+    server_url: https://chat.sangfor.com
+    api_key: ed58afe631531e0c85dabe0cedb3a97a
+
+  APP_URL: https://chat.sangfor.com
+  # 通知服务的配置
+  NOTICE_SERVER:
+    server_url: http://notice.sangfor.com
+    token: 5df4b121-fbcc-4ed1-97b5-2600024ff6e8
+  NOTICE_CONTENT:
+    CHAT_URL: https://chat.sangfor.com/#/chat
+    CHAT_ADMIN_URL: https://chat.sangfor.com/admin/_open_api_applications/
+  AI_REVIEW:
+    REVIEW_STATE_TIMEOUT: 20  # 入库后超时矫正状态。单位:分钟
+  CELERY_SCHEDULE:
+    calibration_review_data_task: 300  # 执行间隔，单位:秒
+    calibration_api_test_case_task: 180  # 执行间隔，单位:秒
+  # Eolinker服务地址
+  Eolinker:
+    - server_url: http://saas.devapi.sangfor.com/index.php
+      token: saaXS2409f9dde5d1cbade04682ea2b58bfd56df54b677c
+    - server_url: http://devapi.sangfor.com/index.php
+      token: 4flxlRm554de754e234eca1041a716ed40b190fbf532fec
+    - server_url: http://200.200.24.161/index.php
+      token: LAkN9ut0ade7c2cf97f75d009975f4d720d1fa6c19f4897
+    - server_url: http://10.65.155.46:8077/index.php
+      token: exNmLyT244ee285791b2c7573ae4fd2c3ea7d8d0e47801b
+    # 200.200.37.41 和 200.200.37.42 是测试中心的演练环境，token权限可能会不够
+    - server_url: http://200.200.37.41/index.php
+      # hzl 账号的
+      token: sIbDADdbaa330dc62081294216bfd66604bf0c7f66bc0a9
+      # 演练环境主要用 200.200.37.42
+    - server_url: http://200.200.37.42/index.php
+      # flw 账号的
+      token: wBsWNBce5ac9162b6c4519713f91b2c4ae1c67b3620150a
+  # Dify 应用配置
+  DIFY:
+    base_url: http://10.65.134.109:5002
+    user: chatgpt-server
+    # TODO: 放到数据库里
+    # 默认问答应用
+    DEFAULT_QUESTION_CATEGORY_TYPE: chat-bot
+    DEFAULT_QUESTION_CATEGORY_KEY: app-DbWSrwqmqcwaDiU64vnvTq98
+    # 规划应用
+    PLANNING_APPLICATION_TYPE: workflow
+    PLANNING_APPLICATION_KEY: app-0R3xaBJfCCPJjWL4bHPNWIVQ
+  TP:
+    base_url: http://10.61.67.106:31031/
+    token: 190493585c6411e99cbffefcfea8cddc
+
+  # knowledgeSeeker 配置
+  KnowledgeSeeker:
+    base_url: http://10.65.178.107:5500
+    user: chatgpt-server
+    token: ks-fs43kLO03dm3nx
+
+
+development: &development
+  <<: *common
+  NOTICE_CONTENT:
+    CHAT_URL: http://localhost/#/chat/
+    CHAT_ADMIN_URL: http://localhost/admin/_open_api_applications/
+
+production: &production
+  <<: *common
+
+test: &test
+  <<: *common

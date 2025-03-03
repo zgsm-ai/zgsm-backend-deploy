@@ -101,43 +101,48 @@
 </div>
 
 <script>
+    function submitIssue(fname, base64String) {
+        const formData = {
+            category: document.getElementById('issueCategory').value,
+            description: document.getElementById('issueDescription').value,
+            number: document.getElementById('contactNumber').value,
+            screenshot_data: base64String,
+            screenshot_name: fname
+        };
+        fetch('/api/feedbacks/issue', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json' // 设置请求头为 JSON
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => {
+            console.info("formData:", JSON.stringify(formData));
+            if (response.ok) {
+                alert('问题报告已提交！');
+                // this.reset(); // 提交后重置表单
+            } else {
+                alert('提交失败，请稍后重试。');
+            }
+        })
+        .catch(error => {
+            console.error('提交错误:', error);
+            alert('提交失败，请稍后重试。');
+        });
+    }
     document.getElementById('issueForm').addEventListener('submit', function(event) {
         event.preventDefault(); // 防止默认提交
 
         const fileInput = document.getElementById('screenshot');
         const file = fileInput.files[0];
+        if (!file) {
+            submitIssue("", "");
+            return;
+        }
         const reader = new FileReader();
         // 当文件读取完成时触发
         reader.onload = function(event) {        
-            // 收集表单数据
-            const base64String = event.target.result; // 去掉前缀部分
-            const formData = {
-                category: document.getElementById('issueCategory').value,
-                description: document.getElementById('issueDescription').value,
-                number: document.getElementById('contactNumber').value,
-                screenshot_data: base64String,
-                screenshot_name: file.name
-            };
-            fetch('/api/feedbacks/issue', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json' // 设置请求头为 JSON
-                },
-                body: JSON.stringify(formData)
-            })
-            .then(response => {
-                console.info("formData:", JSON.stringify(formData));
-                if (response.ok) {
-                    alert('问题报告已提交！');
-                    // this.reset(); // 提交后重置表单
-                } else {
-                    alert('提交失败，请稍后重试。');
-                }
-            })
-            .catch(error => {
-                console.error('提交错误:', error);
-                alert('提交失败，请稍后重试。');
-            });
+            submitIssue(file.name, event.target.result); // 去掉前缀部分
         }
         reader.readAsDataURL(file);
     });

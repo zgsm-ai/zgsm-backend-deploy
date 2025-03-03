@@ -48,7 +48,7 @@ curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT 
 
 # 把请求keycloak的请求定向到keycloak端点
 curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
-    "uris": ["/realms/'"$KEYCLOAK_REALM"'/*", "/resources/*"],
+    "uris": ["/realms/'"$KEYCLOAK_REALM"'/*"],
     "id": "keycloak",
     "upstream_id": "keycloak"
   }'
@@ -56,25 +56,38 @@ curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d
 # 登录各页面用到的资源
 curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
     "uris": ["/login/css/*", "/login/cdn/*", "/login/img/*", "/login/resources/*"],
-    "id": "keycloak-resources",
+    "id": "keycloak-portal-resources",
     "upstream_id": "portal"
+  }'
+
+# 把请求keycloak的请求定向到keycloak端点
+curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
+    "uris": ["/resources/*"],
+    "vars": [
+      [ "uri", "!", "~*", "^/resources/.*/login/phone/.*$" ]
+    ],
+    "id": "keycloak-common-resource",
+    "upstream_id": "keycloak"
   }'
 
 # 登录页需要用到的图片:img/keycloak-bg.png,img/favicon.ico,css/login.css
 curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
-    "uris": ["/resources/kfiww/login/phone/*"],
-    "id": "keycloak-auth-resource",
+    "uris": ["/resources/*"],
+    "vars": [
+      [ "uri", "~*", "^/resources/.*/login/phone/.*$" ]
+    ],
+    "id": "keycloak-login-resource",
     "upstream_id": "portal",
     "plugins": {
       "proxy-rewrite": {
-        "regex_uri": ["^/resources/kfiww/login/phone/(. *)", "/login/$1"]
+        "regex_uri": ["^/resources/.*/login/phone/(.*)", "/login/$1"]
       }
     }
   }'
 
-# 将登录成功后的跳板请求转发给trampoline服务
+# 将登录成功后的跳板请求转发给trampoline服务，"uris": ["/login/ok", "/login/resources/*"],
 curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
-    "uris": ["/login/ok", "/login/resources/*"],
+    "uris": ["/login/ok"],
     "id": "keycloak-trampoline",
     "upstream_id": "trampoline"
   }'

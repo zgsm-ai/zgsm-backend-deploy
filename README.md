@@ -61,11 +61,36 @@
 
 ### 1. 根据需求，修改配置
 
+```sh
+vim configure.sh
+tpl-resolve.sh
+```
+
 ### 2. 下载模型数据
 
 ### 3. 启动docker-compose
 
+```sh
+docker compose up -d
+```
+
 ### 4. 配置路由
 
-### 5. 配置vscode-zgsm扩展，调整服务器URL为实际地址
+```sh
+apisix-*.sh
+```
+
+### 5. 导入keycloak的配置
+
+```sh
+keycloak-import.sh
+```
+
+### 6. 初始化数据库，创建chatgpt需要的数据库表
+
+```sh
+chatgpt-initdb.sh
+```
+
+### 7. 配置vscode-zgsm扩展，调整服务器URL为实际地址
 

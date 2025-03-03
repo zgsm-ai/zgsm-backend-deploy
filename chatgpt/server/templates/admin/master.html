@@ -1,0 +1,15 @@
+{% extends admin_base_template %}
+
+{% block head_css %}
+{{ super() }}
+<script>
+  //function logout() {
+   //    window.location.href = "{{ get_url('sessions.logout') }}";
+  //}
+</script>
+{% endblock %}
+
+{% block access_control %}
+{{ super() }}
+{#<button class="btn navbar-btn navbar-right" id="logout-btn" onclick="logout()">Logout</button>#}
+{% endblock %}

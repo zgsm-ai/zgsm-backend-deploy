@@ -178,6 +178,7 @@ services:
       - ./chatgpt/server:/server
       - ./chatgpt/supervisor:/var/log/supervisor
       - ./chatgpt/logs:/server/logs
+      - ./chatgpt/custom.yml:/custom.yml
     ports:
       - "5000:5000/tcp"
       - "8765:8765/tcp"
@@ -188,12 +189,9 @@ services:
       - REDIS_URL=redis://172.16.0.4:6379/0
       - SERVE_THREADS=200
       - SERVE_CONNECTION_LIMIT=512
-      - PG_URL=172.16.0.4:5432
-      - DB_NAME=chatgpt
       - DATABASE_URI=postgresext+pool://keycloak:sf2025~SHENMA@172.16.0.4/chatgpt
       - ES_SERVER=http://172.16.0.4:9200
       - ES_PASSWORD=4c6y4g6Z09T2w33pYRNKE3LG
-      - DEVOPS_URL=
       - GEVENT_SUPPORT=True
       - NO_COLOR=1
       - DEPLOYMENT_TYPE=all
