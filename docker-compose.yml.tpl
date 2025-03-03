@@ -195,7 +195,7 @@ services:
       - ES_SERVER=http://{{ZGSM_BACKEND}}:{{PORT_ES}}
       - ES_PASSWORD={{PASSWORD_ELASTIC}}
       - CUSTOM_CONFIG_FILE=/custom.yml
-      - DEFAULT_MODEL_NAME=deepseek-chat
+      - DEFAULT_MODEL_NAME={{CHAT_MODEL}}
       - GEVENT_SUPPORT=True
       - NO_COLOR=1
       - DEPLOYMENT_TYPE=all

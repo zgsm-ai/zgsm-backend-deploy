@@ -42,3 +42,5 @@ KEYCLOAK_REALM="gw"
 
 OPENAI_MODEL_HOST="http://172.16.254.5:32081/v1/completions"
 OPENAI_MODEL="DeepSeek-Coder-V2-Lite-Base"
+
+CHAT_MODEL="deepseek-chat"
