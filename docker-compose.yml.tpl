@@ -122,7 +122,7 @@ services:
       - shenma
 
   kaptcha:
-    image: kaptcha-generator:v0.6.0
+    image: kaptcha-generator:0.6.0
     restart: always
     working_dir: /root/kaptcha
     volumes:
@@ -136,7 +136,7 @@ services:
       - shenma
 
   chatgpt-initdb:
-    image: docker.sangfor.com/containerd/chat-server:1.2.0
+    image: zgsm/chat-server:1.2.0
     command: ["/sbin/entrypoint.sh", "app:init"]
     restart: no
     profiles:
@@ -171,7 +171,7 @@ services:
       - shenma
 
   chatgpt:
-    image: docker.sangfor.com/containerd/chat-server:1.2.0
+    image: zgsm/chat-server:1.2.0
     command: ["/sbin/entrypoint.sh", "app:start"]
     restart: always
     volumes:
@@ -206,8 +206,7 @@ services:
       - shenma
 
   fauxpilot:
-    # image: docker.sangfor.com/moyix/copilot_proxy:1.5.9
-    image: docker.sangfor.com/moyix/copilot_proxy:1.5.15
+    image: zgsm/copilot_proxy:1.5.15
     command: ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "5000"]
     restart: always
     volumes:
