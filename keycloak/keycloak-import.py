@@ -1,3 +1,4 @@
+# coding: utf-8
 import requests
 import json
 import argparse
@@ -43,7 +44,7 @@ def get_access_token():
         'grant_type': 'password'
     }
     response = requests.post(token_url, data=payload)
-    
+
     if response.status_code == 200:
         return response.json().get('access_token')
     else:
@@ -60,9 +61,9 @@ def create_realm(access_token):
     with open(IMPORT_FNAME, 'r') as file:
         realm_data = json.load(file)
     realm_name = realm_data.get('realm')
-    
+
     response = requests.post(create_realm_url, headers=headers, json=realm_data)
-    
+
     if response.status_code >= 200 and response.status_code < 210:
         print(f"status {response.status_code}: Realm '{realm_name}' created successfully.")
     else:
@@ -75,10 +76,10 @@ def main():
 
         # 获取访问令牌
         access_token = get_access_token()
-        
+
         # 创建新的 realm
         create_realm(access_token)
-        
+
     except Exception as e:
         print(e)
 

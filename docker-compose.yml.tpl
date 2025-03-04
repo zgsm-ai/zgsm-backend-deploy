@@ -110,7 +110,7 @@ services:
       - shenma
 
   trampoline:
-    image: trampoline:1.0.241018
+    image: zgsm/trampoline:1.0.241018
     restart: always
     environment:
       TZ: "Asia/Shanghai"
@@ -122,7 +122,7 @@ services:
       - shenma
 
   kaptcha:
-    image: kaptcha-generator:0.6.0
+    image: zgsm/kaptcha-generator:0.6.0
     restart: always
     working_dir: /root/kaptcha
     volumes:
@@ -270,10 +270,11 @@ services:
       - TZ=Asia/Shanghai
       - discovery.type=single-node
       - bootstrap.memory_lock=true
-      - xpack.security.enabled=false  # 禁用安全功能
+      - xpack.security.enabled=false
       - xpack.security.http.ssl.enabled=false  # 禁用 HTTPS
       - xpack.ml.enabled=false
       - "ELASTIC_PASSWORD={{PASSWORD_ELASTIC}}"
+      #- "ENROLLMENT_TOKEN={{ENROLLMENT_TOKEN}}"
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     user: "1000:1000"
     ulimits:
@@ -292,8 +293,7 @@ services:
     image: docker.elastic.co/kibana/kibana:8.9.0
     environment:
       - ELASTICSEARCH_HOSTS=http://{{ZGSM_BACKEND}}:{{PORT_ES}}  # 指向 Elasticsearch
-      - ELASTICSEARCH_USERNAME=elastic  # Elasticsearch 用户名
-      - ELASTICSEARCH_PASSWORD={{PASSWORD_ELASTIC}}  # Elasticsearch 密码
+      - ELASTICSEARCH_SERVICEACCOUNTTOKEN={{ENROLLMENT_TOKEN}}
     ports:
       - "5601:5601"  # Kibana 端口
     depends_on:
