@@ -212,6 +212,9 @@ services:
     volumes:
       - ./fauxpilot/logs:/python-docker/logs
       - ./fauxpilot/common-v1.5.15.py:/python-docker/utils/common.py
+      - ./fauxpilot/tgi_proxy_v2.py:/python-docker/instances/tgi_proxy_v2.py
+      - ./fauxpilot/api_manager.py:/python-docker/thrid_platform/openai_server/api_manager.py
+      - ./fauxpilot/model_client_service.py:/python-docker/services/model_client_service.py
     ports:
       - "{{PORT_FAUXPILOT}}:5000/tcp"
     environment:
@@ -233,6 +236,7 @@ services:
       - MAIN_MODEL_TYPE=openai
       - OPENAI_MODEL_HOST={{OPENAI_MODEL_HOST}}
       - OPENAI_MODEL={{OPENAI_MODEL}}
+      - OPENAI_MODEL_API_KEY={{OPENAI_MODEL_API_KEY}}
     depends_on:
       - redis
     networks:
