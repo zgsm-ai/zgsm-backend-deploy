@@ -1,6 +1,6 @@
 .vscode
 apisix/config.yaml
-apisix_dashboard/config.yaml
+apisix_dashboard/conf.yaml
 chatgpt/custom.yml
 etcd/etcd.conf.yml
 grafana/config/grafana.ini
