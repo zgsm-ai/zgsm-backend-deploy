@@ -5,14 +5,14 @@ SCRIPT_NAME=$(basename "$0")
 LOG_FILE="${SCRIPT_NAME%.*}.log"
 exec > >(tee -a "$LOG_FILE") 2>&1
 # -------------------------- 常量定义 --------------------------
-declare -r SERVER_IP='{{server_ip}}'
-declare -r CHAT_MODEL_IP='{{chat_model_ip}}'                   # 'http://127.74.1.32:8888'
-declare -r CHAT_MODEL_TYPE='{{chat_model_type}}'               # 'deepseek-chat'
-declare -r CHAT_API_KEY='{{chat_api_key}}'                     # 'sk-edd332b8844445f6ef8c683b754141d'
-declare -r COMPLETION_MODEL_IP='{{completion_model_ip}}'       # 'http://127.74.1.32:9999/v1/completions'
-declare -r COMPLETION_MODEL_TYPE='{{completion_model_type}}'   # 'DeepSeek-Coder-V2-Lite-Base'
-declare -r COMPLETION_API_KEY='{{completion_api_key}}'         # 'sk-e0d435b568876745f4438c583b4561d'
-declare -r BASE_DIR="$HOME/zgsm-compose-deploy"
+declare -r SERVER_IP='192.168.14.133'
+declare -r CHAT_MODEL_IP='http://127.74.1.32:8888'
+declare -r CHAT_MODEL_TYPE='deepseek-chat'
+declare -r CHAT_API_KEY='sk-edd332b8844445f6ef8c683b754141d'
+declare -r COMPLETION_MODEL_IP='http://127.74.1.32:9999/v1/completions'
+declare -r COMPLETION_MODEL_TYPE='DeepSeek-Coder-V2-Lite-Base'
+declare -r COMPLETION_API_KEY='sk-e0d435b568876745f4438c583b4561d'
+declare -r BASE_DIR="$HOME/sxf/zgsm-compose-deploy"
 
 # -------------------------- 函数定义 --------------------------
 log() {
@@ -63,6 +63,45 @@ safe_sed() {
     rm -f "${file}.bak"
 }
 
+safe_chown() {
+    # 需要修改权限的目录数组
+    declare -a dirs=(
+        "/etcd/data"
+        "/postgres/data"
+        "/es/data"
+    )
+
+    # 检查并创建目录（如果需要）
+    for dir in "${dirs[@]}"; do
+        full_path="${BASE_DIR}${dir}"
+
+        # 自动创建目录（如果不存在）
+        if [[ ! -d "$full_path" ]]; then
+            echo "Creating directory: $full_path"
+            if ! sudo mkdir -p "$full_path"; then
+                echo "Error: Failed to create directory $full_path" >&2
+                exit 1
+            fi
+        fi
+
+        echo "Processing: $full_path"
+
+        # 修改所有权
+        if ! sudo chown -R 1000:1000 "$full_path"; then
+            echo "Error: chown failed for $full_path" >&2
+            exit 1
+        fi
+
+        # 修改权限
+        if ! sudo chmod -R 0775 "$full_path"; then
+            echo "Error: chmod failed for $full_path" >&2
+            exit 1
+        fi
+    done
+
+    echo "All permissions updated successfully"
+}
+
 # -------------------------- 主逻辑 --------------------------
 main() {
     log "INFO" "脚本启动，日志文件: $LOG_FILE"
@@ -92,6 +131,9 @@ main() {
             exit 1
         fi
     done
+
+    # 修改目录权限
+    safe_chown
 
     # 启动Docker服务
     log "INFO" "启动Docker容器"
