@@ -2,7 +2,13 @@
 apisix/config.yaml
 apisix_dashboard/conf.yaml
 chatgpt/custom.yml
+chatgpt/logs
+chatgpt/server/celerybeat-schedule
+chatgpt/supervisor
+es/data
 etcd/etcd.conf.yml
+etcd/data
+fauxpilot/logs
 grafana/config/grafana.ini
 grafana/provisioning/datasources/all.yaml
 kaptcha/application.yaml
@@ -10,5 +16,7 @@ keycloak/keycloak.conf
 keycloak/realm-export-sms.json
 keycloak/realm-export.json
 portal/nginx.conf
+postgres/data
+redis/data
 prometheus/prometheus.yml
 docker-compose.yml
