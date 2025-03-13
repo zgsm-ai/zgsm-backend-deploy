@@ -10,7 +10,7 @@ while : ; do
   # 通过检测端口是否监听判断服务状态
   if curl -sSf http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" >/dev/null; then
     echo "APISIX 已成功启动（管理接口响应正常）"
-    exit 0
+    break
   fi
 
   # 超时检测
