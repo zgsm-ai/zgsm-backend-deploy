@@ -1,10 +1,12 @@
 .vscode
+*.log
 apisix/config.yaml
 apisix_dashboard/conf.yaml
 chatgpt/custom.yml
 chatgpt/logs
 chatgpt/server/celerybeat-schedule
 chatgpt/supervisor
+chatgpt/server/tmp/gunicorn.pid
 es/data
 etcd/etcd.conf.yml
 etcd/data
