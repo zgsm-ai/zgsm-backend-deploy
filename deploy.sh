@@ -12,7 +12,7 @@ declare -r CHAT_API_KEY='sk-edd332b8844445f6ef8c683b754141d'
 declare -r COMPLETION_MODEL_IP='http://127.74.1.32:9999/v1/completions'
 declare -r COMPLETION_MODEL_TYPE='DeepSeek-Coder-V2-Lite-Base'
 declare -r COMPLETION_API_KEY='sk-e0d435b568876745f4438c583b4561d'
-declare -r BASE_DIR="$HOME/sxf/zgsm-compose-deploy"
+declare -r BASE_DIR=$(pwd)
 
 # -------------------------- 函数定义 --------------------------
 log() {
@@ -28,7 +28,7 @@ validate_environment() {
         "chatgpt/custom.yml.tpl"
         "tpl-resolve.sh"
         "chatgpt-initdb.sh"
-        "docker-compose.yml"
+        "docker-compose.yml.tpl"
         "apisix-chatgpt.sh"
         "apisix-copilot.sh"
         "apisix-issue.sh"
@@ -67,7 +67,6 @@ safe_chown() {
     # 需要修改权限的目录数组
     declare -a dirs=(
         "/etcd/data"
-        "/postgres/data"
         "/es/data"
     )
 
@@ -119,6 +118,9 @@ main() {
     safe_sed "s/api_key: \".*\"/api_key: \"$CHAT_API_KEY\"/g" chatgpt/custom.yml.tpl
     safe_sed "s/CHAT_MODEL=\".*\"/CHAT_MODEL=\"$CHAT_MODEL_TYPE\"/g" configure.sh
 
+    # 修改目录权限
+    safe_chown
+
     # 执行子脚本
     local sub_scripts=(
         "tpl-resolve.sh"
@@ -131,9 +133,6 @@ main() {
             exit 1
         fi
     done
-
-    # 修改目录权限
-    safe_chown
 
     # 启动Docker服务
     log "INFO" "启动Docker容器"
