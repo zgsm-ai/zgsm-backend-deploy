@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-    简单介绍
+    Simple introduction
 
-    :作者: 苏德利 16646
-    :时间: 2023/3/14 14:16
-    :修改者: 苏德利 16646
-    :更新时间: 2023/3/14 14:16
+    :Author: Sudeli 16646
+    :Time: 2023/3/14 14:16
+    :Modifier: Sudeli 16646
+    :UpdateTime: 2023/3/14 14:16
 """
 
 from playhouse.shortcuts import _clone_set, Field, Alias
@@ -21,9 +21,9 @@ class BaseModel(Model):
     class Meta:
         database = db
 
-    deleted = BooleanField(default=False, verbose_name='软删除')
-    created_at = DateTimeField(default=datetime.now, null=True, verbose_name='创建时间')
-    update_at = DateTimeField(default=datetime.now, null=True, verbose_name='更新时间')
+    deleted = BooleanField(default=False, verbose_name='Soft delete')
+    created_at = DateTimeField(default=datetime.now, null=True, verbose_name='Creation time')
+    update_at = DateTimeField(default=datetime.now, null=True, verbose_name='Update time')
 
     def set_key(self):
         if hasattr(self, "key"):
@@ -64,8 +64,8 @@ class BaseModel(Model):
              exclude=None, seen=None, extra_attrs=None,
              fields_from_query=None, max_depth=None, manytomany=False):
         """
-        改写自playhouse.shortcuts.model_to_dict方法
-        将其改写成实例方法，并替换掉自身函数调用
+        Rewritten from playhouse.shortcuts.model_to_dict method
+        Rewrite it as an instance method and replace its own function call
         Convert a model instance (and any related objects) to a dictionary.
 
         :param bool recurse: Whether foreign-keys should be recursed.

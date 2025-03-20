@@ -23,17 +23,17 @@ def get_request_kwargs(ignore=[]):
     return kwargs
 
 def filter_fields(kwargs: dict, allow_params: list) -> dict:
-    """过滤字段"""
+    """Filter fields"""
     kwargs = {key: value for key, value in kwargs.items() if key in allow_params}
     return kwargs
 
 def handle_validate(service, methods="create", draft_cache=False):
     def desc(func):
         """
-        验证创建/更新字段
-        :param service service对象
-        :param method 请求方法
-        :param draft_cache 是否流水线缓存操作
+        Validate create/update fields
+        :param service service object
+        :param method request method
+        :param draft_cache Whether pipeline cache operation
         """
 
         @wraps(func)
@@ -55,7 +55,7 @@ def handle_validate(service, methods="create", draft_cache=False):
 
 def handle_paginate(func):
     """
-    处理分页
+    Handle pagination
     """
 
     @wraps(func)

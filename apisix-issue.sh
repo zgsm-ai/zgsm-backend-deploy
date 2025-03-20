@@ -3,10 +3,10 @@
 . ./configure.sh
 
 #
-# 提交问题报告,页面资源托管在portal服务，API ‘/api/feedbacks/issue’ 由chatgpt实现。
+# Submit issue report, page resources are hosted on the portal service, and the API '/api/feedbacks/issue' is implemented by chatgpt.
 #
 
-# 定义存放登录相关页面资源的upstream
+# Define the upstream for storing login-related page resources
 curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT  -d '{
     "id": "portal",
     "nodes": {
@@ -15,7 +15,7 @@ curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT 
     "type": "roundrobin"
 }'
 
-# 登录各页面用到的资源
+# Resources used for login pages
 curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
     "uris": ["/issue/*"],
     "id": "issue-resources",

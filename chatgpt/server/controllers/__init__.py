@@ -36,6 +36,7 @@ def register_controller(app=None):
         """
         根据规则校验请求是否能够通过, 校验登录
         """
+        # Check whether the request can pass according to the rules, check the login status
         pass
 
     @app.after_request
@@ -61,15 +62,18 @@ def registry_session(app):
         jwt_handler = JwtTokenHandler(
             headers, cookies, NAME, SECRET, EXP, domain=DOMAIN, algorithm=ALG)
         # 解析获得session
+        # Parse to get session
         session = jwt_handler.parse()
         if isinstance(session, JwtSession):
             # 查询或者创建用户
+            # Query or create user
             username = session.get('username')
             display_name = session.get('display_name')
             user = users_service.get_or_create_by_username_and_display_name(
                 username, display_name)
             if not user:
                 # 用户非法,清空session
+                # User is illegal, clear the session
                 ApplicationContext.clear_session()
                 return
         ApplicationContext.reset_session(session)
@@ -84,6 +88,7 @@ def registry_session(app):
                 user = None
             if user:
                 # 用户登录才设置jwt_token
+                # Set jwt_token only when the user logs in
                 from services.system.jwt_token_service import JwtTokenService
                 j_t = JwtTokenService(request)
                 jwt_token = j_t.gen_token()
@@ -101,6 +106,7 @@ def registry_session(app):
         except Exception as err:
             logger.info(f'生成jwt_token失败：{str(err)}')
             # 该后置请求出现任何异常认为是认证失败, 不做处理，返回原请求
+            # Any exception in this post request is considered as authentication failure, no processing is done, and the original request is returned
             pass
         finally:
             return response

@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-    注册日志处理模块
+    Registration log processing module
 
-    :作者: 苏德利 16646
-    :时间: 2023/3/29 9:47
-    :修改者: 苏德利 16646
-    :更新时间: 2023/3/29 9:47
+    :Author: Su Deli 16646
+    :Time: 2023/3/29 9:47
+    :Modifier: Su Deli 16646
+    :UpdateTime: 2023/3/29 9:47
 """
 import os
 import logging
@@ -39,7 +39,7 @@ def setup_logging(default_path='config/logging.yml',
         logging.config.dictConfig(config)
     else:
         logging.basicConfig(level=default_level)
-    # 隐藏掉不第3方包的无用的日志打印
+    # Hide useless log printing of non-3rd party packages
     pydantic_spec_logger = logging.getLogger('flask_pydantic_spec.config')
     pydantic_spec_logger.setLevel(logging.ERROR)
 
@@ -66,7 +66,7 @@ def register_logger(app):
 task_chat_logger = None
 def get_task_chat_logger():
     """
-    调用openai.chat.completions API是一个异步操作，该操作过程的日志，由本函数返回的日志记录器记录
+    Calling openai.chat.completions API is an asynchronous operation, and the log of this operation process is recorded by the logger returned by this function
     """
     global task_chat_logger
     if task_chat_logger is not None:
@@ -77,7 +77,7 @@ def get_task_chat_logger():
     task_chat_logger.setLevel(logging.DEBUG)
     task_chat_logger.addHandler(error_handler)
     task_chat_logger.addHandler(info_handler)
-    # 为所有处理程序设置格式化器
+    # Set the formatter for all handlers
     formatter = Formatter('%(asctime)s - %(levelname)s - [SID: %(sid)s] - %(message)s')
     for handler in task_chat_logger.handlers:
         handler.setFormatter(formatter)

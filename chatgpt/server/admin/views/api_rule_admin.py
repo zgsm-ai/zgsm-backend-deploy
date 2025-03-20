@@ -32,8 +32,10 @@ class ApiRuleAdmin(AdminPermission, BaseView):
     can_delete = True
     column_default_sort = ('created_at', True)
     # 额外过滤条件
+    # Extra filtering conditions
     column_extra_filters = [
         # 类型过滤下拉框
+        # Type filter drop-down box
         CustomFilter(
             column=ApiRule.rule_type,
             name=ApiRule.rule_type.verbose_name,
@@ -41,18 +43,22 @@ class ApiRuleAdmin(AdminPermission, BaseView):
         )
     ]
     # 列表页 字段显示verbose_name值
+    # List page field display verbose_name value
     column_labels = BaseView.get_column_labels(ApiRule)
     # 列表页 字段值显示choices值
+    # List page field value display choices value
     column_formatters = {
         'rule_type': lambda v, c, m, p: dict(m.RULE_TYPE_CHOICES).get(m.rule_type)
     }
 
     # 修改前触发
+    # Triggered before modification
     def on_model_change(self, form, model, is_created):
         model.rule_info = model.rule_info.strip()
         if model.rule_info == '':
             raise ValidationError(f'请填写 {ApiRule.rule_info.verbose_name} 字段')
         # 校验规则是否已配置，软删除则不校验
+        # Check whether the rule has been configured, soft deletion does not need to be checked
         elif model.deleted is False and ApiRuleService.rule_is_exist(model.id, model.rule_type, model.rule_info):
             raise ValidationError('规则已存在')
 

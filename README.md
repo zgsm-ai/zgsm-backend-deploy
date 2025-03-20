@@ -1,96 +1,95 @@
 # 诸葛神码部署工具(for docker-compose)
 
-## 简介
+## Introduction
 
-### 整体思路
+### Overall idea
 
-诸葛神码采用微服务架构。
+Zhuge Shenma adopts a microservice architecture.
 
-整个后端系统大概分为三层四块，三层分别是：网关层，服务层，存储层。这三层再加上贯穿三层架构的统一的运维中心，共四大块。
+The entire backend system is roughly divided into three layers and four blocks. The three layers are: gateway layer, service layer, and storage layer. These three layers, plus the unified operation and maintenance center that runs through the three-layer architecture, make up the four major blocks.
 
-#### 网关层
+#### Gateway Layer
 
-网关层负责应用分发、负载均衡、流量控制、API授权控制
+The gateway layer is responsible for application distribution, load balancing, traffic control, and API authorization control.
 
-- 流量转发，ssl卸载： 推荐使用Sangfor AD，也可以使用其它具有ssl卸载能力的负载均衡设备完成
-- 应用分发、流量控制等: apisix
-- 登录认证、授权控制：keycloak,trampoline,kaptcha
-  - 用户管理组件：keycloak
-  - 登录跳板：trampoline
-  - 登录过程使用的验证码服务：kaptcha
+- Traffic forwarding, SSL offloading: It is recommended to use Sangfor AD, or other load balancing equipment with SSL offloading capabilities.
+- Application distribution, traffic control, etc.: apisix
+- Login authentication, authorization control: keycloak, trampoline, kaptcha
+  - User management component: keycloak
+  - Login trampoline: trampoline
+  - Verification code service used during the login process: kaptcha
 
-#### 服务层
+#### Service Layer
 
-服务层即几大核心服务，目前包括：
+The service layer consists of several core services, currently including:
 
-- 负责代码补全的代理后端：completion-server
-- 负责对话服务的代理后端: chat-server
+- Proxy backend responsible for code completion: completion-server
+- Proxy backend responsible for dialogue services: chat-server
 
-对话和补全，都使用代理后端的目的是，屏蔽不同模型API的细节，并提供额外的上下文处理等能力。
+The purpose of using proxy backends for both dialogue and completion is to shield the details of different model APIs and provide additional context processing capabilities.
 
-#### 存储层
+#### Storage Layer
 
-存储层：
+Storage layer:
 
-- 关系数据库: pgsql
-- 键值数据库: etcd
-- 缓存: redis
+- Relational database: pgsql
+- Key-value database: etcd
+- Cache: redis
 
-#### 运维中心
+#### Operation and Maintenance Center
 
-运维中心：
+Operation and maintenance center:
 
-- grafana(可选)
-- prometheus(可选)
-- kibana(可选)
-- elasticsearch(必选)
+- grafana (optional)
+- prometheus (optional)
+- kibana (optional)
+- elasticsearch (required)
 
-## 部署步骤
+## Deployment Steps
 
-### 0. 前提条件
+### 0. Prerequisites
 
-#### 使用自己部署的模型实例
+#### Using your own deployed model instance
 
-1. 一台最低配置16C，32G，512G存储的X64硬件设备，具有支持模型推理服务运行的显卡(至少2张RTX4090,或1张A800)
-2. 安装好centos7,nvidia-docker,docker-compose等必要组件
+1. An X64 hardware device with a minimum configuration of 16C, 32G, 512G storage, and a graphics card that supports the operation of model inference services (at least 2 RTX4090s or 1 A800)
+2. Install necessary components such as centos7, nvidia-docker, and docker-compose.
 
-#### 使用第三方API服务，或自行部署模型实例
+#### Using third-party API services or deploying model instances yourself
 
-1. 一台最低配置16C，32G，512G存储的X64硬件设备
-2. 安装好centos7,docker,docker-compose等必要组件
+1. An X64 hardware device with a minimum configuration of 16C, 32G, 512G storage
+2. Install necessary components such as centos7, docker, and docker-compose.
 
-### 1. 根据需求，修改配置
+### 1. Modify the configuration as needed
 
 ```sh
 vim configure.sh
 tpl-resolve.sh
 ```
 
-### 2. 下载模型数据
+### 2. Download model data
 
-### 3. 启动docker-compose
+### 3. Start docker-compose
 
 ```sh
 docker compose up -d
 ```
 
-### 4. 配置路由
+### 4. Configure routing
 
 ```sh
 apisix-*.sh
 ```
 
-### 5. 导入keycloak的配置
+### 5. Import keycloak configuration
 
 ```sh
 keycloak-import.sh
 ```
 
-### 6. 初始化数据库，创建chatgpt需要的数据库表
+### 6. Initialize the database and create the database tables needed by chatgpt
 
 ```sh
 chatgpt-initdb.sh
 ```
 
-### 7. 配置vscode-zgsm扩展，调整服务器URL为实际地址
-
+### 7. Configure the vscode-zgsm extension and adjust the server URL to the actual address

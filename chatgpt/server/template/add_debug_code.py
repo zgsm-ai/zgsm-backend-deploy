@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# 生成调试代码模板
+# Generate debug code template
 INITIAL_PROMPT = """
 ```{language}
 {selectedText}

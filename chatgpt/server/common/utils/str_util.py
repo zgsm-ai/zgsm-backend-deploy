@@ -14,7 +14,7 @@ class StrUtil:
     @classmethod
     def random(cls, count=10):
         """
-        生成随机字符串
+        Generate random string
         """
         return ''.join(
             random.sample(
@@ -26,8 +26,8 @@ class StrUtil:
     @classmethod
     def is_contain_chinese(cls, string):
         """
-        检查整个字符串是否包含中文
-        :param string: 需要检查的字符串
+        Check if the entire string contains Chinese characters
+        :param string: The string to check
         :return: bool
         """
         if not string:
@@ -44,14 +44,14 @@ class StrUtil:
     @classmethod
     def find_best_match(cls, prefix_list, text):
         """
-        在prefix_list中找到与字符串a匹配字符最多的字符串。
-        # 示例用法
+        Find the string in prefix_list that matches the most characters in string a.
+        # Example usage
         prefix_list = ["pre", "prefix", "pref", "prelude"]
         a = "prefixation"
-        print(find_best_match(prefix_list, a))  # 输出: "prefix"
-        :param prefix_list: 字符串列表
-        :param a: 目标字符串
-        :return: 与a匹配字符最多的字符串
+        print(find_best_match(prefix_list, a))  # Output: "prefix"
+        :param prefix_list: List of strings
+        :param a: Target string
+        :return: The string that matches the most characters in a
         """
         best_match = ""
         max_match_length = 0
@@ -75,40 +75,40 @@ class StrUtil:
     @classmethod
     def is_filled_url(cls, template_url, filled_url):
         """
-        判断一个URL字符串是否是另一个带占位符的URL字符串填充后的结果。
-        # 示例用法
+        Check if a URL string is the result of filling another URL string with placeholders.
+        # Example usage
         template_url = "/v1/namespaces/@namespaces/alarm/atemplate/@name"
         filled_url = "/v1/namespaces/default/alarm/atemplate/alarm1"
         :param template_url:
         :param filled_url:
         :return:
         """
-        # 将占位符替换为正则表达式中的通配符
+        # Replace placeholders with wildcards in the regular expression
         pattern = re.sub(r'@[^/]+', r'[^/]+', template_url)
-        # 在开始和结束添加锚点
+        # Add anchors at the beginning and end
         pattern = f'^{pattern}$'
 
-        # 使用正则表达式匹配
+        # Use regular expression to match
         return re.match(pattern, filled_url) is not None
 
     @classmethod
     def remove_url_params(cls, url):
         """
-        删除URL中的参数部分，但保留方法参数
+        Delete the parameter part of the URL, but keep the method parameters
         print(remove_url_params("http://example.com/path?param1=value1&param2=value2"))
-        输出: http://example.com/path
+        Output: http://example.com/path
         print(remove_url_params("http://example.com/path?_method=get&param1=value1"))
-        输出: http://example.com/path?_method=delete
+        Output: http://example.com/path?_method=delete
         print(remove_url_params("http://example.com/path?_method=delete"))
-        输出: http://example.com/path?_method=delete
+        Output: http://example.com/path?_method=delete
         print(remove_url_params("http://example.com/path"))
-        输出: http://example.com/path
+        Output: http://example.com/path
         :param url:
         :return:
         """
         match = re.search(r'(\?_method=[^&]*)(?:&|$)|\?.*', url)
         if match:
-            # 如果匹配到_method参数，保留它
+            # If the _method parameter is matched, keep it
             if match.group(1):
                 return url[:match.start()] + match.group(1)
             else:

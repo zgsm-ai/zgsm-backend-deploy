@@ -38,6 +38,7 @@ def handle_db(func):
                 psycopg2.OperationalError, peewee.OperationalError) as e:
             logging.error(f"error to connect the db: {e}, try to reconnect")
             # 如果在数据操作中出现了连接异常，可能会造成线程中的连接一直处于无效状态，所以需要先重置该连接，再捕获该异常。
+            # If a connection exception occurs during data operations, the connection in the thread may remain invalid, so the connection needs to be reset first, and then the exception is caught.
             database = connect(CONFIG.app.DATABASE_URI)
             db.initialize(database)
             if db.obj.is_closed():
@@ -45,6 +46,7 @@ def handle_db(func):
             raise e
         finally:
             # 使用了 poolext 的数据库连接，close 只是将使用完的连接放回 pool 中
+            # Using a poolext database connection, close simply puts the completed connection back into the pool
             if not db.obj.is_closed():
                 db.obj.close()
 
@@ -62,6 +64,7 @@ celery_app.conf.ONCE = {
 }
 
 # 定时任务配置
+# Scheduled task configuration
 celery_app.conf.update(
     beat_schedule={
         'clean_up_expired_contexts_task': {

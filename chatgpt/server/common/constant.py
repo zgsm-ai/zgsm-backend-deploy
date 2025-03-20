@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-    项目常量
+    Project Constants
 
-    :作者: 苏德利 16646
-    :时间: 2023/3/3 15:31
-    :修改者: 刘鹏 z10807
-    :更新时间: 2023/4/21 9:26
+    :Author: Su Deli 16646
+    :Time: 2023/3/3 15:31
+    :Modifier: Liu Peng z10807
+    :UpdateTime: 2023/4/21 9:26
 """
 
 
@@ -18,57 +18,57 @@ class ActionsConstant:
     CHAT = "chat"
     ADVISE="advise"
     GENERATE_CODE = "generateCode"
-    # e2e 用例生成========
+    # e2e case generation========
     REVIEW = "review"
     SCRIBE = "scribe"
-    ADD_DEBUG_CODE = "addDebugCode"  # 添加调试代码
-    ADD_STRONGER_CODE = "addStrongerCode"  # 添加健壮性代码
-    ADD_COMMENT = "addComment"  # 添加注释
-    PICK_COMMON_FUNC = "pickCommonFunc"  # 公共函数提取
-    SIMPLIFY_CODE = "simplifyCode"  # 精简代码
-    GIVE_ADVICE = "giveAdvice"  # 给出建议
-    CONTINUE = "continue"  # 续写
-    ZHUGE_NORMALCHAT = 'zhuge_normal_chat'  # 诸葛普通聊天
+    ADD_DEBUG_CODE = "addDebugCode"  # Add debug code
+    ADD_STRONGER_CODE = "addStrongerCode"  # Add robustness code
+    ADD_COMMENT = "addComment"  # Add comments
+    PICK_COMMON_FUNC = "pickCommonFunc"  # Extract common functions
+    SIMPLIFY_CODE = "simplifyCode"  # Simplify code
+    GIVE_ADVICE = "giveAdvice"  # Give advice
+    CONTINUE = "continue"  # Continue writing
+    ZHUGE_NORMALCHAT = 'zhuge_normal_chat'  # Zhuge normal chat
 
 class GPTModelConstant:
-    GPT_35 = "gpt-3.5"  # 使用 GPT_35_16K ，仅在请求参数中使用
-    GPT_TURBO = "gpt-3.5-turbo"  # 使用 GPT_35_16K ，仅在请求参数中使用
-    GPT_35_16K = "gpt-35-turbo-16k"  # 16k模型
-    GPT_4 = "gpt-4"  # 128k模型
-    GPT_4o = "gpt-4o"  # 128k模型
-    GPT_35_CHAT_MODELS = [GPT_TURBO, GPT_35_16K]  # 支持模型列表
+    GPT_35 = "gpt-3.5"  # Use GPT_35_16K, only used in request parameters
+    GPT_TURBO = "gpt-3.5-turbo"  # Use GPT_35_16K, only used in request parameters
+    GPT_35_16K = "gpt-35-turbo-16k"  # 16k model
+    GPT_4 = "gpt-4"  # 128k model
+    GPT_4o = "gpt-4o"  # 128k model
+    GPT_35_CHAT_MODELS = [GPT_TURBO, GPT_35_16K]  # List of supported models
     DEEPSEEK_SEEK_CHAT = "deepseek-chat"
-    CHAT_MODELS = [GPT_TURBO, GPT_35_16K, GPT_4, GPT_4o, DEEPSEEK_SEEK_CHAT, ]  # 支持模型列表
+    CHAT_MODELS = [GPT_TURBO, GPT_35_16K, GPT_4, GPT_4o, DEEPSEEK_SEEK_CHAT, ]  # List of supported models
 
 
 class GPTConstant:
-    TIMEOUT = 120  # 单位: s
-    GPT35_16K_MAX_TOKENS = 12000  # 输入上限12k
-    GPT4_MAX_TOKENS = 60000  # 输入上限60k
+    TIMEOUT = 120  # Unit: s
+    GPT35_16K_MAX_TOKENS = 12000  # Input limit 12k
+    GPT4_MAX_TOKENS = 60000  # Input limit 60k
     DEEPSEEK_SEEK_CHAT_TOKENS = 128000
-    # 代码生成限制最大 token 数，要比最大 token 数小。
+    # Code generation limits the maximum number of tokens, which should be less than the maximum number of tokens.
     CODE_GENERATE_MAX_PROMPT_TOKENS = GPT35_16K_MAX_TOKENS - 200
 
-    # 响应格式类型
+    # Response format type
     RESPONSE_JSON_OBJECT = 'json_object'
-    RESPONSE_FORMAT_TYPES = [RESPONSE_JSON_OBJECT]  # gpt新版支持返回格式类型列表
+    RESPONSE_FORMAT_TYPES = [RESPONSE_JSON_OBJECT]  # gpt new version supports list of return format types
 
-    SCRIBE_MAX_PROMPT_TOKENS = 6000  # 划词对话限制最大tokens
+    SCRIBE_MAX_PROMPT_TOKENS = 6000  # Word selection dialog limits maximum tokens
 
-    MAX_CONTINUE_COUNT = 2  # 允许最大续写次数
-    CONTINUE_SIGN = '\n----------续写----------\n'  # 续写标识
-    # 允许自动续写actions
+    MAX_CONTINUE_COUNT = 2  # Maximum number of allowed continuation writes
+    CONTINUE_SIGN = '\n----------Continue----------\n'  # Continuation identifier
+    # Allow automatic continuation writing actions
     ALLOW_CONTINUE_ACTIONS = [
         ActionsConstant.CONTINUE,
         ActionsConstant.SCRIBE,
     ]
 
-    # 完成原因
+    # Completion reason
     class FinishReason:
-        STOP = 'stop'  # API 返回了完整的模型输出。
-        LENGTH = 'length'  # 由于 max_tokens 参数或标记限制，模型输出不完整。
-        CONTENT_FILTER = 'content_filter'  # 由于内容筛选器的标志，省略了内容。
-        NULL = 'null'  # API 回复仍在进行中或未完成。
+        STOP = 'stop'  # The API returned a complete model output.
+        LENGTH = 'length'  # The model output is incomplete due to the max_tokens parameter or token limit.
+        CONTENT_FILTER = 'content_filter'  # Content omitted due to content filter flags.
+        NULL = 'null'  # The API response is still in progress or incomplete.
 
 
 class TikTokenEncodeType:
@@ -78,14 +78,14 @@ class TikTokenEncodeType:
 
 
 class ServeConstant:
-    THREADS = 4  # waitress serve用于处理应用程序逻辑的线程数，默认为4。
+    THREADS = 4  # The number of threads that waitress serve uses to handle application logic, the default is 4.
     CONNECTION_LIMIT = 100
     DEFAULT_API_TYPE = "openai"
 
 
 class NullValueSort:
     """
-    将None值排序放在前或者后
+    Place None value sorting first or last
     """
     NULL_FIRST = 'null_first'
     NULL_LAST = 'null_last'
@@ -94,67 +94,67 @@ class NullValueSort:
 class AppConstant:
     DELETED = True
     REQUESTS_TIMEOUT_TIME = [2, 4, 8, 16, 32, 64]
-    DEPT_CACHE_TIMEOUT = 86400  # 部门数据缓存24小时
+    DEPT_CACHE_TIMEOUT = 86400  # Department data cache for 24 hours
 
 
 class UserRole:
-    ADMIN = "admin"  # 管理员
-    USER = "user"  # 普通用户
+    ADMIN = "admin"  # Administrator
+    USER = "user"  # Normal user
 
 
 class ErrorMsgs:
-    TIMEOUT = 'Cancelling nested steps due to timeout'  # 任务执行时间超出设定的时间，默认60分钟
-    GITLAB_NOT_RESPONDE = 'GitLab is not responding'  # gitlab 502报错关键字段
+    TIMEOUT = 'Cancelling nested steps due to timeout'  # The task execution time exceeds the set time, default 60 minutes
+    GITLAB_NOT_RESPONDE = 'GitLab is not responding'  # gitlab 502 error key field
 
 
 class AdminNoticeContent:
-    """管理员通知内容"""
-    CONTENT = '千流AI通知：\n用户{username}申请API账号。\n请前往后台管理进行审批：{chat_admin_url}'
+    """Admin notice content"""
+    CONTENT = 'Qianliu AI notice:\nUser {username} is applying for an API account.\nPlease go to the backend management for approval: {chat_admin_url}'
 
 
 class ApplicantNoticeContent:
-    """申请人通知内容"""
-    CONTENT = '千流AI通知：\n{first_line}{approve_remark}\n应用名称：{project_name}\n到期时间：{expiration_time}\n' \
-              '申请原因：{application_reason}\n预期收益：{expected_profit}\n' \
-              '更多操作，可前往千流AI平台：{chat_url}（跳转到千流ai首页）'
+    """Applicant notice content"""
+    CONTENT = 'Qianliu AI notice:\n{first_line}{approve_remark}\nApplication name: {project_name}\nExpiration time: {expiration_time}\n' \
+              'Reason for application: {application_reason}\nExpected benefits: {expected_profit}\n' \
+              'For more operations, please go to the Qianliu AI platform: {chat_url} (jump to Qianliu AI homepage)'
 
 
 class OpenAppConstant:
-    """开放应用"""
-    APPROVAL = 'approval'  # 审批中
-    APPROVED = 'approved'  # 审批通过
-    FAIL = 'fail'  # 审批未通过
-    DISABLE = 'disable'  # 已禁用
-    EXPIRED = 'expired'  # 已超期
+    """Open application"""
+    APPROVAL = 'approval'  # Under approval
+    APPROVED = 'approved'  # Approved
+    FAIL = 'fail'  # Approval failed
+    DISABLE = 'disable'  # Disabled
+    EXPIRED = 'expired'  # Expired
     STATE_CHOICES = (
-        (APPROVAL, '审批中'),
-        (APPROVED, '审批通过'),
-        (FAIL, '审批未通过'),
-        (DISABLE, '已禁用'),
-        (EXPIRED, '已超期'),
+        (APPROVAL, 'Under approval'),
+        (APPROVED, 'Approved'),
+        (FAIL, 'Approval failed'),
+        (DISABLE, 'Disabled'),
+        (EXPIRED, 'Expired'),
     )
-    ALLOW_DELETE_STATES = (FAIL, DISABLE, EXPIRED)  # 允许删除的状态
-    ALLOW_NOTICE_STATES = (APPROVED, FAIL, DISABLE)  # 允许通知的状态
-    APPROVE_REMARK_NOT_EMPTY_STATES = (FAIL, DISABLE)  # 审批备注必填的状态
-    SQUARE_RETURN_STATES = (APPROVED, DISABLE, EXPIRED)  # 广场数据可返回的状态
+    ALLOW_DELETE_STATES = (FAIL, DISABLE, EXPIRED)  # States allowed to be deleted
+    ALLOW_NOTICE_STATES = (APPROVED, FAIL, DISABLE)  # States allowed to be notified
+    APPROVE_REMARK_NOT_EMPTY_STATES = (FAIL, DISABLE)  # States where approval remarks are required
+    SQUARE_RETURN_STATES = (APPROVED, DISABLE, EXPIRED)  # States where square data can be returned
 
 
 class UserConstant:
     CACHE_KEY_API_KEY = "users:api_key"
     CACHE_KEY_ID = "users:id"
     CACHE_KEY_USERNAME = "users:username"
-    # 用户头像背景色集合
+    # Set of user avatar background colors
     AVATAR_COLORS = ['#4179FF', '#3AC8FF', '#8439FF', '#E251F5', '#49F4BA', '#A2E40B', '#FFC800', '#FF8000', '#F55151',
                      '#FF5FA0']
 
 
 class ApiRuleConstant:
-    """api规则/权限"""
+    """api rules/permissions"""
     DEPT = 'dept'
     USER = 'user'
     RULE_TYPE_CHOICES = (
-        (DEPT, '部门'),
-        (USER, '用户'),
+        (DEPT, 'Department'),
+        (USER, 'User'),
     )
     ALLOW_COMPANY = '深信服科技股份有限公司'
 
@@ -177,35 +177,35 @@ class ConfigurationConstant:
 
     REVIEW_TYPE = 'review'
 
-    # prompt模板 其他每个action都有配置
+    # prompt template Other actions have configurations
     PROMPT_TEMPLATE = 'prompt_template'
-    # 其他模板
+    # Other templates
     MANUAL_REVIEW_PROMPT = 'manual_review'
-    # 续写模板
+    # Continuation writing template
     CONTINUE_PROMPT = 'continue'
 
-    # 权限
+    # Permissions
     PERMISSION_TYPE = 'permission'
 
-    # 系统配置项
+    # System configuration items
     SYSTEM_TYPE = 'system_config'
-    SYSTEM_KEY = 'front_end'  # 前端通用
+    SYSTEM_KEY = 'front_end'  # Front-end common
 
-    # 模型控制值设置
+    # Model control value settings
     MODEL_BELONG_TYPE = "model"
     ENABLED_MODELS = "enable_models"
 
-    # 上下文控制值设置
+    # Context control value settings
     CONTEXT_BELONG_TYPE = "context"
     CONTEXT_MAX_NUM = "context_max_num"
 
 
 class PromptConstant:
     CACHE_KEY_FORBID_WORD = 'prompt_forbidden_word'
-    CHECK_PARAM_LIST = ['prompt', 'code', 'custom_instructions', 'system_prompt']  # 需要校验敏感词的参数
-    FORBID_WORD_RETURN_MESSAGE = '安全规定，提问词不允许包含 公司名称、密码等字样，请重新提问 （当前问题包含敏感词：{}）'
-    OLD_PLUGIN_RETURN_MESSAGE = '为了提供更好的服务和用户体验，请升级到最新版本。升级完成之后，重启IDE即可。配置连接：http://docs.sangfor.org/x/rNnHDw '
-    TOKENS_OVER_LENGTH = '您的提问超过了最大 token 数限制，请缩短提问后重试。'
+    CHECK_PARAM_LIST = ['prompt', 'code', 'custom_instructions', 'system_prompt']  # Parameters that need to be checked for sensitive words
+    FORBID_WORD_RETURN_MESSAGE = 'According to safety regulations, the question words are not allowed to contain company names, passwords, etc. Please rephrase the question (the current question contains sensitive words: {})'
+    OLD_PLUGIN_RETURN_MESSAGE = 'In order to provide better services and user experience, please upgrade to the latest version. After the upgrade is complete, restart the IDE. Configuration connection: http://docs.sangfor.org/x/rNnHDw '
+    TOKENS_OVER_LENGTH = 'Your question exceeds the maximum number of tokens limit, please shorten the question and try again.'
     PLUGIN_LABELS = ['node-fetch', 'qianliu-ai-jetbrains-plugin']
     DEVOPS_LABELS = ['cicd service', 'qianliu-devops', 'tp service']
     RESPONSE_TEMPLATE = {
@@ -214,14 +214,14 @@ class PromptConstant:
                 'finish_reason': 'stop',
                 'index': 0,
                 'message': {
-                    'content': '回答问题',
+                    'content': 'Answer the question',
                     'role': 'assistant'
                 }
             }
         ],
-        'created': '1722650508',  # 需重新赋值当前 time.time()
-        'id': 'chatcmpl-72bxP8TakrdRMN4Ln2b1VQrV2VpKJ',  # 根据需要重新赋值
-        'model': None,  # 需指定对应model
+        'created': '1722650508',  # Need to reassign the current time.time()
+        'id': 'chatcmpl-72bxP8TakrdRMN4Ln2b1VQrV2VpKJ',  # Reassign as needed
+        'model': None,  # Need to specify the corresponding model
         'object': 'chat.completion',
         'usage': {
             'completion_tokens': 34,
@@ -229,13 +229,13 @@ class PromptConstant:
             'total_tokens': 84
         }
     }
-    # 敏感词替换映射表（使用正则替换），键为替换后的字符，值为敏感词
+    # Sensitive word replacement mapping table (using regular replacement), the key is the replaced character, and the value is the sensitive word
     FORBIDDEN_WORD_MAP = {
         '_hello_': 'sangfor|sinfor|sangfor123|admin123|sangfor@123|Sangfor@123|sangforos',
         '_深圳_': '深信服|信服'
     }
 
-    # 敏感词替换映射表 一对一 （皆为城市单词）
+    # Sensitive word replacement mapping table one-to-one (all are city words)
     SENSITIVE_WORD_MAP = {
         'Sangfor@123': 'Philadelphia',
         'sangfor@123': 'Colorado',
@@ -251,48 +251,48 @@ class PromptConstant:
 
 
 class ADConstant:
-    CACHE_KEY_QIANLIU_AD = 'qianliu_ad'  # 千流广告配置缓存key
-    CACHE_PREFIX_KEY = "AD"  # 用户广告缓存前缀key
-    CACHE_TIMEOUT = 60 * 60 * 24 * 30  # 每个用户投放一次广告时间 1次/1月
+    CACHE_KEY_QIANLIU_AD = 'qianliu_ad'  # Qianliu advertising configuration cache key
+    CACHE_PREFIX_KEY = "AD"  # User advertising cache prefix key
+    CACHE_TIMEOUT = 60 * 60 * 24 * 30  # Each user is exposed to an advertisement once per month
 
 
 class AIReviewConstant:
     TOKENIZER_PATH = 'runtime/tokenizer.json'
     MAX_TOKEN = 2048
     TREE_SITTER_LIB_PATH = 'runtime/languages.so'
-    MAX_REVIEW_NUM = 5  # 单文件最多进行review数量（排除prompt超tokens的、直接复用结果的，实际需要请求review的数量）
+    MAX_REVIEW_NUM = 5  # Maximum number of reviews for a single file (excluding those with prompt exceeding tokens, direct reuse of results, the actual number of reviews required)
     STREAM_SEPARATOR = '#data_id#'
 
     class ReviewType:
-        AUTO = 'auto'  # 自动
-        MANUAL = 'manual'  # 手动
+        AUTO = 'auto'  # Automatic
+        MANUAL = 'manual'  # Manual
         CHOICES = (
-            (AUTO, '自动'),
-            (MANUAL, '主动'),
+            (AUTO, 'Automatic'),
+            (MANUAL, 'Manual'),
         )
 
     class ReviewState:
-        INIT = 'init'  # 初始
-        SUCCESS = 'success'  # 成功
-        FAIL = 'fail'  # 失败
+        INIT = 'init'  # Initial
+        SUCCESS = 'success'  # Success
+        FAIL = 'fail'  # Fail
         CHOICES = (
-            (INIT, '初始'),
-            (SUCCESS, '成功'),
-            (FAIL, '失败')
+            (INIT, 'Initial'),
+            (SUCCESS, 'Success'),
+            (FAIL, 'Fail')
         )
 
     class Flag:
-        REPAIR = 'repair'  # 标记为解决
-        NO_REPAIR = 'no_repair'  # 标记为不修复
-        REJECT = 'reject'  # 拒绝此问题
+        REPAIR = 'repair'  # Marked as resolved
+        NO_REPAIR = 'no_repair'  # Marked as not repaired
+        REJECT = 'reject'  # Reject this issue
 
-        SKIP_REVIEW = (NO_REPAIR, REJECT)  # 跳过
-        REUSE_REVIEW = ('', REPAIR)  # 复用
+        SKIP_REVIEW = (NO_REPAIR, REJECT)  # Skip
+        REUSE_REVIEW = ('', REPAIR)  # Reuse
 
         CHOICES = (
-            (REPAIR, '标记为解决'),
-            (NO_REPAIR, '标记为不修复'),
-            (REJECT, '拒绝此问题'),
+            (REPAIR, 'Marked as resolved'),
+            (NO_REPAIR, 'Marked as not repaired'),
+            (REJECT, 'Reject this issue'),
         )
 
     TREE_SITTER_CODE_TYPE_MAP = {
@@ -311,7 +311,7 @@ class AIReviewConstant:
 
 
 class AskStreamConfig:
-    # 循环次数太少容易误杀，提高一点
+    # Too few loop iterations can easily lead to false positives, so increase it a bit
     LOOP_COUNT_LIMIT = 30
 
 
@@ -323,17 +323,17 @@ class ScribeConstant:
     ES_ID_TITLE = "dmsc"
     RESPONSE_TEMPLATE = {
         "success": False,
-        "message": '我是一个问题回答人工智能，可以访问互联网并以中文 markdown 格式回答问题。',
+        "message": 'I am a question answering artificial intelligence, can access the Internet and answer questions in Chinese markdown format.',
         "data": None
     }
-    # 划词生成代码的系统预设
+    # System presets for generating code by selecting words
     SCRIBE_SYSTEMS = [
         """You are an experienced development engineer.
         Your task is to implement code that meets the requirements,
         and the result needs to be compared with the selected code for diff differences,
         so you need to make sure that you do not omitted code for brevity,
         and finally, use the markdown format in output"""]
-    # 中间处理类型
+    # Intermediate processing type
     ADD_TAG = 'add_tag'
     VECTOR_RECALL = 'vector_recall'
     BASIC_SAFEGUARD = 'basic_safeguard'
@@ -342,45 +342,45 @@ class ScribeConstant:
     GENERATE_CODE = 'generate_code'
     MERGE_CODE = 'merge_code'
     keyword_dict = {"表格": "表格", "表单": "表单", "详情列": "多列详情列"}
-    # 允许前端指定组件库的语言
+    # Languages allowed for front-end specified component libraries
     CUSTOM_COMPONENT_ALLOW_LANGUAGES = ['javascript', 'typescript', 'html', 'vue']
-    # 各文档中组件的正则表达式
+    # Regular expressions for components in each document
     component_patterns = [
-        r'(?<![A-Za-z\u4e00-\u9fa5])<([a-zA-Z0-9-]+)',  # 匹配组件名
-        r'import .*?\{([^\}]+)\} from',  # 匹配带{}的导入的hook
-        r'import (\w+[\s,]*\w*)+ from'  # 匹配不带{}的导入的hook
+        r'(?<![A-Za-z\u4e00-\u9fa5])<([a-zA-Z0-9-]+)',  # Matches component names
+        r'import .*?\{([^\}]+)\} from',  # Matches imports with {}
+        r'import (\w+[\s,]*\w*)+ from'  # Matches imports without {}
     ]
     exclude_component_list = ["a", "div", "template", "style", "script", "p", "img", "span", "i", "section", "h2", "h1"]
 
 
 class CheckApiParamsType:
     """
-    # 校验api_info中参数信息方式
+    # Verify parameter information method in api_info
     """
-    # 1、close不校验；2、request仅校验入参；3、all校验入参和出参
+    # 1. close: do not verify; 2. request: only verify incoming parameters; 3. all: verify both incoming and outgoing parameters
     CLOSE = "close"
     REQUEST = "request"
     ALL = "all"
 
 class AgentConstant:
     TASK_CHAT_QUEUE = "task_chat_queue"
-    CELERY_TASK_TIMEOUT = 60 * 60  # 任务执行超时时间，1h
+    CELERY_TASK_TIMEOUT = 60 * 60  # Task execution timeout time, 1h
 
-    CACHE_KEY_ZHUGE_ADS = "CACHE_KEY_ZHUGE_ADS"  # 千流诸葛页面推荐词列表缓存key
+    CACHE_KEY_ZHUGE_ADS = "CACHE_KEY_ZHUGE_ADS"  # Qianliu Zhuge page recommended word list cache key
     """
     [{
-        "title": "",         # 首页展示标题
-        "prompt": "",        # 具体提示词(点击后面板展示的内容),若不存在则取 title 为提示词
-        "use_agent": true    # 是否启用智能团
+        "title": "",         # Title displayed on the homepage
+        "prompt": "",        # Specific prompt words (content displayed after clicking the panel), if it does not exist, take the title as the prompt word
+        "use_agent": true    # Whether to enable intelligent team
     }]
     """
 
     AGENT_CHAT_DONE_MSG = "[DONE]"
 
-    ROLE_OBSERVER = 'observer'  # 智能团观察者角色
-    ROLE_GROUP_MEMBER = 'group_member'  # 智能团团员
-    ROLE_GROUP_GUARDIAN = 'group_guardian'  # 智能团守卫者，兜底角色
-    ROLE_NORMAL_CHAT = 'normal_chat'  # 普通聊天角色
+    ROLE_OBSERVER = 'observer'  # Intelligent team observer role
+    ROLE_GROUP_MEMBER = 'group_member'  # Intelligent team member
+    ROLE_GROUP_GUARDIAN = 'group_guardian'  # Intelligent team guardian, fallback role
+    ROLE_NORMAL_CHAT = 'normal_chat'  # Normal chat role
 
     AGENT_THOUGHT_EVENT = "dify_agent_thought"
     AGENT_ADVISE_EVENT = "agent_advise"
@@ -388,14 +388,14 @@ class AgentConstant:
     AGENT_END_EVENT = "agent_end"
 
     ROLE_CHOICES = (
-        (ROLE_OBSERVER, '观察者'),
-        (ROLE_GROUP_MEMBER, '群成员'),
-        (ROLE_NORMAL_CHAT, '普通聊天')
+        (ROLE_OBSERVER, 'Observer'),
+        (ROLE_GROUP_MEMBER, 'Group member'),
+        (ROLE_NORMAL_CHAT, 'Normal chat')
     )
 
-    # agent的服务于后台的展示提取规则，比如：历史会话里的名字获取
+    # Agent's display extraction rules for the backend, such as getting names from historical conversations
     AGENT_DISPLAY_NAME_PATTERN = r'\|([^\|]*)'
-    # agent的服务于前端的展示提取规则
+    # Agent's display extraction rules for the front end
     AGENT_UI_PATTERN = r'^(.*?)\|'
 
 
@@ -405,12 +405,12 @@ class LoggerNameContant:
 
 
 class ContextNavigationConstant:
-    # context的redis缓存key
+    # redis cache key of context
     code_navigation_context_redis_key = "cnc-{uuid}"
     get_local_context_redis_key = "glc-{uuid}"
-    cnc_redis_ex_time = 60 * 60  # 缓存时间 1小时
+    cnc_redis_ex_time = 60 * 60  # Cache time 1 hour
 
-    # 动态上下文的key
+    # dynamic context key
     get_file_content_action = "get_file_content"
     get_file_sign_action = "get_file_sign"
     get_sign_contents_action = "get_sign_contents"

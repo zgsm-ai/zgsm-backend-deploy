@@ -4,10 +4,10 @@ from config import conf
 
 class ChatHistory:
     """
-    带对话历史和上下文信息的对话机器人
+    Chatbot with conversation history and context information
     """
     def __init__(self, redis = None) -> None:
-        # TODO: 后面考虑换成数据库的持久化存储形式
+        # TODO: Consider changing to a persistent storage form of the database later
         if redis is None:
             redis = get_redis(conf)
         self.conv_db = Conversation(redis)
@@ -76,7 +76,7 @@ class ChatHistory:
         """
         self.conv_db.add_conversation(conversation_id, self.chat_history)
 
-# 默认的对话历史管理器
+# Default conversation history manager
 default_history = None
 
 def get_history():

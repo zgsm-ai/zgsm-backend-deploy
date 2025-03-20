@@ -16,12 +16,14 @@ class ApiRuleService(BaseService):
 
     @classmethod
     def user_rule_is_exist(cls, display_name):
+        # Determine whether the user rule exists
         if cls.dao.get_nums(rule_type=ApiRuleConstant.USER, rule_info=display_name) > 0:
             return True
         return False
 
     @classmethod
     def dept_rule_is_exist(cls, department):
+        # Determine whether the department rule exists
         fields = {
             'rule_type': ApiRuleConstant.DEPT,
             'conditions': ((ApiRuleService.dao.model.rule_info != '')
@@ -33,6 +35,7 @@ class ApiRuleService(BaseService):
 
     @classmethod
     def rule_is_exist(cls, mid, rule_type, rule_info):
+        # Determine whether the rule exists
         fields = {
             'conditions': ((ApiRuleService.dao.model.id != mid),),
             'rule_type': rule_type,

@@ -15,13 +15,13 @@ from config import conf
 from config.log_config import logger
 from tokenizers import Tokenizer
 
-# 创建一个缓存，最多缓存 100 个结果，每个结果的生命周期为 30 分钟
+# Create a cache, caching up to 100 results, with each result having a lifetime of 30 minutes
 cache = TTLCache(maxsize=1000, ttl=30 * 60)
 
 SPECIAL_MIDDLE_SIGNAL = "<special-middle>"
 
 
-# 使用 @cached 装饰器来缓存函数的结果
+# Use the @cached decorator to cache the results of the function
 # @cached(cache)
 # def check_api_key(authorization):
 #     if authorization:
@@ -34,7 +34,7 @@ SPECIAL_MIDDLE_SIGNAL = "<special-middle>"
 #         "id": random_completion_id(),
 #         "choices": [
 #             {
-#                 "text": '千流 Copilot认证失败，请到插件设置页面设置Token，\n可前往千流AI网页版 https://chat.sangfor.com 设置页面获取token.',
+#                 "text": '千流 Copilot authentication failed. Please set the Token on the plugin settings page.\nYou can go to the Qianliu AI web version https://chat.sangfor.com settings page to obtain the token.',
 #             }
 #         ]
 #     }
@@ -49,8 +49,8 @@ def random_completion_id():
 
 def is_python_text(text):
     """
-    用于过滤非python语言补全出现python代码问题
-    :params text: 补全返回的代码段
+    Used to filter out the issue of Python code appearing in non-Python language completions
+    :params text: The code segment returned by the completion
     """
     python_text_rules = os.environ.get("PYTHON_TEXT_RULES", 'return self.name').split(',')
     for text_rule in python_text_rules:
@@ -66,26 +66,26 @@ def init_tree_sitter(language, prefix, suffix):
         sitter = TreeSitterUtil(language)
         return sitter
     except Exception as e:
-        logger.error(f"初始化tree_sitter失败:", e)
+        logger.error(f"Failed to initialize tree_sitter:", e)
         return None
 
 
 def cut_text_by_tree_sitter(language, choices_text, prefix, suffix, time_start, time_out_threshold):
     """
-    :params data: 接口参数
-    :params text: 代码补全字符串
+    :params data: Interface parameters
+    :params text: Code completion string
     """
     try:
         sitter = init_tree_sitter(language, prefix, suffix)
         if sitter is None:
             return choices_text
-        # 对补全内容的原始前后缀进行处理，抽取出新的前后缀（尽可能使得拼接后的上下文完整，提高语法修正的命中率）
+        # Process the original prefixes and suffixes of the completed content to extract new prefixes and suffixes (as much as possible to make the spliced context complete, and improve the hit rate of syntax correction)
         # prefix, suffix = extract_block_prefix_suffix(sitter, choices_text, prefix, suffix)
         new_prefix, new_suffix = extract_accurate_block_prefix_suffix(sitter, prefix, suffix)
         choices_text = sitter.intercept_syntax_error_code(choices_text, new_prefix, new_suffix,
                                                           time_start, time_out_threshold)
     except Exception as e:
-        logger.error(f"切割{language}代码失败:", e)
+        logger.error(f"Failed to cut {language} code:", e)
     return choices_text
 
 
@@ -97,13 +97,13 @@ def is_code_syntax(language, code, prefix, suffix):
         new_prefix, new_suffix = extract_accurate_block_prefix_suffix(sitter, prefix, suffix)
         return sitter.is_code_syntax(new_prefix + code + new_suffix)
     except Exception as e:
-        logger.error(f"判断{language}代码语法错误失败:", e)
+        logger.error(f"Failed to determine {language} code syntax error:", e)
     return True
 
 
 def extract_block_prefix_suffix(sitter, choices_text, prefix, suffix):
     """
-    对补全内容的前后缀进行处理，抽取出新的前后缀
+    Process the prefixes and suffixes of the completed content to extract new prefixes and suffixes
     :param sitter:
     :param choices_text:
     :param prefix:
@@ -122,7 +122,7 @@ def extract_block_prefix_suffix(sitter, choices_text, prefix, suffix):
 
 def extract_accurate_block_prefix_suffix(sitter, prefix, suffix):
     """
-    对补全所在光标位置的前后缀进行处理，抽取出更加准确的前后缀
+    Process the prefixes and suffixes of the cursor position where the completion is located to extract more accurate prefixes and suffixes
     :param sitter:
     :param prefix:
     :param suffix:
@@ -132,11 +132,11 @@ def extract_accurate_block_prefix_suffix(sitter, prefix, suffix):
     source_code = code.encode("utf-8")
     line_num, _ = get_choices_text_line_number(code, SPECIAL_MIDDLE_SIGNAL)
 
-    # 定位到光标所属block结点，解析出代码块
+    # Locate the block node to which the cursor belongs and parse the code block
     cur_block_code = sitter.get_node_text(source_code,
                                           sitter.find_second_level_node_by_line_num(source_code, line_num))
 
-    # 定位到光标所属block结点的最近无语法错误的前后结点，分别解析出代码块
+    # Locate the nearest non-syntax error front and rear nodes of the block node to which the cursor belongs, and parse the code blocks respectively
     prefix_node, suffix_node = sitter.find_second_level_nearest_node_by_line_num(code.encode("utf-8"), line_num)
     prefix_block_code = sitter.get_node_text(source_code, prefix_node)
     suffix_block_code = sitter.get_node_text(source_code, suffix_node)
@@ -150,7 +150,7 @@ def extract_accurate_block_prefix_suffix(sitter, prefix, suffix):
 
 def get_paired_symbols():
     """
-    获取成对出现的符号以及对应的映射
+    Get symbols that appear in pairs and the corresponding mappings
     :return:
     """
     return get_left_paired_symbols() | get_right_paired_symbols()
@@ -182,7 +182,7 @@ def get_boundary_symbols():
 
 def count_paired_symbols(text):
     """
-    统计成对出现的符号
+    Count the symbols that appear in pairs
     :param text:
     :return:
     """
@@ -195,7 +195,7 @@ def count_paired_symbols(text):
 
 def remove_strings(code_line):
     """
-    删除代码行中包含字符串的部分（用''或用""括起来的部分）
+    Delete the part of the code line that contains strings (the part enclosed in '' or "")
     :param code_line:
     :return:
     """
@@ -225,14 +225,14 @@ def remove_strings(code_line):
 
 def is_cursor_in_parentheses(prefix, suffix):
     """
-    判断光标是否在括号内
+    Determine whether the cursor is in parentheses
     :param prefix:
     :param suffix:
     :return:
     """
     def find_parenthesis(text, symbol, is_reverse=False):
         """
-         找到字符串text中非成对出现的symbol的下标位置
+         Find the subscript position of the non-paired symbol in the string text
         :param text:
         :param symbol:
         :param is_reverse:
@@ -259,23 +259,23 @@ def is_cursor_in_parentheses(prefix, suffix):
 
 def is_cursor_in_string(cursor_prefix, cursor_suffix):
     """
-    判断光标是否在字符串内
+    Determine whether the cursor is in the string
     :param cursor_prefix:
     :param cursor_suffix:
     :return:
     """
-    # 计算前缀中的引号数量，忽略转义的引号
+    # Calculate the number of quotes in the prefix, ignoring escaped quotes
     quotes_count = {k: 0 for k in get_quotes_symbols()}
     i = 0
     while i < len(cursor_prefix):
-        if cursor_prefix[i] == '\\':  # 跳过转义字符
+        if cursor_prefix[i] == '\\':  # Skip escape characters
             i += 2
             continue
         if cursor_prefix[i] in get_quotes_symbols():
             quotes_count[cursor_prefix[i]] += 1
         i += 1
 
-    # 如果引号数量为奇数，则光标在字符串内
+    # If the number of quotes is odd, the cursor is in the string
     for count in quotes_count.values():
         if count % 2 == 1:
             return True
@@ -284,7 +284,7 @@ def is_cursor_in_string(cursor_prefix, cursor_suffix):
 
 def get_choices_text_line_number(code, pattern):
     """
-    获取补全内容在代码中的行号
+    Get the line number of the completed content in the code
     :param code:
     :param pattern
     :return:
@@ -305,7 +305,7 @@ def get_choices_text_line_number(code, pattern):
 
 def isolated_prefix_suffix(code, pattern):
     """
-    分离前后缀
+    Separate prefixes and suffixes
     :param pattern:
     :param code:
     :return:
@@ -319,17 +319,17 @@ def isolated_prefix_suffix(code, pattern):
     return None, None
 
 
-# 将vue代码切分为html和ts代码
+# Cut the vue code into html and ts code
 def vue_to_html_ts(prefix, suffix):
     """
-    :params prefix: 光标前面代码块
-    :params suffix: 光标后面代码块
+    :params prefix: Code block in front of the cursor
+    :params suffix: Code block after the cursor
     """
     language = LanguageConst.VUE
     if (f"\n{VueTagConst.TS_START}" in prefix or prefix.startswith(VueTagConst.TS_START)) and (
             VueTagConst.TS_END in suffix or not suffix.strip()):
         language = LanguageConst.TS
-        # 查找"<script>"的位置,对prefix进行截取
+        # Find the position of "<script>", and truncate prefix
         if prefix.startswith(VueTagConst.TS_START):
             prefix_index = prefix.find(VueTagConst.TS_START)
         else:
@@ -337,17 +337,17 @@ def vue_to_html_ts(prefix, suffix):
         if prefix_index != -1:
             # logger.info(f"{prefix_index} {prefix} xxx {prefix[prefix_index:]}")
             prefix = prefix[prefix_index:]
-            # 以\n为换行符号删掉第一行
+            # Delete the first line with \n as the line break symbol
             prefix = '\n'.join(prefix.strip().split('\n')[1:])
-        # 查找"</script>"的位置,对suffix进行截取
+        # Find the position of "</script>", and truncate suffix
         suffix_index = suffix.find(VueTagConst.TS_END)
-        # 如果找到了"</script>"，则删除它及其后面的代码
+        # If "</script>" is found, delete it and the code behind it
         if suffix_index != -1:
             suffix = suffix[:suffix_index]
     elif (f"\n{VueTagConst.HTML_START}" in prefix or prefix.startswith(VueTagConst.HTML_START)) and (
             VueTagConst.HTML_END in suffix or not suffix.strip()):
         language = LanguageConst.HTML
-        # html部分带上template标签
+        # The html part comes with a template tag
         prefix_index = prefix.find(VueTagConst.HTML_START)
         if prefix_index != -1:
             prefix = prefix[prefix_index:]
@@ -355,13 +355,13 @@ def vue_to_html_ts(prefix, suffix):
         if suffix_index != -1:
             suffix = suffix[:suffix_index] + VueTagConst.HTML_END
     else:
-        # 如果没有找到"<script>"或"<template>"，则返回原始代码块
+        # If "<script>" or "<template>" is not found, return the original code block
         pass
 
     return language, prefix, suffix
 
 
-# 清空缓存
+# Clear cache
 def cache_clear():
     cache.clear()
 
@@ -374,8 +374,8 @@ def get_completion_cache_key(prompt):
 
 def completion_make_cache(cache, completion_cache_time, prompt, text):
     """
-    @param: prompt 预处理后的 promt
-    @param: choices 请求模型返回的结果
+    @param: prompt Preprocessed promt
+    @param: choices The result returned by the request model
     """
     if not cache.enabled:
         return
@@ -390,7 +390,7 @@ def get_completion_cache(cache, completion_cache_time, prompt):
     hash_key = get_completion_cache_key(prompt)
     text = cache.get(hash_key)
     if text and len(text):
-        # 续期
+        # Renew
         cache.expire(hash_key, completion_cache_time)
         return json.loads(text)
     else:
@@ -419,9 +419,9 @@ STR_PREFIX_CONFIG = [
 
 def compute_prefix_suffix_match_length(content):
     """
-    计算字符串的最长前缀后缀匹配长度
-    :param content: 字符串
-    :return: 匹配长度数组
+    Calculate the longest prefix suffix matching length of the string
+    :param content: string
+    :return: Matching length array
     """
     match_lengths = [0 for _ in range(len(content))]
     match_lengths[0] = -1
@@ -438,7 +438,7 @@ def compute_prefix_suffix_match_length(content):
 def is_repetitive_content(content):
     match_lengths = compute_prefix_suffix_match_length(content)
     for config in STR_PREFIX_CONFIG:
-        # 考虑最后lastTokensToConsider个字符组成的字符串的前后缀重复字符数
+        # Consider the number of duplicate characters in the prefix and suffix of the string composed of the last lastTokensToConsider characters
         max_match = max(match_lengths[:config["lastTokensToConsider"]])
         if (
             len(content) >= config["lastTokensToConsider"]
@@ -450,29 +450,29 @@ def is_repetitive_content(content):
 
 def is_repetitive(content):
     """
-    判断字符串结尾是否为重复内容
-    计算规则参考https://devops.atrust.sangfor.com/demand/research_develop/3580/issues/695246
-    :param content: 字符串内容
-    :return: 是否为重复内容
+    Determine whether the end of the string is repetitive content
+    The calculation rules refer to https://devops.atrust.sangfor.com/demand/research_develop/3580/issues/695246
+    :param content: String content
+    :return: Whether it is repetitive content
     """
     return is_repetitive_content(content[::-1]) or \
         is_repetitive_content("".join(filter(lambda s: len(s.strip()) > 0, reversed(content))))
 
 
 def contains_only_non_alpha(input_string):
-    # 判断字符串是否仅包含非字母字符
+    # Determine whether the string contains only non-alphabetic characters
     return all(not c.isalpha() for c in input_string)
 
 
 def check_context_include_text(text, prefix, suffix):
-    # 验证text是否是上文结尾部分，以及是否是下文开头部分或者存在下文内容行数两倍于text的内容中
+    # Verify whether the text is the end of the upper context, and whether it is the beginning of the lower context or the number of lines in the lower context content is twice the content in the text
     if not text.strip():
         return True
     if len(text.strip()) <= 3 and suffix.strip().startswith(text.strip()[0]):
-        # 分析es数据，发现1~2+一个换行字符场景且和下文开头部分相同，则认为是上文结尾部分，且大部分场景是补全; ' );等，直接返回空
+        # Analyze es data and find that the 1~2+line break character scenario is the same as the beginning of the lower context, it is considered the end of the upper context, and most scenarios are completions; ' ); etc., directly return empty
         return True
     if contains_only_non_alpha(text) and suffix.strip().startswith(text.strip()[0]):
-        # 分析es数据，当text只有符号且下文以text第一个非空字符开头时，认为是上文结尾部分，且大部分场景是补全; ' );等，直接返回空
+        # Analyze es data. When text only has symbols and the lower context starts with the first non-empty character of text, it is considered the end of the upper context, and most scenarios are completions; ' ); etc., directly return empty
         # https://devops.atrust.sangfor.com/demand/research_develop/3580/issues/797264
         return True
     if text and len(text) <= 5:
@@ -487,7 +487,7 @@ def check_context_include_text(text, prefix, suffix):
     elif double_text.startswith(trimmed_text):
         return True
     elif line_count > 2 and trimmed_text in double_text:
-        # 当返回行数较少时容易误判，这里添加行数条件
+        # When the number of returned lines is small, it is easy to misjudge. Add line number conditions here
         # https://devops.atrust.sangfor.com/demand/research_develop/3580/issues/815665
         return True
     else:
@@ -496,11 +496,11 @@ def check_context_include_text(text, prefix, suffix):
 
 def cut_suffix_overlap(text, prefix, suffix, cut_suffix_line=3):
     """
-    去除「补全内容」与suffix的前缀重叠部分
-    :param text: 补全内容
-    :param prefix: 上文
-    :param suffix: 下文
-    :param cut_suffix_line: 截取suffix的行数
+    Remove the prefix overlap between the "completed content" and the suffix
+    :param text: Completed content
+    :param prefix: Upper context
+    :param suffix: Lower context
+    :param cut_suffix_line: The number of lines to intercept the suffix
     :return:
     """
     if not text:
@@ -510,7 +510,7 @@ def cut_suffix_overlap(text, prefix, suffix, cut_suffix_line=3):
     text_len = len(text)
     suffix = suffix.strip()
 
-    # 循环多次，每次都截掉suffix的首行再进行内容重叠切割（循环多次的原因是：LLM的缺陷可能会导致text与suffix较后的内容重叠）
+    # Loop multiple times, each time cutting off the first line of the suffix and then performing content overlap cutting (the reason for looping multiple times is: the LLM defect may cause the text to overlap with the later content of the suffix)
     for _ in range(cut_suffix_line):
         new_text = text
         spilt_suffix = suffix.split("\n")
@@ -521,14 +521,14 @@ def cut_suffix_overlap(text, prefix, suffix, cut_suffix_line=3):
         first_line_suffix_len = len(spilt_suffix[0])
         max_overlap_length = min(text_len, suffix_len)
         for i in range(max_overlap_length, int(max_overlap_length / 2), -1):
-            # 若suffix首行长度 大于 判重长度，则直接返回
+            # If the length of the first line of suffix is greater than the de-duplication length, return directly
             if i < first_line_suffix_len:
                 break
-            # 若suffix首行长度 等于 判重长度 且 首行仅有一个单词，那么无需判重直接返回
+            # If the length of the first line of suffix is equal to the de-duplication length and the first line has only one word, there is no need to de-duplicate and return directly
             if i == first_line_suffix_len and len(suffix[:i].split(" ")) == 1:
                 break
 
-            # 一旦text 和 suffix 存在重叠部分， 立刻返回
+            # Once there is an overlap between text and suffix, return immediately
             if new_text[text_len - i:] == suffix[:i]:
                 return new_text[:text_len - i]
         suffix = "\n".join(spilt_suffix[1:])
@@ -537,14 +537,14 @@ def cut_suffix_overlap(text, prefix, suffix, cut_suffix_line=3):
 
 def cut_repetitive_text(text):
     """
-    去除补全内容中的重复内容
+    Remove duplicate content in the completed content
     :param text:
     :return:
     """
     if not text:
         return text
 
-    # 行数超过3才触发去重（该策略的前提是：若模型开始长篇大论重复，则模型产生的内容通常有很多行）
+    # De-duplication is only triggered when the number of lines exceeds 3 (the premise of this strategy is: if the model starts to repeat at length, the content generated by the model usually has many lines)
     line_count = len(text.split("\n"))
     if line_count < 3:
         return text
@@ -553,7 +553,7 @@ def cut_repetitive_text(text):
 
 def do_cur_repetitive_text(text, ratio=0.15):
     """
-    若最长前后缀匹配长度占比超过阈值ratio，则去除补全内容中的重复内容
+    If the ratio of the longest prefix suffix matching length exceeds the threshold ratio, remove the duplicate content in the completed content
     :param text:
     :param ratio:
     :return:
@@ -561,7 +561,7 @@ def do_cur_repetitive_text(text, ratio=0.15):
     if not text:
         return text
 
-    # 计算text末尾有多少\n
+    # Calculate how many \n are at the end of text
     last_line_count = 0
     for i in range(len(text) - 1, -1, -1):
         if text[i] == '\n':
@@ -569,26 +569,26 @@ def do_cur_repetitive_text(text, ratio=0.15):
         else:
             break
 
-    # 逆转补全文本
+    # Reverse the completed text
     text = text.rstrip()[::-1]
 
-    # 计算当前逆转后的补全文本的最长前后缀长度
+    # Calculate the longest prefix suffix length of the current reversed completed text
     max_match_lengths = max(max(compute_prefix_suffix_match_length(text)), 0)
 
-    # 若 最长前后缀长度/补全内容长度 大于等于 ratio 则判断为重复内容
+    # If the longest prefix suffix length/completed content length is greater than or equal to ratio, it is judged as repetitive content
     if max_match_lengths > 0 and max_match_lengths / len(text) >= ratio:
         text = text[max_match_lengths + 1:]
 
     text = text[::-1]
 
-    # 还原\n
+    # Restore \n
     for i in range(last_line_count):
         text = text + "\n"
     return text
 
 
 def is_valid_brackets(text):
-    # 用于判断text字符串中括号是否完整
+    # Used to determine whether the brackets in the text string are complete
     stack = []
     mapping = {")": "(", "}": "{", "]": "["}
     for char in text:

@@ -3,7 +3,7 @@
 from third_platform.es.base_es import BaseESService, calc_rid
 
 class ChatbotESService(BaseESService):
-    """记录与模型对话的关键信息"""
+    """Record key information about conversations with the model"""
     def __init__(self):
         super(ChatbotESService, self).__init__()
         self.index = "chatbot"
@@ -11,18 +11,18 @@ class ChatbotESService(BaseESService):
     @staticmethod
     def _calc_rid(data):
         """
-        根据用户上报信息中的conversation_id,chat_id,action三个字段计算记录ID
+        Calculate the record ID based on the conversation_id, chat_id, and action fields in the user-reported information
         """
         return calc_rid(data.get("conversation_id", ""), data.get("chat_id", ""), data.get("action", ""))
 
     def insert_chat_completion(self, data, request_data, response_content=''):
         """
-        插入chat.completion调用的记录，这是和对话模型直接通讯的结果记录
+        Insert the record of chat.completion calls, which is the result record of direct communication with the dialogue model
         """
         try:
             data["response_content"] = response_content
             self.insert(data, id=self._calc_rid(request_data))
         except Exception as err:
-            self.logger.error(f"chatbot.insert_chat_completion插入数据失败，失败日志： {str(err)}")
+            self.logger.error(f"chatbot.insert_chat_completion failed to insert data, error log: {str(err)}")
 
 chatbot_es = ChatbotESService()

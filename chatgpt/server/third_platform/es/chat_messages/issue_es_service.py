@@ -3,7 +3,7 @@
 from third_platform.es.base_es import BaseESService, calc_rid
 
 class IssueESService(BaseESService):
-    """记录用户反馈的问题报告"""
+    """Record user feedback issue reports"""
     def __init__(self):
         super(IssueESService, self).__init__()
         self.index = "issue"
@@ -18,13 +18,13 @@ class IssueESService(BaseESService):
     
     def insert_issue(self, data):
         """
-        记录用户反馈的问题单
+        Record user feedback issue ticket
         """
         try:
             if data.get("id") is None:
                 data["id"] = self._calc_rid(data)
             self.insert(data, id=data["id"])
         except Exception as err:
-            self.logger.error(f"issue.insert_issue插入数据失败，失败日志： {str(err)}")
+            self.logger.error(f"issue.insert_issue failed to insert data, error log: {str(err)}")
 
 issue_es = IssueESService()

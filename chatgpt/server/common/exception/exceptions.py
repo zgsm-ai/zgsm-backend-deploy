@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-    简单介绍
+    simple introduction
 
-    :作者: 苏德利 16646
-    :时间: 2023/3/14 15:42
-    :修改者: 苏德利 16646
-    :更新时间: 2023/3/14 15:42
+    :Author: 苏德利 16646
+    :Time: 2023/3/14 15:42
+    :Modifier: 苏德利 16646
+    :UpdateTime: 2023/3/14 15:42
 """
 import logging
 
@@ -19,10 +19,10 @@ logger = logging.getLogger(__name__)
 
 
 class CustomException(Exception):
-    msg = '错误'
+    msg = 'error'
     code = 500
     error_code = ERROR_CODE.DEFAULT
-    # 是否要上报到 sentry, 默认上报
+    # Whether to report to sentry, default is to report
     send_to_sentry = True
 
     @classmethod
@@ -52,139 +52,139 @@ class CustomException(Exception):
 
 class NoResourceError(CustomException):
     code = 404
-    msg = '无此资源'
+    msg = 'No such resource'
     error_code = ERROR_CODE.RESOURCE.NO_RESOURCE
 
     def __init__(self, resource_id=None, label=None):
         if resource_id:
             if label:
-                self.msg = f"未找到ID为{resource_id}的{label}数据"
+                self.msg = f"No {label} data found with ID {resource_id}"
             else:
-                self.msg = f"未找到ID为{resource_id}的资源数据"
+                self.msg = f"No resource data found with ID {resource_id}"
 
 
 class FieldValidateError(CustomException):
     code = 403
-    msg = '字段校验失败'
+    msg = 'Field validation failed'
     error_code = ERROR_CODE.USER_DATA.FIELD_VALID_ERROR
     send_to_sentry = False
 
 
 class NoLoginError(CustomException):
-    msg = '会话已过期或未登陆，请重新登陆'
+    msg = 'Session expired or not logged in, please log in again'
     code = 400
     error_code = ERROR_CODE.AUTH.NO_LOGIN
     send_to_sentry = False
 
 
 class AuthFailError(CustomException):
-    msg = '您没有此操作权限，请联系拥有操作权限人员添加权限'
+    msg = 'You do not have permission to perform this operation. Please contact someone with permission to add permission'
     code = 401
     error_code = ERROR_CODE.AUTH.FORBIDDEN
     send_to_sentry = False
 
 
 class NodeAuthFailError(CustomException):
-    msg = '您没有此操作权限，请联系维护人添加权限'
+    msg = 'You do not have permission to perform this operation. Please contact the maintainer to add permission'
     code = 401
     error_code = ERROR_CODE.AUTH.FORBIDDEN
     send_to_sentry = False
 
 
 class PermissionFailError(CustomException):
-    msg = '您没有此操作权限，请联系管理员添加权限'
+    msg = 'You do not have permission to perform this operation, please contact the administrator to add permission'
     code = 403
     error_code = ERROR_CODE.AUTH.FORBIDDEN
     send_to_sentry = False
 
 
 class EsIndexError(CustomException):
-    msg = '服务或网络异常'
+    msg = 'Service or network exception'
     code = 500
     error_code = ERROR_CODE.SERVER.ES_INDEX_ERROR
 
 
 class ModelException(CustomException):
-    msg = '服务或网络异常'
+    msg = 'Service or network exception'
     code = 500
     error_code = ERROR_CODE.SERVER.MODEL_ERROR
 
 
 class OpenAiRequestError(CustomException):
     code = 501
-    msg = 'openai服务或网络异常'
+    msg = 'openai service or network exception'
     error_code = ERROR_CODE.SERVER.GPT_ERROR
     send_to_sentry = False
 
 
 class ResourceNotFoundError(CustomException):
-    msg = '服务或网络异常'
+    msg = 'Service or network exception'
     code = 404
     error_code = ERROR_CODE.RESOURCE.NOT_FOUND
 
 
 class ParameterConversionError(CustomException):
-    msg = "参数转换异常"
+    msg = "Parameter conversion exception"
     code = 400
     error_code = ERROR_CODE.SERVER.PARAMS_ERROR
 
 
 class OperationError(CustomException):
-    msg = "操作异常"
+    msg = "Operation exception"
     code = 400
     error_code = ERROR_CODE.SERVER.OPERATION_ERROR
     send_to_sentry = False
 
 
 class RequestError(CustomException):
-    msg = "服务或网络异常"
+    msg = "Service or network exception"
     code = 500
     error_code = ERROR_CODE.SERVER.REQUEST_ERROR
 
 
 class RequireParamsMissingError(CustomException):
-    msg = "必填参数缺失异常"
+    msg = "Required parameter missing exception"
     code = 500
     error_code = ERROR_CODE.SERVER.REQUIRE_PARAMS_MISSING_ERROR
 
 
 class RetryError(CustomException):
-    msg = "重试异常"
+    msg = "Retry exception"
     code = 500
     error_code = ERROR_CODE.SERVER.RETRY_ERROR
 
 
 class ParamsTypeError(CustomException):
-    msg = "参数类型错误异常"
+    msg = "Parameter type error exception"
     code = 500
     error_code = ERROR_CODE.SERVER.PARAMS_TYPE_ERROR
 
 
 class ResHeadersParameterError(CustomException):
-    msg = "响应头参数异常"
+    msg = "Response header parameter exception"
     code = 400
     error_code = ERROR_CODE.RESOURCE.RES_HEADERS_PARAMS_ERROR
 
 
 class LockFail(CustomException):
-    msg = "加锁失败"
+    msg = "Lock failed"
     code = 400
     error_code = ERROR_CODE.SERVER.OPERATION_ERROR
 
 
 class ForbiddenWordError(CustomException):
-    msg = "敏感词汇"
+    msg = "Sensitive words"
     code = 400
     error_code = ERROR_CODE.USER_DATA.FIELD_VALID_ERROR
 
 
 class PromptTokensError(CustomException):
-    msg = "您需求描述超过了token上限，可减少描述后重试"
+    msg = "Your requirement description exceeds the token limit, please reduce the description and try again"
     code = 400
     error_code = ERROR_CODE.SERVER.PROMPT_TOKENS_LENGTH
 
 class ManualCaseError(CustomException):
-    msg = "用例步骤过于简单，请完善后再进行生成"
+    msg = "The use case steps are too simple, please improve them before generating"
     code = 400
     error_code = ERROR_CODE.SERVER.MANUAL_CASE_ERROR
 

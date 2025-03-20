@@ -3,7 +3,7 @@
 from third_platform.es.base_es import BaseESService, calc_rid
 
 class CompletionESService(BaseESService):
-    """记录代码补全服务的关键信息"""
+    """Records key information for code completion services"""
     def __init__(self):
         super(CompletionESService, self).__init__()
         self.index = "completion"
@@ -11,7 +11,7 @@ class CompletionESService(BaseESService):
     @staticmethod
     def _calc_rid(data):
         """
-        计算记录ID，关键信息包括：  completion_id, fpath, line, column, line_prefix
+        Calculate the record ID, key information includes: completion_id, fpath, line, column, line_prefix
         """
         return calc_rid(data.get("completion_id", ""), 
                         data.get("fpath", ""), 
@@ -20,12 +20,12 @@ class CompletionESService(BaseESService):
 
     def insert_completion(self, data):
         """
-        插入代码补全的记录
+        Insert code completion record
         """
         try:
             self.insert(data, id=self._calc_rid(data))
         except Exception as err:
-            self.logger.error(f"completion.insert_completion插入数据失败，失败日志： {str(err)}")
+            self.logger.error(f"completion.insert_completion failed to insert data, failure log: {str(err)}")
 
     def update_completion(self, data):
         pass

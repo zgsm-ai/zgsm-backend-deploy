@@ -67,8 +67,8 @@ class JwtTokenService:
     @classmethod
     def create_token(cls, payload):
         """
-        临时生成使用
-        :param payload:  用户信息
+        Temporary generation for use
+        :param payload: User information
         :return:
         """
         return JwtTokenHandler.create_token(payload, SECRET, ALG)
@@ -76,7 +76,7 @@ class JwtTokenService:
     @classmethod
     def get_jwt_token_header(cls, user):
         """
-        获取header，选择使用
+        Get header, select to use
         :param user:
         :return:
         """

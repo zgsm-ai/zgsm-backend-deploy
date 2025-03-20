@@ -11,13 +11,13 @@ from models.base_model import BaseModel
 
 
 class PromptSquare(BaseModel):
-    """prompt广场"""
+    """prompt square"""
 
-    title = CharField(default='', index=True, verbose_name='标题')
-    prompt = TextField(default='', verbose_name='问题')
-    prompt_completion = JSONField(default=[], verbose_name='问答')
-    hot = IntegerField(default=0, verbose_name='热度/引用量')
-    creator = CharField(default='', index=True, verbose_name='创建人')
+    title = CharField(default='', index=True, verbose_name='title')
+    prompt = TextField(default='', verbose_name='question')
+    prompt_completion = JSONField(default=[], verbose_name='Q&A')
+    hot = IntegerField(default=0, verbose_name='popularity/number of citations')
+    creator = CharField(default='', index=True, verbose_name='creator')
 
     class Meta:
         table_name = 'prompt_square'

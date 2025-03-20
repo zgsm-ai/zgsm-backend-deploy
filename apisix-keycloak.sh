@@ -3,14 +3,14 @@
 . ./configure.sh
 
 #
-# 四个上游：
-#   keycloak-登录整体逻辑
-#   portal-登录页面资源
-#   trampoline-登录成功跳板
-#   kaptcha-图形验证码
+# Four upstream:
+#   keycloak-Overall login logic
+#   portal-Login page resources
+#   trampoline-Login success springboard
+#   kaptcha-Graphic verification code
 #
 
-# 定义存放登录相关页面资源的upstream
+# Define the upstream for storing login-related page resources
 curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT  -d '{
     "id": "portal",
     "nodes": {
@@ -19,7 +19,7 @@ curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT 
     "type": "roundrobin"
 }'
 
-# trampoline: 登录成功跳板(URL: /login/ok),负责拉起vscode
+# trampoline: Login success springboard (URL: /login/ok), responsible for pulling up vscode
 curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT  -d '{
     "id": "trampoline",
     "nodes": {
@@ -28,7 +28,7 @@ curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT 
     "type": "roundrobin"
 }'
 
-# 生成图片校验码的服务
+# Service for generating image verification codes
 curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT  -d '{
     "id": "kaptcha",
     "nodes": {
@@ -37,7 +37,7 @@ curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT 
     "type": "roundrobin"
 }'
 
-# 定义keycloak这个端点
+# Define the keycloak endpoint
 curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT  -d '{
     "id": "keycloak",
     "nodes": {
@@ -46,21 +46,21 @@ curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT 
     "type": "roundrobin"
 }'
 
-# 把请求keycloak的请求定向到keycloak端点
+# Redirect requests to keycloak to the keycloak endpoint
 curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
     "uris": ["/realms/'"$KEYCLOAK_REALM"'/*"],
     "id": "keycloak",
     "upstream_id": "keycloak"
   }'
 
-# 登录各页面用到的资源
+# Resources used by login pages
 curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
     "uris": ["/login/css/*", "/login/cdn/*", "/login/img/*", "/login/resources/*"],
     "id": "keycloak-portal-resources",
     "upstream_id": "portal"
   }'
 
-# 把请求keycloak的请求定向到keycloak端点
+# Redirect requests to keycloak to the keycloak endpoint
 curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
     "uris": ["/resources/*"],
     "vars": [
@@ -70,7 +70,7 @@ curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d
     "upstream_id": "keycloak"
   }'
 
-# 登录页需要用到的图片:img/keycloak-bg.png,img/favicon.ico,css/login.css
+# Images needed for the login page: img/keycloak-bg.png, img/favicon.ico, css/login.css
 curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
     "uris": ["/resources/*"],
     "vars": [
@@ -85,16 +85,16 @@ curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d
     }
   }'
 
-# 将登录成功后的跳板请求转发给trampoline服务，"uris": ["/login/ok", "/login/resources/*"],
+# Forward the springboard request after successful login to the trampoline service, "uris": ["/login/ok", "/login/resources/*"],
 curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
     "uris": ["/login/ok"],
     "id": "keycloak-trampoline",
     "upstream_id": "trampoline"
   }'
 
-# 生成验证码
+# Generate verification code
 curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
-    "uris": ["/realms/'"$KEYCLOAK_REALM"'/captcha/code"],
+    "uris": ["/realms/'"$KEYCLOAK_REALM"'/captcha/code'],
     "id": "keycloak-captcha",
     "upstream_id": "kaptcha",
     "plugins": {

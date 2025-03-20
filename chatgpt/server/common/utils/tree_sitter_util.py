@@ -24,15 +24,15 @@ class TreeSitterUtil:
     @classmethod
     def get_code_dict(cls, node):
         """
-        获取节点的dict信息
-        @param node: 语法树中的一个节点
+        Get the dict information of the node
+        @param node: A node in the syntax tree
         @return:
         """
         code_dict = {
-            'start_byte': node.start_byte,  # 代码块开始的下标
-            'end_byte': node.end_byte,  # 代码块结束的下标
-            'start_lineno': node.start_point[0] + 1,  # +1是因为tree_sitter的行号按0开始
-            'end_lineno': node.end_point[0] + 1,  # 包含尾行
+            'start_byte': node.start_byte,  # Index where the code block starts
+            'end_byte': node.end_byte,  # Index where the code block ends
+            'start_lineno': node.start_point[0] + 1,  # +1 because tree_sitter line numbers start at 0
+            'end_lineno': node.end_point[0] + 1,  # Includes trailing line
             'type': node.type,
             'children': []
         }
@@ -41,8 +41,8 @@ class TreeSitterUtil:
     @classmethod
     def split_code_dicts(cls, node):
         """
-        根据首行和尾行,在源代码中获取到,其对应的代码段
-        @param node: 语法树节点
+        Get the corresponding code segment in the source code according to the first and last lines
+        @param node: Syntax tree node
         @return:
         """
         code_dicts = []
@@ -65,9 +65,9 @@ class TreeSitterUtil:
     @classmethod
     def split_code(cls, language, source_code) -> list:
         """
-        切割代码中的所有函数代码
-        @param language: 编程语言
-        @param source_code: 源代码
+        Cut all function codes in the code
+        @param language: Programming language
+        @param source_code: Source code
         @return:
         """
         language = language.lower()
@@ -81,7 +81,7 @@ class TreeSitterUtil:
         except Exception as e:
             logger.error(language + ' ' + str(e))
             return []
-        source_code = source_code.encode('utf8')  # 中文会导致切割偏移,所以先encode一下
+        source_code = source_code.encode('utf8')  # Chinese will cause segmentation offset, so encode it first
         tree = cls.parser.parse(source_code)
 
         code_dicts = cls.split_code_dicts(tree.root_node)

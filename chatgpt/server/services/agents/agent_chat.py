@@ -10,21 +10,21 @@ from logger import get_task_chat_logger
 
 class AgentChatBot:
     """
-    单角色对话
+    Single role conversation
     """
     def __init__(self, conv_id, chat_id, history=None):
         super().__init__()
-        # 本轮对话
+        # Current round of conversation
         self.conv_id = conv_id
-        # 本次对话
+        # This conversation
         self.chat_id = chat_id
-        # 对话历史管理器
+        # Conversation history manager
         self.history = history if history else get_history()
         self.logger = get_task_chat_logger()
 
     def chat_stream(self, req: ChatRequestData, username=None):
         """
-        流式对话，单角色对话
+        Streaming conversation, single role conversation
         """
         self.history.load_conversation(self.conv_id)
         self._chat_normal(req, username=username)
@@ -32,7 +32,7 @@ class AgentChatBot:
 
     def _get_advise(self, req: ChatRequestData, username=None):
         """
-        获取LLM建议的下一步操作列表，该操作是针对本轮对话的后续常见操作
+        Get the next step operation list suggested by LLM, which is a common follow-up operation for this round of conversation
         """
         iostream = IOStream.get_default()
         data = {
@@ -58,27 +58,29 @@ class AgentChatBot:
         try:
             index = result.find('[')
             if index != -1:
-                result = result[index:]     # 包含 '[' 及其后面的内容
+                result = result[index:]     # Contains '[' and the content after it
             index = result.rfind(']')
             if index != -1:
-                result = result[:index + 1]  # 提取 '[' 到 ']' 之间的内容
+                result = result[:index + 1]  # Extract the content between '[' and ']'
             data = json.loads(result)
             iostream.print_agent_advise(data)
         except json.decoder.JSONDecodeError:
             self.logger.error(f"_get_advise() error: result: {result}")
             iostream.print_agent_advise([{
                     "title": "输出更多选择", "prompt": "输出更多可选方案"
+                    "title": "Output more options", "prompt": "Output more alternative solutions"
                 }, {
                     "title": "推荐最佳方案", "prompt": "推荐一个最佳方案"
+                    "title": "Recommend the best solution", "prompt": "Recommend the best solution"
                 }])
 
     def _chat_normal(self, req: ChatRequestData, username=None):
         """
-        普通对话，无代码上下文
+        Normal conversation, no code context
 
         Args:
-            query (str): 用户输入的查询。
-            username (optional): 当前用户信息。
+            query (str): User input query.
+            username (optional): Current user information.
         Returns:
             None
         """
@@ -111,9 +113,11 @@ class AgentChatBot:
                     chunk_data,
                     sender="诸葛神码",
                     sender_icon=None
+                    sender="Zhuge Shenma",
+                    sender_icon=None
                 )
         self._get_advise(req, username)
-        # 为保障后续的一问一答的正常运行，在这里构造历史完整会话流
+        # In order to ensure the normal operation of the subsequent Q&A, construct a complete historical conversation stream here
+        # To ensure the normal operation of the subsequent Q&A, construct a complete historical conversation stream here
         self.history.add_user_message(req.prompt)
         self.history.add_ai_message(full_data)
-

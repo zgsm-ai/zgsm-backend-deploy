@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# 查找代码可能存在问题的提问初始模板
+# Find the initial template of the question that may have problems with the code
 INITIAL_PROMPT = """## Instructions
 You are now working as a code review specialist.
 Only check for obvious bugs, functional issues, performance issues, stability issues.
@@ -38,6 +38,6 @@ No problem please reply directly no problem.
 Return only json content, no explanation
 review_content field Must reply with Chinese."""
 
-# 查找代码可能存在问题的连续提问模板
+# Find the continuous question template that may have problems with the code
 RESPONSE_PROMPT = """
 """

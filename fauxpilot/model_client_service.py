@@ -3,7 +3,7 @@
 """
 @Author: 黄鹏龙 20036
 @Date  :  2024/07/24
-@Desc : 补全模型处理类
+@Desc : Completion model processing class
 """
 
 import time
@@ -19,7 +19,7 @@ from services.completion_stream_service import StreamHandlerFactory
 
 class AbstractModelClientStrategy(ABC):
     @abstractmethod
-    def get_client(self, host, model, data):
+    def get_client(self, host, model, data, api_key):
         raise NotImplementedError
 
     @abstractmethod
@@ -68,42 +68,42 @@ class OpenAIClientStrategy(AbstractModelClientStrategy):
         stream_handler = StreamHandlerFactory.get_stream_handler(context=context_and_intention)
         try:
             for chunk in choices.iter_lines():
-                # 模型请求内容超过最大时间，退出
+                # Model request content exceeds the maximum time, exit
                 if int((time.time() - context_and_intention.st) * 1000) >= max_model_cost_time:
                     stream_handler.mark_exception_flag()
                     break
 
-                # 检查到补全内容为空，跳过当前内容
+                # Check if the completion content is empty, skip the current content
                 if not chunk:
                     continue
 
                 chunk_text = chunk.decode('utf-8')
-                # 检查到补全正常结束，取消设置异常标记，退出
+                # Check if the completion ends normally, cancel the exception flag, exit
                 if self.check_chunk_done(chunk_text):
                     stream_handler.unmark_exception_flag()
                     break
 
-                # 检查到补全内容无效，跳过当前内容
+                # Check if the completion content is invalid, skip the current content
                 if not self.check_chunk_content(chunk_text):
                     continue
 
                 shell_text = json.loads(chunk_text[len(OpenAIStreamContent.CHUNK_START_WORD):])['choices'][0]['text']
 
-                # 流式输出过程中，针对单行/多行场景满足特定逻辑下退出补全
+                # During streaming output, exit completion under specific logic for single/multi-line scenarios
                 if not stream_handler.handle(shell_text):
-                    logger.info(f"补全流式输出提前终止，内容为: {stream_handler.get_completed_content()}")
+                    logger.info(f"Completion stream output terminated early, content is: {stream_handler.get_completed_content()}")
                     break
 
         except Exception as e:
             stream_handler.mark_exception_flag()
-            logger.exception(f"补全流式异常终止，异常信息为: {e}")
+            logger.exception(f"Completion stream terminated abnormally, exception information is: {e}")
         finally:
             choices.close()
         return stream_handler.get_completed_content_and_handle_ex()
 
 
 class LocalClientStrategy(AbstractModelClientStrategy):
-    def get_client(self, host, model, data):
+    def get_client(self, host, model, data, api_key):
         return Client(base_url=self.handle_host(host), headers={'x-complete-id': data['x-complete-id']})
 
     def choices_process(self, choices, context_and_intention, max_model_cost_time):
@@ -115,13 +115,13 @@ class LocalClientStrategy(AbstractModelClientStrategy):
                 if int((time.time() - context_and_intention.st) * 1000) >= max_model_cost_time:
                     stream_handler.mark_exception_flag()
                     break
-                # 流式输出过程中，针对单行/多行场景满足特定逻辑下退出补全
+                # During streaming output, exit completion under specific logic for single/multi-line scenarios
                 if not stream_handler.handle(c.token.text):
-                    logger.info(f"补全流式输出提前终止，内容为: {stream_handler.get_completed_content()}")
+                    logger.info(f"Completion stream output terminated early, content is: {stream_handler.get_completed_content()}")
                     break
         except Exception as e:
             stream_handler.mark_exception_flag()
-            logger.error(f"补全流式异常终止，异常信息为: {e}")
+            logger.error(f"Completion stream terminated abnormally, exception information is: {e}")
         finally:
             choices.close()
         return stream_handler.get_completed_content_and_handle_ex()

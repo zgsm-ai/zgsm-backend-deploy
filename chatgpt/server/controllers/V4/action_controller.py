@@ -21,14 +21,14 @@ actions_v4 = Blueprint('actions_v4', __name__)
 @handle_validate(UserGiveFeedbacks)
 def give_like(fields):
     """
-    用户点赞接口,同时处理dify和es平台
-    注意:快捷指令没有点赞功能，因此无message_id
+    User likes interface, simultaneously processes dify and es platforms
+    Note: Quick commands do not have a like function, so there is no message_id
     ---
     tags:
-      - 补全
+      - Completion
     responses:
       200:
-        result: 流
+        result: Stream
     
     """
     conv_id = fields.pop("conversation_id")
@@ -48,13 +48,13 @@ def give_like(fields):
 @actions_v4.route('/user_feedbacks', methods=['POST'])
 def user_feedbacks():
     """
-    用户反馈
+    User feedback
     ---
     tags:
-      - 补全
+      - Completion
     responses:
       200:
-        res: 结果
+        res: Result
     
     """
     try:
@@ -64,7 +64,7 @@ def user_feedbacks():
             res, status = {"error": "Invalid input: JSON data is required"}, 403
         conv_id = request_data.get("conversation_id")
         accept_num = request_data.get("accept_num") or 0
-        # 新增用户交互行为，兼容旧版本，不做字段校验
+        # Add user interaction behavior, compatible with older versions, no field validation
         behavior = request_data.get("behavior", "")
         if not conv_id or not isinstance(conv_id, str):
             res, status = {"error": "Invalid input: 'conversation_id' must be a non-empty string"}, 403
@@ -83,4 +83,3 @@ def user_feedbacks():
             "Cache-Control": "no-cache",
             "Connection": "keep-alive",
         })
-

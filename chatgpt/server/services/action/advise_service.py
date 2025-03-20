@@ -9,7 +9,7 @@ from services.agents.agent_data_classes import ChatRequestData
 
 class AdviseStrategy(ActionStrategy):
     """
-    LLM给出最可能的下一步操作推荐
+    LLM gives the most likely next step recommendation
     """
     name = 'advise'
 

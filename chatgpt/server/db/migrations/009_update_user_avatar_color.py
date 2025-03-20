@@ -21,7 +21,7 @@ SQL = pw.SQL
 
 def migrate(migrator, database, fake=False, **kwargs):
     """Write your migrations here."""
-    # 更新现有用户头像背景色
+    # update existing user avatar background color
     users, _ = UsersService.list(deleted=None)
     for user in users:
         avatar_color = random.choice(UserConstant.AVATAR_COLORS)

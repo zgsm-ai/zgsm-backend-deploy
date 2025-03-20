@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-    服务初始化命令集
+    Service initialization command set
 
-    :作者: 苏德利 16646
-    :时间: 2023/3/14 14:35
-    :修改者: 苏德利 16646
-    :更新时间: 2023/3/14 14:35
+    :Author: su deli 16646
+    :Time: 2023/3/14 14:35
+    :Modifier: su deli 16646
+    :UpdateTime: 2023/3/14 14:35
 """
 
 import click
@@ -22,32 +22,32 @@ def cli():
 @cli.command()
 @click.option('--force/--unforce', default=False)
 def initdb(force):
-    """初始化数据库"""
+    """Initialize database"""
     from db.help import initialize_db
     initialize_db(force)
-    click.echo('数据库初始化成功')
+    click.echo('Database initialization successful')
 
 
 @cli.command()
 def dropdb():
-    """删除所有表"""
+    """delete all tables"""
     from db.help import drop_tables
     drop_tables()
-    click.echo('数据库表删除成功')
+    click.echo('Database table deletion successful')
 
 
 @cli.command()
 def cleardb():
-    """清空数据"""
+    """clear data"""
     from db.help import truncate_tables
     truncate_tables()
-    click.echo('数据库清空成功')
+    click.echo('Database clear successful')
 
 
 @cli.command()
 @click.option('--name', help='migration name')
 def create_migration(name):
-    """新建迁移文件"""
+    """Create migration file"""
     from db.help import get_router, create_migration
     router = get_router()
     create_migration(router, name)
@@ -56,7 +56,7 @@ def create_migration(name):
 @cli.command()
 @click.option('--name', help='migration name')
 def migrate(name):
-    """迁移数据库"""
+    """migrate database"""
     from db.help import get_router, migrate
     router = get_router()
     migrate(router, name)
@@ -70,7 +70,7 @@ def insert_advice_prompt(name):
 @cli.command()
 @click.option('--name', help='clear_all_prompt_template_cache')
 def clear_prompt_cache(name):
-    # python command.py clear-prompt-cache 缓存的prompt模板清空
+    # python command.py clear-prompt-cache Cached prompt template emptied
     pass
 
 if __name__ == "__main__":

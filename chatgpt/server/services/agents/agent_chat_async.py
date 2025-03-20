@@ -15,11 +15,11 @@ cache = Cache()
 
 def ignore_exceptions(func):
     """
-    定义函数ignore_exceptions，用于装饰其他函数以忽略所有异常
+    Define the function ignore_exceptions to decorate other functions to ignore all exceptions
     args:
-        func: 需要装饰的函数
+        func: The function to be decorated
     return:
-        wrapper函数，捕获并忽略异常
+        wrapper function that catches and ignores exceptions
     """
     def wrapper(*args, **kwargs):
         try:
@@ -36,11 +36,11 @@ class CursorObj:
 class DifyMessageQueueHelper:
     @classmethod
     def _push_data(cls, key, data):
-        # 需要对key设置超时时间；但key必须得在创建的时候才能获取到
+        # Need to set a timeout for the key; but the key must be obtained when it is created
         is_exist_key = True if cache.connection.exists(key) else False
         cache.connection.rpush(key, cache.serialize(data))
         if is_exist_key is True:
-            # 如果不存在，则本次是创建 key，则设置过期时间
+            # If it does not exist, then this is creating the key, then set the expiration time
             cache.connection.expire(key, 3600)
 
     @classmethod
@@ -95,7 +95,7 @@ class DifyMessageQueueHelper:
 
 
 class DifySpecifiedContextHelper(DifyMessageQueueHelper):
-    """这个类服务于过程中上下文的获取，业务逻辑的不同，需要复用队列的一些方法"""
+    """This class serves the acquisition of context in the process, and some methods of the queue need to be reused due to different business logic"""
 
     @classmethod
     def _make_queue_key(cls, mq_id):
@@ -105,12 +105,12 @@ class DifySpecifiedContextHelper(DifyMessageQueueHelper):
     @classmethod
     def _blpop_data(cls, key, timeout=6) -> str:
         """
-        定义类方法_blpop_data，从缓存中阻塞读取数据
+        Define class method _blpop_data to read data from the cache in a blocking manner
         args:
-            key: 缓存键
-            timeout: 阻塞超时时间，默认为6秒
+            key: Cache key
+            timeout: Blocking timeout, default is 6 seconds
         return:
-            读取的数据，如果读取超时，返回默认值"{}"
+            The data read, if the read times out, returns the default value "{}"
         """
 
         try:
@@ -137,7 +137,7 @@ def agent_chat_with_redis(data: ChatRequestData):
     request_data["total_tokens"] = 0
     request_data["total_context"] = ""
 
-    # 游标，需保证所有入 redis 的数据都加上偏移量
+    # Cursor, all data entering redis needs to be added with an offset
     cursor = CursorObj()
 
     @ignore_exceptions
@@ -167,7 +167,7 @@ def agent_chat_with_redis(data: ChatRequestData):
 
 def agent_chat(req: ChatRequestData, send_json_func, send_msg_func):
     """
-    agent生成对话数据，并发送给请求对话的客户端
+    Agent generates conversation data and sends it to the client requesting the conversation
     """
     iostream = AgentChatIOStream(send_json_func=send_json_func, send_msg_func=send_msg_func)
     try:
@@ -176,7 +176,7 @@ def agent_chat(req: ChatRequestData, send_json_func, send_msg_func):
                 chatbot = AgentChatBot(req.conversation_id, req.chat_id)
                 chatbot.chat_stream(req, username=req.username)
     except Exception:
-        # 将详细信息打印出来
+        # Print detailed information
         traceback.print_exc()
     finally:
         iostream.finish()

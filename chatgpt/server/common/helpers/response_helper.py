@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-    定义基本的response响应结构
+    define basic response structure
 
-    :作者: 苏德利 16646
-    :时间: 2023/3/14 15:45
-    :修改者: 苏德利 16646
-    :更新时间: 2023/3/14 15:45
+    :Author: su deli 16646
+    :Time: 2023/3/14 15:45
+    :Modifier: su deli 16646
+    :UpdateTime: 2023/3/14 15:45
 """
 from typing import Iterator
 from flask import jsonify, make_response, request, Response, stream_with_context
@@ -16,21 +16,21 @@ from peewee import ModelSelect, Model
 class Result:
 
     @classmethod
-    def message(cls, state_str="成功"):
+    def message(cls, state_str="success"):
         method_name = request.method
         if "GET" == method_name:
-            return f"获取{state_str}"
+            return f"get {state_str}"
         elif "POST" == method_name:
-            return f"操作{state_str}"
+            return f"operate {state_str}"
         elif "DELETE" == method_name:
-            return f"删除{state_str}"
+            return f"delete {state_str}"
         elif "PUT" == method_name:
-            return f"更新{state_str}"
+            return f"update {state_str}"
         return ""
 
     @classmethod
     def success(cls, data=None, total=None, message=None, code=200, info_code=None, **kwargs):
-        # 解决空数据处理错误问题
+        # solve the error of empty data processing
         if isinstance(data, ModelSelect):
             if data:
                 data = [item.dict() for item in data]
@@ -53,7 +53,7 @@ class Result:
     @classmethod
     def fail(cls, data=None, message=None, code=400, info_code=None, **kwargs):
         resp = {
-            "message": message if message else cls.message("失败"),
+            "message": message if message else cls.message("failed"),
             "data": data,
             "success": False
         }
@@ -63,7 +63,7 @@ class Result:
         return make_response(jsonify(resp), code)
 
     @classmethod
-    def fail_404(cls, msg='无此资源', data=None, code=404):
+    def fail_404(cls, msg='No such resource', data=None, code=404):
         resp = make_response(jsonify({
             "msg": msg,
             "data": data,
@@ -74,10 +74,10 @@ class Result:
     @classmethod
     def stream_response(cls, result: Iterator[str], is_use_sse_struct: bool = False):
         """
-        返回流式响应,流式输出结果sse协议封装，将数据流式输出到客户端
-        @param result: 迭代器
-        @param is_use_sse_struct: 是否使用sse协议数据结构
-        @return: http 响应
+        return streaming response, streaming output result sse protocol encapsulation, streaming output data to client
+        @param result: iterator
+        @param is_use_sse_struct: whether to use sse protocol data structure
+        @return: http response
         """
         if is_use_sse_struct:
             data_chunk = cls.gen_sse_data_chunk(result)
@@ -92,11 +92,11 @@ class Result:
     @staticmethod
     def gen_sse_data_chunk(result: Iterator) -> Iterator[str]:
         """
-        生组装成sse协议的chunk
+        generate chunk assembled into sse protocol
         @param result:
         @return:
         """
-        # sse协议的message格式
+        # message format of sse protocol
         message_chunk = "data: {}\n\n"
         for res in result:
             yield message_chunk.format(res)

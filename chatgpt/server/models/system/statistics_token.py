@@ -9,17 +9,17 @@ logger = logging.getLogger(__name__)
 
 
 class StatisticsToken(BaseModel):
-    """模型使用token数统计"""
+    """Model uses token number statistics"""
 
     class Meta:
         table_name = 'statistics_token'
 
-    application_name = CharField(verbose_name='应用名称')
-    username = CharField(null=True, verbose_name='用户')
-    model_identification = CharField(verbose_name='模型标识')
-    user_req_token = IntegerField(verbose_name='模型名称')  # 用户请求的token数，包含（system、user）
-    input_token = IntegerField(verbose_name='请求模型输入token')  # 请求模型的token数，包含（system、user、上下文）
-    output_token = IntegerField(verbose_name='请求模型输出token')  # 模型响应的token数
+    application_name = CharField(verbose_name='Application Name')
+    username = CharField(null=True, verbose_name='User')
+    model_identification = CharField(verbose_name='Model Identification')
+    user_req_token = IntegerField(verbose_name='Model Name')  # The number of tokens requested by the user, including (system, user)
+    input_token = IntegerField(verbose_name='Request Model Input Token')  # The number of tokens for the requested model, including (system, user, context)
+    output_token = IntegerField(verbose_name='Request Model Output Token')  # The number of tokens for the model response
 
     def dict(self, *args, **kwargs):
         data = super().dict()

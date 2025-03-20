@@ -36,7 +36,7 @@ class ConfigurationService(BaseService):
 
             for item in data_list:
                 try:
-                    # 若是json字符串，则进行反序列化
+                    # If it is a json string, then deserialize it
                     item['attribute_value'] = json.loads(item['attribute_value'])
                 except JSONDecodeError:
                     pass
@@ -45,11 +45,11 @@ class ConfigurationService(BaseService):
 
     @classmethod
     def get_configuration(cls, belong_type, attribute_key, default=None):
-        """通用查询"""
+        """General query"""
         kwargs = {
             'belong_type': belong_type,
             'attribute_key': attribute_key,
-            'is_need_total': False,  # 节省一次统计查询
+            'is_need_total': False,  # save a statistical query
         }
         query, _ = cls.dao.list(**kwargs)
         return query[0].attribute_value if query and len(query) > 0 else default
@@ -57,19 +57,19 @@ class ConfigurationService(BaseService):
     @classmethod
     @cache_able(CACHE_KEY_PREFIX, index=[1, 2])
     def get_configuration_with_cache(cls, belong_type, attribute_key, default=None):
-        """通用查询缓存"""
+        """General query cache"""
         res = cls.get_configuration(belong_type, attribute_key, default)
         return res
 
     @classmethod
     @cache_evict(CACHE_KEY_PREFIX, index=[1, 2])
     def clear_cache(cls, belong_type, attribute_key):
-        """通用清理缓存"""
+        """General clear cache"""
         logging.info(f"clear_cache {cls.CACHE_KEY_PREFIX}:{belong_type}:{attribute_key}")
 
     @classmethod
     def get_prompt_template(cls, attribute_key):
-        """查询prompt模板，有缓存"""
+        """Query prompt template, with cache"""
         default = DEFAULT_TEMPLATE_MAP.get(attribute_key, '')
         prompt = cls.get_configuration_with_cache(ConfigurationConstant.PROMPT_TEMPLATE, attribute_key, default)
         return prompt
@@ -83,13 +83,13 @@ class ConfigurationService(BaseService):
     @classmethod
     @cache_evict(CACHE_KEY_FORBID_WORD)
     def evict_cache(cls):
-        logger.info('清理禁用敏感词缓存')
+        logger.info('Clear forbidden sensitive word cache')
         return
 
     @classmethod
     @cache_all_evict(ADConstant.CACHE_PREFIX_KEY)
     def evict_user_ad_cache(cls):
-        logger.info('清理用户广告记录缓存')
+        logger.info('Clear user ad record cache')
         return
 
     @classmethod
@@ -104,7 +104,7 @@ class ConfigurationService(BaseService):
     @classmethod
     @cache_all_evict(CACHE_KEY_LANGUAGE_MAP)
     def evict_language_map_cache(cls):
-        logger.info('清理语言映射缓存')
+        logger.info('Clear language mapping cache')
         return
 
     @classmethod
@@ -119,10 +119,9 @@ class ConfigurationService(BaseService):
 
     @classmethod
     def get_model_ide_normal(cls, attribute_key):
-        """根据action端的配置获取model"""
+        """Get model based on the configuration of the action end"""
         data = cls.dao.get_or_none(belong_type=attribute_key, attribute_key=attribute_key)
         if data:
             return data.attribute_value
         else:
             return conf.get('default_model_name', 'deepseek-chat')
-

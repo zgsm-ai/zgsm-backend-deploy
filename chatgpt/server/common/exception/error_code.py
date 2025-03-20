@@ -1,73 +1,73 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-    简单介绍
+    Simple introduction
 
-    :作者: 苏德利 16646
-    :时间: 2023/3/14 15:41
-    :修改者: 苏德利 16646
-    :更新时间: 2023/3/14 15:41
+    :Author: Su Deli 16646
+    :Time: 2023/3/14 15:41
+    :Modifier: Su Deli 16646
+    :UpdateTime: 2023/3/14 15:41
 """
 
 
 class ERROR_CODE:
-    """错误代码
+    """Error code
     """
     DEFAULT = 10000
 
-    # 认证相关错误 100001 ~ 110000
+    # Authentication related errors 100001 ~ 110000
     class AUTH:
-        # 未登录
+        # Not logged in
         NO_LOGIN = 100001
-        # 无权，与403状态码组合时保持唯一
+        # Unauthorized, keep unique when combined with 403 status code
         FORBIDDEN = 100002
 
-    # 资源相关 120000 ~ 130000
+    # Resource related 120000 ~ 130000
     class RESOURCE:
-        # 查无资源
+        # No resource found
         NO_RESOURCE = 120001
-        # 查无资源
+        # No resource found
         NOT_FOUND = 120002
-        # 响应头参数错误
+        # Response header parameter error
         RES_HEADERS_PARAMS_ERROR = 120003
 
-    # 用户输入数据相关 130000 ~ 140000
+    # User input data related 130000 ~ 140000
     class USER_DATA:
-        # 字段无效、参数有误
+        # Invalid field, incorrect parameters
         FIELD_VALID_ERROR = 130001
 
-    # 服务相关 140000 ~ 150000
+    # Service related 140000 ~ 150000
     class SERVER:
-        # 模型错误
+        # Model error
         MODEL_ERROR = 140001
-        # 参数错误
+        # Parameter error
         PARAMS_ERROR = 140002
-        # 第三方请求错误
+        # Third-party request error
         REQUEST_ERROR = 140003
-        # 操作错误
+        # Operation error
         OPERATION_ERROR = 140004
-        # es 插入错误
+        # es insertion error
         ES_INDEX_ERROR = 140005
-        # 切割函数
+        # Cutting function
         FUNCTION_ERROR = 140006
-        # 数据操作异常
+        # Data operation exception
         DB_ERROR = 140007
-        # prompt tokens 过长
+        # prompt tokens too long
         PROMPT_TOKENS_LENGTH = 140008
-        # ai返回没有包含代码
+        # ai return does not contain code
         AI_RESPONSE_NO_CODE = 140009
 
-        # gpt异常
+        # gpt exception
         GPT_ERROR = 170002
 
-        # 必填参数缺失异常
+        # Required parameter missing exception
         REQUIRE_PARAMS_MISSING_ERROR = 180002
 
-        # 重试异常
+        # Retry exception
         RETRY_ERROR = 180003
 
-        # 参数类型错误异常
+        # Parameter type error exception
         PARAMS_TYPE_ERROR = 180005
 
-        # 手工用例步骤错误
+        # Manual case step error
         MANUAL_CASE_ERROR = 180006

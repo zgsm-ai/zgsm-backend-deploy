@@ -29,18 +29,18 @@ http {
         location /login/ {
             alias login/;
         }
-        # 配置对 CSS、JS、PNG、SVG 文件的访问
+        # Configuration for accessing CSS, JS, PNG, SVG files
         location ~* \.(css|js|png|svg)$ {
-            expires 1d;  # 设置缓存过期时间
-            add_header Access-Control-Allow-Origin *;  # 允许所有域访问
-            add_header Access-Control-Allow-Methods 'GET, OPTIONS';  # 允许的请求方法
-            add_header Access-Control-Allow-Headers 'Content-Type';  # 允许的请求头
+            expires 1d;  # Set cache expiration time
+            add_header Access-Control-Allow-Origin *;  # Allow access from all domains
+            add_header Access-Control-Allow-Methods 'GET, OPTIONS';  # Allowed request methods
+            add_header Access-Control-Allow-Headers 'Content-Type';  # Allowed request headers
         }
 
-        # 其他文件类型的配置（可选）
+        # Configuration for other file types (optional)
         location ~* \.(jpg|jpeg|gif|ico|woff|woff2|ttf|eot)$ {
-            expires 1d;  # 设置缓存过期时间
-            add_header Access-Control-Allow-Origin *;  # 允许所有域访问
+            expires 1d;  # Set cache expiration time
+            add_header Access-Control-Allow-Origin *;  # Allow access from all domains
         }
     }
 }

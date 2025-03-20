@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>问题报告</title>
+    <title>Issue Report</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -65,37 +65,37 @@
 <body>
 
 <div class="container">
-    <h1>问题报告</h1>
+    <h1>Issue Report</h1>
     <form id="issueForm">
         <div class="form-group">
-            <label for="issueCategory">问题分类 <span class="required">*</span></label>
+            <label for="issueCategory">Issue Category <span class="required">*</span></label>
             <select id="issueCategory" required>
-                <option value="">请选择问题分类</option>
-                <option value="不清楚">不清楚</option>
-                <option value="性能问题">性能问题</option>
-                <option value="服务异常">服务异常</option>
-                <option value="插件崩溃">插件崩溃</option>
-                <option value="对话/补全效果差">对话/补全效果差</option>
+                <option value="">Please select issue category</option>
+                <option value="不清楚">Not clear</option>
+                <option value="性能问题">Performance issues</option>
+                <option value="服务异常">Service exception</option>
+                <option value="插件崩溃">Plugin crash</option>
+                <option value="对话/补全效果差">Poor dialogue/completion effect</option>
             </select>
         </div>
 
         <div class="form-group">
-            <label for="issueDescription">问题描述 <span class="required">*</span></label>
-            <textarea id="issueDescription" placeholder="在这里输入您的问题，请尽可能详细说明操作步骤，故障现象..." required></textarea>
+            <label for="issueDescription">Issue Description <span class="required">*</span></label>
+            <textarea id="issueDescription" placeholder="Enter your question here, please describe the steps and fault phenomenon in as much detail as possible..." required></textarea>
         </div>
 
         <div class="form-group">
-            <label for="screenshot">上传截图（可选）</label>
+            <label for="screenshot">Upload Screenshot (Optional)</label>
             <input type="file" id="screenshot" accept="image/*">
         </div>
 
         <div class="form-group">
-            <label for="contactNumber">联系电话（可选）</label>
-            <input type="text" id="contactNumber" placeholder="请输入您的联系电话">
+            <label for="contactNumber">Contact Number (Optional)</label>
+            <input type="text" id="contactNumber" placeholder="Please enter your contact number">
         </div>
 
         <div class="button-container">
-            <button type="submit">提交</button>
+            <button type="submit">Submit</button>
         </div>
     </form>
 </div>
@@ -119,15 +119,15 @@
         .then(response => {
             console.info("formData:", JSON.stringify(formData));
             if (response.ok) {
-                alert('问题报告已提交！');
+                alert('Issue report submitted!');
                 // this.reset(); // 提交后重置表单
             } else {
-                alert('提交失败，请稍后重试。');
+                alert('Submission failed, please try again later.');
             }
         })
         .catch(error => {
-            console.error('提交错误:', error);
-            alert('提交失败，请稍后重试。');
+            console.error('Submission error:', error);
+            alert('Submission failed, please try again later.');
         });
     }
     document.getElementById('issueForm').addEventListener('submit', function(event) {

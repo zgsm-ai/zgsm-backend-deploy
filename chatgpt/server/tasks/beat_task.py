@@ -10,6 +10,6 @@ from tasks import celery_app, handle_db
 @handle_db
 def clean_up_expired_contexts_task():
     """
-    定时清理过期会话记录
+    Timed cleanup of expired session records
     """
     pass

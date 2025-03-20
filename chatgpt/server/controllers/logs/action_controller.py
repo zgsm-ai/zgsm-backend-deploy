@@ -26,7 +26,7 @@ logs = Blueprint('logs', __name__)
 
 def get_request_ide_data(data, user) -> dict:
     """
-    获取IDE插件传输的数据
+    get ide plugin data
     """
     data['user_agent'] = request.headers.get("User-Agent")
     data['host'] = request.headers.get("Host")
@@ -40,15 +40,15 @@ def get_request_ide_data(data, user) -> dict:
     return data
 
 #
-#   服务关键数据记录
-#   1. 补全：
-#       1.1. API结果
+#   service key data record
+#   1. Completion:
+#       1.1. API Result
 #
 
 @logs.route("/completion", methods=['POST'])
 def logs_completion():
     """
-    插件端反馈用户在代码补全中接受的代码片段
+    The plug-in feeds back the code snippets accepted by the user in code completion
     """
     user = ApplicationContext.get_current()
     data = request.get_json()

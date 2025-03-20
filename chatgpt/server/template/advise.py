@@ -1,31 +1,31 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# 生成下一步操作建议
+# Generate next operation suggestions
 ADVISE_PROMPT = """
 ```
 {query}
 ```
-相关代码:
+Related code:
 ```{language}
 {code}
 ```
 
-以上信息是用户上一步请求的操作，请根据以上信息，生成下一步操作建议:
-1. 这些建议和上述信息密切相关
-2. 这些建议是大多数用户下一步最可能需要执行的操作
+The above information is the operation requested by the user in the previous step. Based on the above information, please generate suggestions for the next operation:
+1. These suggestions are closely related to the above information
+2. These suggestions are the operations that most users are most likely to perform next
 
-需求:
-1. 参考输出范例以JSON格式输出结果
-2. 输出格式为JSON数组，数组元素为JSON对象，每个对象包含title和prompt字段
-3. 输出结果中除了JSON数组，不能包含任何其他内容，包括但不限于注释、解释、说明等
-4. title字段需简洁，尽量在7个字以内，以中文方式表示
-5. prompt字段需包含完整准确的中文提示信息，方便大语言模型输出更高质量的输出内容
-6. 输出数组不超过7个元素
+Requirements:
+1. Refer to the output example to output the result in JSON format
+2. The output format is a JSON array, and the array elements are JSON objects, each object containing the title and prompt fields
+3. The output result should not contain any other content except the JSON array, including but not limited to comments, explanations, descriptions, etc.
+4. The title field should be concise, preferably within 7 characters, and expressed in Chinese
+5. The prompt field needs to contain complete and accurate Chinese prompt information to facilitate the large language model to output higher quality output content
+6. The output array should not exceed 7 elements
 
-输出范例：
+Output example:
 
 [{{"title": "注释", "prompt": "给以下代码生成注释"}}, {{"title": "检查参数", "prompt": "给以下代码生成检查参数有效性代码"}}]
 
-输出:
+Output:
 """

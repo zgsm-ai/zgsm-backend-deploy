@@ -28,8 +28,15 @@ def current():
       200:
         res: 结果
     """
+    # current user
+    # ---
+    # tags:
+    #   - User Management
+    # responses:
+    #   200:
+    #     res: Result
     user = ApplicationContext.get_current()
-    return Result.success(message='获取成功', data=user)
+    return Result.success(message='Get success', data=user)
 
 
 @users.route("/key", methods=["GET", "POST"])
@@ -43,10 +50,17 @@ def generate_api_key():
       200:
         res: 结果
     """
+    # Used to get or reset the API key
+    # ---
+    # tags:
+    #   - User Management
+    # responses:
+    #   200:
+    #     res: Result
     user = ApplicationContext.get_current()
     if request.method == "POST":
         user = users_service.update_api_key(user)
-    return Result.success(message='获取成功', data=user)
+    return Result.success(message='Get success', data=user)
 
 
 @users.route("/code_completion_log", methods=['POST'])
@@ -60,6 +74,13 @@ def code_completion_log():
       200:
         res: 结果
     """
+    # Used to record the reported data of code completion or code generation when users use the Qianliu AI plugin.
+    # ---
+    # tags:
+    #   - User Management
+    # responses:
+    #   200:
+    #     res: Result
     user = ApplicationContext.get_current()
     data = request.get_json()
     data['username'] = user.username
@@ -69,7 +90,7 @@ def code_completion_log():
     data['ide_real_version'] = request.headers.get('ide-real-version', '')
     accept_key = "isAccept"
     if accept_key in data.keys():
-        # 部分场景需要统计用户接收度，如tp的用例优化和ide的划词对话产场景
+        # Some scenarios require statistics on user acceptance, such as TP's use case optimization and IDE's word selection dialogue production scenarios.
         prompt_es_service.insert_prompt(data)
     else:
         code_completion_es_service.insert_code_completion(data)
@@ -87,6 +108,13 @@ def code_copy_log():
       200:
         res: 结果
     """
+    # Used to record the reported data of code copying when users use Qianliu AI plugin or web.
+    # ---
+    # tags:
+    #   - User Management
+    # responses:
+    #   200:
+    #     res: Result
     user = ApplicationContext.get_current()
     data = request.get_json()
     data['display_name'] = user.display_name
@@ -97,4 +125,3 @@ def code_copy_log():
     code_copy_es_service.insert_code_completion(data)
 
     return Result.success()
-

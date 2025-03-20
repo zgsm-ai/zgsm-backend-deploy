@@ -53,14 +53,14 @@ class AgentChatIOStream(IOStream):
 
     def print_chunk(self, chunk_data, sender, sender_icon=None):
         """
-        输出JSON数据块
+        Output JSON data block
         """
         self._dify_agent_thought(chunk_data, sender, agent_icon=sender_icon)
 
     
     def print_agent_advise(self, advise_data):
         """
-        输出LLM给出的下一步建议
+        Output the next suggestion given by LLM
         """
         self._send_json({
             "event": AgentConstant.AGENT_ADVISE_EVENT,
@@ -69,13 +69,13 @@ class AgentChatIOStream(IOStream):
 
     def print_end(self, sender):
         """
-        输出Dify结束
+        Output Dify end
         """
         self._agent_end(sender)
 
     def finish(self):
         """
-        消息流输出结束
+        Message stream output ends
         """
         self._agent_end()
         self._send_msg(AgentConstant.AGENT_CHAT_DONE_MSG)
@@ -89,7 +89,7 @@ class AgentChatIOStream(IOStream):
 
     def print(self, *args, **kwargs) -> None:
         # print(args, kwargs)
-        # 分隔线
+        # separator line
         if 'sep' in kwargs:
             return
 

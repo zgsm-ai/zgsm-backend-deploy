@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 """
-@Author  ：范立伟33139
+@Author  ：Fan Liwei 33139
 @Date    ：2023/3/16 14:09
 """
 
@@ -14,13 +14,13 @@ sessions = Blueprint('sessions', __name__)
 @sessions.route('/logout', methods=['GET'])
 def logout():
     """
-    登出
+    Logout
     ---
     tags:
-      - 会话管理
+      - Session Management
     responses:
       200:
-        res: 结果
+        res: Result
     """
     SessionService.logout()
-    return Result.success(message='登出成功')
+    return Result.success(message='Logout successful')

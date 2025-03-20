@@ -1,3 +1,4 @@
+```
 # Basic settings for running in production. Change accordingly before deploying the server.
 # Database
 # The database vendor.
@@ -27,15 +28,15 @@ db-url=jdbc:postgresql://{{ZGSM_BACKEND}}/keycloak
 # Hostname for the Keycloak server.
 #hostname=myhostname
 
-# 短信发送服务商
+# SMS service provider
 spi-phone-provider-config-sender-service=ntc
-# 验证码有效期
+# Verification code validity period
 spi-phone-provider-config-token-expires=300
-# 默认区号
+# Default area code
 spi-phone-provider-config-default-areacode=86
-# 区号配置信息
+# Area code configuration information
 spi-phone-provider-config-areacode-config=${kc.home.dir:}/conf/areacode.json
-# 锁定区号
+# Locked area code
 spi-phone-provider-config-area-locked=true
 # Which sms provider
 spi-phone-default-service=ntc
@@ -63,9 +64,9 @@ spi-phone-default-gw-compatible=true
 #Prevent 2FA from always happening for a period of time
 #default: 60 * 60; 1 hour
 spi-phone-default-gw-otp-expires=3600
-# NTC发送的认证码信息模版
-spi-phone-default-gw-message-template=[[code]],此认证码由诸葛神码发送，请勿泄露
-# redis服务器IP
+# NTC sends the authentication code information template
+spi-phone-default-gw-message-template=[[code]], This authentication code is sent by Zhuge Shenma, please do not disclose it
+# redis server IP
 spi-captcha-service-default-redis-host={{ZGSM_BACKEND}}
-# redis服务器端口
+# redis server port
 spi-captcha-service-default-redis-port={{PORT_REDIS}}

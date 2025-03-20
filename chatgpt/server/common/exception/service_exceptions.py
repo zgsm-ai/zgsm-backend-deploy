@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-    平台服务相关的错误
-    error_code： 170 开头
+    Platform service related errors
+    error_code： 170 start
 
-    :作者: 苏德利 16646
-    :时间: 2023/3/16 20:40
-    :修改者: 苏德利 16646
-    :更新时间: 2023/3/16 20:40
+    :Author: Su Deli 16646
+    :Time: 2023/3/16 20:40
+    :Modifier: Su Deli 16646
+    :UpdateTime: 2023/3/16 20:40
 """
 
 from .custom_exception import CustomException
@@ -15,7 +15,7 @@ from .custom_exception import CustomException
 
 class ResourceNotFoundError(CustomException):
     code = 404
-    msg = '无此资源'
+    msg = 'No such resource'
     error_code = 170001
     send_to_sentry = False
 
@@ -24,33 +24,33 @@ class ResourceNotFoundError(CustomException):
             if value is None or label is None:
                 msg = self.msg
             else:
-                msg = f"未找到{key}为{value}的{label}数据"
+                msg = f"No {label} data found with {key} as {value}"
         super().__init__(msg)
 
 
 class FieldValidateError(CustomException):
     code = 400
-    msg = '字段校验失败'
+    msg = 'Field validation failed'
     error_code = 170002
     send_to_sentry = False
 
 
 class NoLoginError(CustomException):
-    msg = '会话已过期或未登陆，请重新登陆'
+    msg = 'Session has expired or not logged in, please log in again'
     code = 401
     error_code = 170003
     send_to_sentry = False
 
 
 class UnauthorizedError(CustomException):
-    msg = "您没有此操作权限，请联系拥有操作权限人员添加权限"
+    msg = "You do not have permission to perform this operation, please contact someone with permission to add permission"
     code = 403
     error_code = 170004
     send_to_sentry = False
 
 
 class EsIndexError(CustomException):
-    msg = 'ES服务或网络异常'
+    msg = 'ES service or network anomaly'
     code = 500
     error_code = 170005
     send_to_sentry = True
@@ -58,62 +58,62 @@ class EsIndexError(CustomException):
 
 class OpenAiRequestError(CustomException):
     code = 501
-    msg = 'openai服务或网络异常'
+    msg = 'openai service or network exception'
     error_code = 170002
     send_to_sentry = False
 
 
 class ParameterConversionError(CustomException):
-    msg = "参数转换异常"
+    msg = "Parameter conversion exception"
     code = 400
     error_code = 170006
     send_to_sentry = False
 
 
 class ModelException(CustomException):
-    msg = "数据库实体出现异常"
+    msg = "Database entity exception"
     code = 400
     error_code = 170007
     send_to_sentry = True
 
 
 class DuplicateError(CustomException):
-    msg = "重复的数据"
+    msg = "Duplicate data"
     code = 400
     error_code = 170008
     send_to_sentry = False
 
 
 class NotSupportParamsError(CustomException):
-    msg = "不支持的参数"
+    msg = "Unsupported parameters"
     code = 400
     error_code = 170009
     send_to_sentry = False
 
 
 class ObjectExistError(CustomException):
-    msg = "对象已存在"
+    msg = "Object already exists"
     code = 400
     error_code = 170010
     send_to_sentry = False
 
 
 class RemoteServiceError(CustomException):
-    msg = "外部服务链接异常"
+    msg = "External service link exception"
     code = 400
     error_code = 170011
     send_to_sentry = True
 
 
 class UnprocessableEntityError(CustomException):
-    msg = "不可处理的实体"
+    msg = "Unprocessable entity"
     code = 422
     error_code = 170012
     send_to_sentry = True
 
 
 class NexusContentMatchError(CustomException):
-    msg = "制品内容与制品类型不匹配(Artifact content does not match artifact type)，请上传MIME类型文件，或找千流客服关闭校验功能"
+    msg = "Artifact content does not match artifact type, please upload a MIME type file or contact Qianliu customer service to turn off the validation function"
     code = 400
     error_code = 170013
     send_to_sentry = True
