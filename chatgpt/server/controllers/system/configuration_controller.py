@@ -18,34 +18,34 @@ configuration = Blueprint('configuration', __name__)
 @configuration.route('', methods=['GET'])
 def get():
     """
-    通用配置项
-    查询: get api/configuration
-        - 默认类型 横幅
+    Common configuration item
+    Query: get api/configuration
+        - Default type banner
     ---
     tags:
       - system
     responses:
       200:
-        res: 结果
+        res: result
     """
     search_kw = get_request_kwargs()
     if search_kw.get('belong_type', None) is None:
-        raise FieldValidateError('[类型] ：该输入项不允许为空')
+        raise FieldValidateError('[Type] : This input item is not allowed to be empty')
 
     query, total = ConfigurationService.get_list(**search_kw)
-    return Result.success(message='获取成功', data=query, total=total)
+    return Result.success(message='Obtained successfully', data=query, total=total)
 
 
 @configuration.route('/system', methods=['GET'])
 def get_system_config():
     """
-    查询系统配置项，比如ide、web一些配置
+    Query system configuration items, such as ide, web some configuration
     ---
     tags:
       - system
     responses:
       200:
-        res: 结果
+        res: result
     """
     query = ConfigurationService.get_system_config()
-    return Result.success(message='获取成功', data=query)
+    return Result.success(message='Obtained successfully', data=query)

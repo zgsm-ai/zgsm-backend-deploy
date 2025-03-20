@@ -275,7 +275,7 @@ services:
       - discovery.type=single-node
       - bootstrap.memory_lock=true
       - xpack.security.enabled=false
-      - xpack.security.http.ssl.enabled=false  # 禁用 HTTPS
+      - xpack.security.http.ssl.enabled=false  # Disable HTTPS
       - xpack.ml.enabled=false
       - "ELASTIC_PASSWORD={{PASSWORD_ELASTIC}}"
       #- "ENROLLMENT_TOKEN={{ENROLLMENT_TOKEN}}"
@@ -296,10 +296,10 @@ services:
   kibana:
     image: docker.elastic.co/kibana/kibana:8.9.0
     environment:
-      - ELASTICSEARCH_HOSTS=http://{{ZGSM_BACKEND}}:{{PORT_ES}}  # 指向 Elasticsearch
+      - ELASTICSEARCH_HOSTS=http://{{ZGSM_BACKEND}}:{{PORT_ES}}  # Point to Elasticsearch
       - ELASTICSEARCH_SERVICEACCOUNTTOKEN={{ENROLLMENT_TOKEN}}
     ports:
-      - "5601:5601"  # Kibana 端口
+      - "5601:5601"  # Kibana port
     depends_on:
       - es
     networks:
@@ -308,4 +308,3 @@ services:
 networks:
   shenma:
     driver: bridge
-

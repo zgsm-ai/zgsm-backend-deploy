@@ -13,13 +13,13 @@ from lib.jwt_session.session import session
 
 logger = logging.getLogger(__name__)
 
-def get_username_by_token(token: str): 
+def get_username_by_token(token: str):
     decoded = jwt.decode(token, options={"verify_signature": False})
     return decoded.get("preferred_username")
 
 class ApplicationContext:
     """
-    上下文,用在RESTAPI中,用于管理与服务交互的用户信息
+    Context, used in RESTAPI to manage user information interacting with the service
     """
     @classmethod
     def get_session(cls):
@@ -33,13 +33,13 @@ class ApplicationContext:
             if user:
                 return user
         from services.system.users_service import UsersService
-        # 尝试通过三种手段获取username：会话缓存，api_key，authorization
+        # Try to get the username through three methods: session cache, api_key, authorization
         username = cls.get_current_username()
         if not username and api_key:
-            #  已经通过用户系统的认证，获得了token
+            #  Has been authenticated through the user system and obtained a token
             username = get_username_by_token(api_key)
         if not username:
-            #  没token，也没username，创建一个test用户顶着用，当是匿名登录
+            #  No token, no username, create a test user to use as anonymous login
             user = UsersService.create_test_user()
             ApplicationContext.update_session_user(user)
             return user
@@ -51,7 +51,7 @@ class ApplicationContext:
             ApplicationContext.update_session_user(user)
             return user
         if raise_not_found_exception:
-            # 放头部会出现循环导入 导致异常
+            # Putting it in the header will cause a circular import and lead to an exception
             from common.exception.exceptions import NoLoginError
             raise NoLoginError()
         return user
@@ -59,7 +59,7 @@ class ApplicationContext:
     @classmethod
     def _get_api_key(cls):
         """
-        从请求中获取api_key
+        Get api_key from request
         """
         api_key = request.args.get("api-key") if not request.headers.get(
             "api-key") else request.headers.get("api-key")
@@ -77,7 +77,7 @@ class ApplicationContext:
             user = UsersService.get_user_by_api_key(api_key)
             return user
         except Exception as err:
-            logger.error(f"解析api_key：{api_key}出现异常:{str(err)}")
+            logger.error(f"Exception occurred while parsing api_key：{api_key}:{str(err)}")
         return None
 
     @classmethod

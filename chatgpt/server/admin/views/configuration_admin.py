@@ -27,6 +27,7 @@ class ConfigurationAdmin(AdminPermission, BaseView):
     column_labels = BaseView.get_column_labels(Configuration)
 
     # 修改前触发
+    # Triggered before modification
     def on_model_change(self, form, model, is_created):
         if model.belong_type == ConfigurationConstant.PROMPT_TYPE \
                 and model.attribute_key == ConfigurationConstant.PROMPT_KEY_FORBID_STRING:
@@ -37,11 +38,13 @@ class ConfigurationAdmin(AdminPermission, BaseView):
                 raise ValidationError(f'属性值字符长度限制 {ConfigurationConstant.PROMPT_RE_MAX_LENGTH}')
             try:
                 re_get_string_in_text(attribute_value, 'abc')  # 验证正则是否合法，会不会报错
+                # Verify whether the regular expression is legal and whether an error will be reported
             except Exception as e:
                 logging.error(e)
                 raise ValidationError('属性值正则不合法')
 
             ConfigurationService.evict_cache()  # 清除缓存
+            # clear cache
         elif model.attribute_key == ConfigurationConstant.LANGUAGE_KEY_MAP:
             try:
                 json.loads(model.attribute_value)
@@ -53,17 +56,23 @@ class ConfigurationAdmin(AdminPermission, BaseView):
 
     def after_model_change(self, form, model, is_created=False):
         # 更新后清理广告配置缓存
+        # Clear the advertising configuration cache after update
         if model.attribute_key == ConfigurationConstant.LANGUAGE_KEY_MAP:
             ConfigurationService.evict_language_map_cache()
         else:
             # 通用清理缓存
+            # General clear cache
             ConfigurationService.clear_cache(model.belong_type, model.attribute_key)
 
     # 清除广告缓存按钮
+    # Clear advertisement cache button
     @action('clear_ad_cache', '清除用户广告缓存')
+    # Clear user ad cache
     def clear_ad_cache(self, ids):
         ConfigurationService.evict_user_ad_cache()
         flash('广告缓存清除成功')
+        # Ad cache cleared successfully
 
 
 ConfigurationAdminView = ConfigurationAdmin(Configuration, endpoint='_configuration', name='配置项')
+# Configuration item

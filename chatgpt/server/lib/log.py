@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-    设置log debug模式是否开启
+    Set whether the log debug mode is enabled
 
-    :作者: 苏德利 16646
-    :时间: 2023/3/29 10:01
-    :修改者: 苏德利 16646
-    :更新时间: 2023/3/29 10:01
+    :Author: Sudeli 16646
+    :Time: 2023/3/29 10:01
+    :Modifier: Sudeli 16646
+    :UpdateTime: 2023/3/29 10:01
 """
 # -*- coding: utf-8 -*-
 from logging import Filter, Formatter, Logger
@@ -25,7 +25,7 @@ class RequireDebugTrue(Filter):
 
 class SocketFilter(Filter):
     """
-    日志过滤器，该过滤器给每条日志记录加上一个sid字段
+    Log filter, this filter adds an sid field to each log record
     """
     def __init__(self, sid=None):
         super().__init__()
@@ -37,7 +37,7 @@ class SocketFilter(Filter):
 
 class SocketWrapper:
     """
-    给某个上下文环境下的每条日志记录加上websocket的sid
+    Add websocket sid to each log record in a context
     """
     @staticmethod
     @contextmanager

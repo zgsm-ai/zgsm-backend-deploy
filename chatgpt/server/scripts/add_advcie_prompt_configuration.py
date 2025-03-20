@@ -19,27 +19,27 @@ Your task is to think along the following lines, and finally guess and polish th
 Please think step by step.
 
 ## output field explanation
-is_problem: 表达清晰为true，表达不清晰为false
-result: 如果表达不清晰，则把结果放到result里面，否则为空数组
-understand: 是否能理解用户需求
-msg: 不能理解用户需求时返回给用户查看的提示
+is_problem: true for clear expression, false for unclear expression
+result: If the expression is not clear, put the result in the result, otherwise it is an empty array
+understand: Whether you can understand user needs
+msg: A prompt to return to the user when user needs cannot be understood
 
 ## example 1
 ### input
 #### requirement
-新增提示，操作成功
+Add prompt, operation successful
 #### selected code
-无
-### 思考过程
-需求跟前端组件相关，新增提示没有说明清楚提示的组件是什么，猜测可能是一个提示框，弹窗或者通知组件。所以对requirement的润色结果为result里面的内容，"is_problem": true。
+None
+### Thinking process
+The requirement is related to the front-end component. Adding a prompt does not clearly state what the prompt component is. It is guessed that it may be a prompt box, pop-up window, or notification component. Therefore, the polished result of the requirement is the content in the result, "is_problem": true.
 ### output
 ```json
 {
     "is_problem": true,
     "result": [
-        "在页面中添加一个提示框，提示框内容为“操作成功”",
-        "在页面中添加一个弹窗，弹窗内容为“操作成功”",
-        "在页面中添加一个通知，通知内容为“操作成功”"
+        "Add a prompt box to the page with the content “Operation successful”",
+        "Add a pop-up window to the page with the content “Operation successful”",
+        "Add a notification to the page with the content “Operation successful”"
     ],
     "understand": true,
     "msg": ""
@@ -49,11 +49,11 @@ msg: 不能理解用户需求时返回给用户查看的提示
 ## example 2
 ### input
 #### requirement
-在页面中添加一个提示框，提示框内容为“操作成功”。
+Add a prompt box to the page with the content “Operation successful”.
 #### selected code
-无
-### 思考过程
-需求跟前端组件相关，已经说清楚了是添加一个提示框组件，生成一个提示框代码并提示操作成功，所以没有问题，"is_problem": false。
+None
+### Thinking process
+The requirement is related to the front-end component. It has been clearly stated that a prompt box component is to be added, generate a prompt box code and prompt that the operation is successful, so there is no problem, "is_problem": false.
 ### output
 ```json
 {
@@ -67,11 +67,11 @@ msg: 不能理解用户需求时返回给用户查看的提示
 ## example 3
 ### input
 #### requirement
-解释并给这段代码添加注释
+Explain and add comments to this code
 #### selected code
 print(12)
-### 思考过程
-需求跟前端组件无关，不考虑需求是否表达清晰，"is_problem": false
+### Thinking process
+The requirement is not related to the front-end component, so whether the requirement is clearly expressed is not considered, "is_problem": false
 ### output
 ```json
 {
@@ -88,15 +88,15 @@ print(12)
 sdfsdfdsf
 #### selected code
 print(12)
-### 思考过程
-输入的内容无法理解, "understand": true
+### Thinking process
+The input content cannot be understood, "understand": true
 ### output
 ```json
 {
     "is_problem": false
     "result": [],
     "understand": false,
-    "msg": "你描述的内容无法理解,请提供更明确的需求描述"
+    "msg": "The content you described cannot be understood. Please provide a clearer description of the requirements."
 }
 ```
 
@@ -119,34 +119,34 @@ class AddAdvicePrompt:
 
     @staticmethod
     def insert_prompt_data():
-        """添加语言规范化的prompt"""
+        """Add language standardization prompt"""
         prompt_data = {'deleted': False, 'belong_type': 'prompt_template', 'attribute_key': 'giveAdvice',
-                       'attribute_value': prompt_template, 'desc': "用户描述语言规范化"}
+                       'attribute_value': prompt_template, 'desc': "User describes language standardization"}
         advice_prompt = ConfigurationService.get_configuration(
             prompt_data['belong_type'], prompt_data['attribute_key'])
         if advice_prompt:
-            print("advice_prompt 配置已经存在")
+            print("advice_prompt already exists")
         else:
-            # 获取下一个可用的id
+            # Get the next available id
             max_id = ConfigurationService.dao.model.select(fn.MAX(ConfigurationService.dao.model.id)).scalar()
             next_id = max_id + 1 if max_id else 1
             prompt_data['id'] = next_id
             ConfigurationService.create(**prompt_data)
-            print("advice_prompt 配置写入成功")
+            print("advice_prompt configuration write success")
 
     @staticmethod
     def insert_switch_data():
         switch_data = {'deleted': False, 'belong_type': "permission", 'attribute_key': "advice_white_list_switch",
-                       'attribute_value': json.dumps({"advice_switch": True, "dept_prefix": []}), 'desc': "问答语言规范化的开关"}
+                       'attribute_value': json.dumps({"advice_switch": True, "dept_prefix": []}), 'desc': "Question and answer language standardization switch"}
 
         advice_switch_json_str = ConfigurationService.get_configuration(
             switch_data['belong_type'], switch_data['attribute_key'])
         if advice_switch_json_str:
-            print("advice_switch 配置已经存在")
+            print("advice_switch configuration already exists")
         else:
-            # 获取下一个可用的id
+            # Get the next available id
             max_id = ConfigurationService.dao.model.select(fn.MAX(ConfigurationService.dao.model.id)).scalar()
             next_id = max_id + 1 if max_id else 1
             switch_data['id'] = next_id
             ConfigurationService.create(**switch_data)
-            print("advice_switch 配置写入成功")
+            print("advice_switch configuration write success")

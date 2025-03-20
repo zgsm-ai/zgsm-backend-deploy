@@ -11,15 +11,15 @@ from models.base_model import BaseModel
 
 
 class Configuration(BaseModel):
-    """通用的配置数据模型"""
+    """Generic configuration data model"""
 
     class Meta:
         table_name = 'configuration'
 
-    belong_type = CharField(default='', verbose_name='类型')
-    attribute_key = CharField(default='', verbose_name='属性键')
-    attribute_value = TextField(default='', verbose_name='属性值',
-                                help_text='类型 banner：值为横幅内容'
-                                          '<br>类型 api_documentation：请填入markdown格式'
-                                          '<br>类型 forbidden_word：支持正则')
-    desc = CharField(default='', verbose_name='描述')
+    belong_type = CharField(default='', verbose_name='Type')
+    attribute_key = CharField(default='', verbose_name='Attribute Key')
+    attribute_value = TextField(default='', verbose_name='Attribute Value',
+                                help_text='Type banner: value is banner content'
+                                          '<br>Type api_documentation: Please fill in markdown format'
+                                          '<br>Type forbidden_word: Support regular expression')
+    desc = CharField(default='', verbose_name='Description')

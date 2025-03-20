@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-    简单介绍
+    Simple introduction
 
-    :作者: 苏德利 16646
-    :时间: 2023/3/3 17:35
-    :修改者: 苏德利 16646
-    :更新时间: 2023/3/3 17:35
+    :Author: Su Deli 16646
+    :Time: 2023/3/3 17:35
+    :Modifier: Su Deli 16646
+    :UpdateTime: 2023/3/3 17:35
 """
 
-# 生成单元测试初始提问模板
+# Generate the initial question template for unit testing
 INITIAL_PROMPT = """
 ## Instructions
 Write a unit test for the code below.
@@ -28,7 +28,7 @@ Must reply with Chinese.
 ## Unit Test
 """
 
-# 生成单元测试连续提问模板
+# Generate the continuous question template for unit testing
 RESPONSE_PROMPT = """
 ## Instructions
 Rewrite the code below as follows: "{{lastMessage}}"

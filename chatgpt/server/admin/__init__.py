@@ -16,7 +16,7 @@ runtime_path = os.path.dirname(os.path.realpath(__file__))
 
 
 def register_admin(app):
-    admin = Admin(app, name='诸葛神码', template_mode='bootstrap3', index_view=AdminIndexView())
+    admin = Admin(app, name='Zhuge Divine Code', template_mode='bootstrap3', index_view=AdminIndexView())
     admin.add_views(*Views)
 
     @app.route('/favicon.ico')

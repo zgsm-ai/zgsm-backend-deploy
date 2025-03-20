@@ -13,12 +13,12 @@ from common.exception.exceptions import PromptTokensError
 logger = logging.getLogger(__name__)
 
 class GenerateCodeBase:
-    """针对代码生成场景"""
+    """For code generation scenarios"""
 
     @staticmethod
     def check_prompt(prompt):
-        """按字符长度"""
+        """By character length"""
         tokens_num = compute_tokens(prompt)
         if tokens_num > GPTConstant.CODE_GENERATE_MAX_PROMPT_TOKENS:
-            logger.info(f'prompt tokens 超限: {tokens_num} > {GPTConstant.CODE_GENERATE_MAX_PROMPT_TOKENS}')
+            logger.info(f'prompt tokens exceeded limit: {tokens_num} > {GPTConstant.CODE_GENERATE_MAX_PROMPT_TOKENS}')
             raise PromptTokensError()

@@ -157,7 +157,7 @@ Optical Coherence Tomography System Device	                            00600053
 Optical Coherence Tomography Station	                                00600054
 Positron Emission Tomography And Computed tomography Scanner	        00600055
 Magnetic Resonance Imaging Scanner	                                    00600056
-Magnetic Resonance Imaging Workstation	                                00600057
+Magnetic Resonance Imaging Workstation	                                    00600057
 Angiography System Device	                                            00600058
 Interventional X-Ray System Device	                                    00600059
 Computed Radiography Medical Image Scanner	                            00600060

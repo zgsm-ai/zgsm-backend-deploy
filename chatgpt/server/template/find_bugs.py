@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-    简单介绍
+    Simple introduction
 
-    :作者: 苏德利 16646
-    :时间: 2023/3/3 17:34
-    :修改者: 苏德利 16646
-    :更新时间: 2023/3/3 17:34
+    :Author: Sudeli 16646
+    :Time: 2023/3/3 17:34
+    :Modifier: Sudeli 16646
+    :UpdateTime: 2023/3/3 17:34
 """
 
-# 查找代码可能存在问题的提问初始模板
+# Initial template for asking questions to find potential problems in the code
 INITIAL_PROMPT = """
 ## Instructions
 What could be wrong with the code below?
@@ -33,7 +33,7 @@ Must reply with Chinese.
 ## Analysis
 """
 
-# 查找代码可能存在问题的连续提问模板
+# Continuous question template for finding potential problems in the code
 RESPONSE_PROMPT = """
 ## Instructions
 Continue the conversation below.

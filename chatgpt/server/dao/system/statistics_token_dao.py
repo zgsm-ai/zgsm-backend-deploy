@@ -16,13 +16,13 @@ class StatisticsTokenDao(BaseDao):
                       output_token: int,
                       username: str = None):
         """
-        记录请求模型的token数
-        :param model_identification: 模型标识
-        :param application_name: 应用名称
-        :param user_req_token: 用户请求token数
-        :param input_token: 请求模型token数
-        :param output_token: 模型响应token数
-        :param username: 用户名
+        Record the number of tokens for the requested model
+        :param model_identification: Model identification
+        :param application_name: Application name
+        :param user_req_token: Number of user request tokens
+        :param input_token: Number of request model tokens
+        :param output_token: Number of model response tokens
+        :param username: Username
         """
         data = dict(
             model_identification=model_identification,

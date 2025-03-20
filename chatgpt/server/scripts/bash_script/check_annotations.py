@@ -6,14 +6,14 @@
 # @File    : check_annotations.py
 # @Software: PyCharm
 # @Project : chatgpt-server
-# @Desc    : 用于检查AF自动化关键字规范https://ipd.atrust.sangfor.com/ipd/team/3580/issue/905355
+# @Desc    : Used to check AF automation keyword specification https://ipd.atrust.sangfor.com/ipd/team/3580/issue/905355
 
 import os
 import re
 import pandas as pd
 import sys
 
-# 定义列表数据
+# Define list data
 data = []
 
 
@@ -22,7 +22,7 @@ def check_keyword_annotations(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
         content = file.read()
 
-    # 正则表达式匹配 @keyword() 装饰器及其后面的注释
+    # Regular expression to match the @keyword() decorator and its subsequent comments
     keyword_pattern = re.compile(r'@keyword\(\)\s*def\s+(\w+)\(.*?\):\s*"""(.*?)"""', re.DOTALL)
     matches = keyword_pattern.findall(content)
 
@@ -51,20 +51,20 @@ def check_directory(directory):
 
 
 def save_to_excel(form_data):
-    # 定义表头信息
+    # Define table header information
     columns = ["filename", "keyword", "check_status"]
 
-    # 创建DataFrame
+    # Create DataFrame
     df = pd.DataFrame(form_data, columns=columns)
 
-    # 或者保存到CSV文件
+    # Or save to CSV file
     df.to_csv("output.csv", index=False)
 
-    print("数据已成功保存到表格中。")
+    print("Data has been successfully saved to the table.")
 
 
 if __name__ == "__main__":
-    directory_to_check = './keywords/utils/system_management/'  # 替换为你要检查的目录路径
+    directory_to_check = './keywords/utils/system_management/'  # Replace with the directory path you want to check
     directory_to_check = sys.argv[1]
     if not os.path.exists(directory_to_check):
         print(f"Directory {directory_to_check} does not exist.")

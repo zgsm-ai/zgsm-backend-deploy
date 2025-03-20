@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 class PermissionChecker:
     """
-    权限检查
+    Permission check
     """
 
     def __init__(self):
@@ -24,7 +24,7 @@ class PermissionChecker:
 
     @staticmethod
     def check_is_admin_or_creator(service):
-        """校验是否是超管或创建者"""
+        """Check if it is a super administrator or creator"""
 
         def outer(func):
             @wraps(func)
@@ -32,9 +32,9 @@ class PermissionChecker:
                 user = ApplicationContext.get_current()
                 creator = service.get_by_id(kwargs.get('mid'))
                 if not user or not creator:
-                    raise AuthFailError(msg="您没有此操作权限。")
+                    raise AuthFailError(msg="You do not have permission to perform this operation.")
                 elif not user.is_admin and user.display_name != creator.creator:
-                    raise AuthFailError(msg="您没有此操作权限。")
+                    raise AuthFailError(msg="You do not have permission to perform this operation.")
                 return func(*args, **kwargs)
 
             return has_permission

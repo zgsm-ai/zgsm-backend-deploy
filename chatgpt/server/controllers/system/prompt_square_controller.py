@@ -22,36 +22,36 @@ prompt_square = Blueprint('prompt_square', __name__)
 @handle_paginate
 def get(page, per):
     """
-    prompt分享数据
-    查询: get api/prompt_square
-        - 支持标题模糊查询
+    prompt sharing data
+    Query: get api/prompt_square
+        - Support fuzzy title search
     ---
     tags:
       - system
     responses:
       200:
-        res: 结果
+        res: Result
     """
     search_kw = get_request_kwargs()
     query, total = prompt_square_service.list(page=page, per=per, **search_kw)
-    return Result.success(message='获取成功', data=query, total=total)
+    return Result.success(message='Get Success', data=query, total=total)
 
 
 @prompt_square.route("", methods=['POST'])
 @handle_validate(PromptSquareService)
 def post(fields):
     """
-    prompt分享数据
-    新增
+    prompt sharing data
+    Add
     ---
     tags:
       - system
     responses:
       200:
-        res: 结果
+        res: Result
     """
     resp = prompt_square_service.create(**fields)
-    return Result.success(message='获取成功', data=resp)
+    return Result.success(message='Get Success', data=resp)
 
 
 @prompt_square.route("/<int:mid>", methods=['PUT'])
@@ -59,32 +59,32 @@ def post(fields):
 @handle_validate(PromptSquareService, methods='update')
 def put(mid, fields):
     """
-    prompt分享数据
-    修改：put api/prompt_square/{mid}
-        - 权限需要超管或创建者
+    prompt sharing data
+    Modify: put api/prompt_square/{mid}
+        - Permissions require super admin or creator
     ---
     tags:
       - system
     responses:
       200:
-        res: 结果
+        res: Result
     """
     resp = prompt_square_service.update(mid, **fields)
-    return Result.success(message='更新成功', data=resp)
+    return Result.success(message='Update Success', data=resp)
 
 
 @prompt_square.route("/<int:mid>", methods=['DELETE'])
 @permission_check(PromptSquareService)
 def delete(mid):
     """
-    prompt分享数据
-    删除：delete api/prompt_square/{mid}
+    prompt sharing data
+    Delete: delete api/prompt_square/{mid}
     ---
     tags:
       - system
     responses:
       200:
-        res: 结果
+        res: Result
     """
     PromptSquareService.delete_by_id(mid)
     return Result.success()
@@ -94,38 +94,38 @@ def delete(mid):
 @handle_validate(PromptSquareHotService, methods='update')
 def hot_put(mid, fields):
     """
-    prompt分享数据
-    修改：put api/prompt_square/{mid}/hot
-        - 热度+1
+    prompt sharing data
+    Modify: put api/prompt_square/{mid}/hot
+        - Hot +1
     ---
     tags:
       - system
     responses:
       200:
-        res: 结果
+        res: Result
     """
     resp = prompt_square_hot_service.update(mid, **fields)
-    return Result.success(message='更新成功', data=resp)
+    return Result.success(message='Update Success', data=resp)
 
 
 @prompt_square.route("/title", methods=['GET'])
 @handle_paginate
 def title_get(page, per):
     """
-    prompt分享数据
-    查询 标题模糊查询：get api/prompt_square/title
-        - 返回部分字段
+    prompt sharing data
+    Query Fuzzy Title Query: get api/prompt_square/title
+        - Returns partial fields
     ---
     tags:
       - system
     responses:
       200:
-        res: 结果
+        res: Result
     """
     search_kw = get_request_kwargs()
     if not search_kw.get('ordering'):
         search_kw['ordering'] = '-hot,title'
-    include_fields = ('id', 'title', 'prompt', 'hot')  # 指定返回字段
+    include_fields = ('id', 'title', 'prompt', 'hot')  # Specify return fields
 
     query, total = prompt_square_service.list(page=page, per=per, include_fields=include_fields, **search_kw)
-    return Result.success(message='获取成功', data=query, total=total)
+    return Result.success(message='Get Success', data=query, total=total)

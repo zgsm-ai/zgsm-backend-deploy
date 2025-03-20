@@ -3,7 +3,7 @@ import requests
 import json
 import argparse
 
-# Keycloak 服务器配置
+# Keycloak server configuration
 KEYCLOAK_URL = "http://localhost:8080/auth"
 ADMIN_USERNAME = "admin"
 ADMIN_PASSWORD = ""
@@ -13,13 +13,13 @@ CLIENT_PASSWORD = "123"
 
 def get_args():
     global KEYCLOAK_URL, ADMIN_USERNAME, ADMIN_PASSWORD, IMPORT_FNAME
-    parser = argparse.ArgumentParser(description="令keycloak导入json数据，创建realm")
-    parser.add_argument('--url', type=str, help='keycloak服务器地址(如http://localhost:8080/auth)', required=True)
-    parser.add_argument('--username', type=str, help='keycloak管理员的用户名', required=False)
-    parser.add_argument('--password', type=str, help='keycloak管理员的密码', required=True)
-    parser.add_argument('--fname', type=str, help='待导入文件的名字', required=False)
-    parser.add_argument('--client-name', type=str, help='诸葛神码用户名', required=False)
-    parser.add_argument('--client-password', type=str, help='诸葛神码密码', required=False)
+    parser = argparse.ArgumentParser(description="Let keycloak import json data and create realm")
+    parser.add_argument('--url', type=str, help='keycloak server address (e.g. http://localhost:8080/auth)', required=True)
+    parser.add_argument('--username', type=str, help='keycloak administrator username', required=False)
+    parser.add_argument('--password', type=str, help='keycloak administrator password', required=True)
+    parser.add_argument('--fname', type=str, help='name of the file to be imported', required=False)
+    parser.add_argument('--client-name', type=str, help='Zhuge Shenma username', required=False)
+    parser.add_argument('--client-password', type=str, help='Zhuge Shenma password', required=False)
 
     args = parser.parse_args()
 
@@ -44,7 +44,7 @@ def get_args():
     print(f"CLIENT_PASSWORD: {CLIENT_PASSWORD}")
 
 def get_access_token():
-    """获取访问令牌"""
+    """Get access token"""
     token_url = f"{KEYCLOAK_URL}/realms/master/protocol/openid-connect/token"
     payload = {
         'client_id': 'admin-cli',
@@ -60,7 +60,7 @@ def get_access_token():
         raise Exception(f"Failed to get access token: {response.text}")
 
 def create_realm(access_token, realm_data, realm_name):
-    """创建新的 realm"""
+    """Create a new realm"""
     create_realm_url = f"{KEYCLOAK_URL}/admin/realms"
     headers = {
         'Authorization': f'Bearer {access_token}',
@@ -87,23 +87,23 @@ def create_user(access_token, realm_name, username, password, temporary_password
             {
                 "type": "password",
                 "value": password,
-                "temporary": temporary_password  # 是否需在首次登录时修改密码
+                "temporary": temporary_password  # Whether to change the password on the first login
             }
         ]
     }
     response = requests.post(create_user_url, headers=headers, json=user_data)
     if 200 <= response.status_code < 210:
         print(f"Status {response.status_code}: User '{username}' created successfully in realm '{realm_name}'")
-        return response.headers.get('Location')  # 返回新用户的URL
+        return response.headers.get('Location')  # Returns the URL of the new user
     else:
         raise Exception(f"Status {response.status_code}: Failed to create user: {response.text}")
 
 def main():
     try:
-        # 获取命令行参数
+        # Get command line arguments
         get_args()
 
-        # 获取访问令牌
+        # Get access token
         access_token = get_access_token()
 
         realm_data = {}
@@ -111,10 +111,10 @@ def main():
             realm_data = json.load(file)
         realm_name = realm_data.get('realm')
 
-        # 创建新的 realm
+        # Create a new realm
         create_realm(access_token, realm_data, realm_name)
 
-        # 创建 user
+        # create user
         create_user(access_token, realm_name, CLIENT_NAME, CLIENT_PASSWORD)
 
     except Exception as e:

@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-    简单介绍
+    Simple introduction
 
-    :作者: 苏德利 16646
-    :时间: 2023/3/14 20:39
-    :修改者: 苏德利 16646
-    :更新时间: 2023/3/14 20:39
+    :Author: Su Deli 16646
+    :Time: 2023/3/14 20:39
+    :Modifier: Su Deli 16646
+    :UpdateTime: 2023/3/14 20:39
 """
 
 import logging
@@ -67,7 +67,7 @@ class RequestUtil:
         try:
             convert_to_json = True
             if "convert_to_json" in kwargs and kwargs.pop("convert_to_json", True) is False:
-                # 传参 convert_to_json 为 False 时不转成 json, 不指定content-type
+                # The json will not be converted to json when the parameter convert_to_json is False, and the content-type is not specified
                 convert_to_json = False
                 keys = []
                 for key in headers:
@@ -82,18 +82,18 @@ class RequestUtil:
                     kwargs['data'] = data
             return cls._request_with_retry(method, url, headers, retry, **kwargs)
         except ModuleNotFoundError as err:
-            logger.error(f"请求404：{err}，直接抛出")
+            logger.error(f"Request 404：{err}，throw directly")
             raise ModuleNotFoundError(err)
         except Exception as e:
-            logger.error(f"请求异常：{str(e)}, url:{url}", exc_info=True)
+            logger.error(f"Request exception：{str(e)}, url:{url}", exc_info=True)
             if "401" in str(e):
                 logger.error(f"401 error ++++++,kwargs: {str(kwargs)}, headers: {headers}")
-            raise RequestError(f"服务或网络异常{e}")
+            raise RequestError(f"Service or network exception{e}")
 
     @classmethod
     def _make_response(cls, resp, raw=False):
         resp.encoding = resp.encoding if resp.encoding else "UTF-8"
-        # 为了获取到td的错误信息，改为400
+        # In order to get the error message of td, change it to 400
         if 200 <= resp.status_code < 300:
             if resp.status_code == 204:
                 return None
@@ -105,21 +105,21 @@ class RequestUtil:
                 return resp
             return json.loads(resp.text)
         elif resp.status_code == 404:
-            logger.info(f"远程请求结果：{resp.text}")
-            raise ModuleNotFoundError(f"未找到：{resp.text}")
+            logger.info(f"Remote request result：{resp.text}")
+            raise ModuleNotFoundError(f"Not Found：{resp.text}")
         else:
-            logger.info(f"远程请求结果：{resp.text}")
-            raise RuntimeError(f"远程获取出现异常：{resp.text}")
+            logger.info(f"Remote request result：{resp.text}")
+            raise RuntimeError(f"Remote access exception：{resp.text}")
 
     @classmethod
     def _request_with_retry(cls, method, url, headers, retry, **kwargs):
-        # 默认会重试5次，但这个没设置超时时间
+        # The default will retry 5 times, but this does not set the timeout time
         requests.adapters.DEFAULT_RETRIES = 5
         s = requests.session()
         s.keep_alive = False
-        # 是否返回响应对象
+        # Whether to return the response object
         raw = kwargs.pop("raw", False)
-        #  如果指定了timeout参数，则不用配置中的重试时间
+        # If the timeout parameter is specified, the retry time in the configuration is not used
         timeout = kwargs.pop("timeout", None)
         if not retry:
             return cls._make_response(requests.request(method, url, headers=headers, **kwargs), raw=raw)
@@ -131,19 +131,19 @@ class RequestUtil:
                     method, url, headers=headers,
                     timeout=timeout if timeout else cls.conf.REQUESTS_TIMEOUT_TIME[retry_count], **kwargs), raw=raw)
             except ModuleNotFoundError as err:
-                logger.error(f"请求404：{err}，直接抛出")
+                logger.error(f"Request 404：{err}，throw directly")
                 raise ModuleNotFoundError(err)
             except Exception as e:
-                error_msg = f"请求异常：{str(e)}, url:{url}, retry_count:{retry_count}"
+                error_msg = f"Request exception：{str(e)}, url:{url}, retry_count:{retry_count}"
                 logger.error(error_msg)
                 # if ErrorMsgs.GITLAB_NOT_RESPONDE in str(e) and retry_count == 0:
-                #     # gitlab 502无响应情况发送通知
+                #     # Send notification when gitlab 502 is unresponsive
                 #     AdminNotice.notice(content=f"502: {str(error_msg)}", notice_type=AdminNotice.DIM)
                 time.sleep(cls.conf.REQUESTS_TIMEOUT_TIME[retry_count])
                 retry_count = retry_count + 1
                 continue
             return result
-        raise RequestError("服务或网络异常")
+        raise RequestError("Service or network exception")
 
     @classmethod
     def urlencode(cls, url, params=None):
@@ -154,5 +154,5 @@ class RequestUtil:
 
 
 class RetryRequestUtil(RequestUtil):
-    # 默认重试为True
+    # The default retry is True
     default_retry = True

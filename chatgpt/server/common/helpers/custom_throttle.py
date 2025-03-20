@@ -13,7 +13,7 @@ limiter = None
 
 
 def register_throttle(app):
-    """接口限流。默认不限"""
+    """Interface traffic limiting. No limit by default"""
     global limiter
     limiter = Limiter(
         app=app,

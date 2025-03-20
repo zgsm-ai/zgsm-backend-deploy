@@ -23,7 +23,7 @@ from services.completion_line_service import CompletionLineHandler
 from services.model_client_service import ModelClientStrategy, OpenAIClientStrategy, LocalClientStrategy
 from models import CompletionContextAndIntention
 
-SPIECE_UNDERLINE_EOT = "▁<EOT>"
+SPIECE_UNDERLINE_EOT = " <liuweiOT>"
 
 default_tokenizer_path = 'cgtok/starcoder_tokenizer.json'
 MAIN_TOKENIZER = load_tokenizer(get_tokenizer_path(ModelType.MAIN, default_tokenizer_path))
@@ -39,7 +39,7 @@ model_client_strategy_map = {
 
 
 def init_stop_words_dict():
-    """获取默认stop_words"""
+    """Get default stop_words"""
     with open('config/stop_words.json', 'r') as f:
         stop_words = json.load(f)
         f.close()
@@ -47,7 +47,7 @@ def init_stop_words_dict():
 
 
 def get_context_token_limit():
-    """获取上下文token数限制，如只设置一个值，则共用"""
+    """Get context token limit, if only one value is set, it is shared"""
     context_token_limit = os.environ.get("MAX_MODEL_LEN", "1024,256").split(",")
     if len(context_token_limit) == 1:
         context_token_limit *= 2
@@ -63,11 +63,11 @@ class TGIProxyV2:
         self.max_model_cost_time = int(os.environ.get("MAX_MODEL_COST_TIME", 2500))
         self.max_cost_time = int(os.environ.get("MAX_COST_TIME", 3000))
         self.cache = redisCache()
-        self.completion_cache_time = int(os.environ.get("COMPLETION_CACHE_TIME", 86400))  # 默认1天
+        self.completion_cache_time = int(os.environ.get("COMPLETION_CACHE_TIME", 86400))  # Default 1 day
         self.min_prefix_token = int(os.environ.get("MIN_PREFIX_TOKEN", 1000))
 
-        self.request_stop_words = []  # 请求传输stop_words
-        self.system_stop_words = []  # json默认stop_words
+        self.request_stop_words = []  # Request transmission stop_words
+        self.system_stop_words = []  # json default stop_words
         self.all_stop_words = []  # request+system
         self.is_windows = False
         self.model = None
@@ -75,13 +75,13 @@ class TGIProxyV2:
         self.client = None
         self.client_strategy = None
         self.tokenizer = None
-        self.FIM_PREFIX = "<｜fim▁begin｜>"
-        self.FIM_MIDDLE = "<｜fim▁end｜>"
-        self.FIM_SUFFIX = "<｜fim▁hole｜>"
+        self.FIM_PREFIX = "<｜liuwei begin｜>"
+        self.FIM_MIDDLE = "<｜liuwei end｜>"
+        self.FIM_SUFFIX = "<｜liuwei hole｜>"
         self.FIM_STOP = ["<|endoftext|>"]
         self.main_model_type = 'default'
 
-    # 初始化补全模型信息
+    # Initialize the completion model information
     def init_completion_model_info(self, data):
         main_model_type = os.environ.get('MAIN_MODEL_TYPE')
         if main_model_type:
@@ -119,20 +119,20 @@ class TGIProxyV2:
 
     def update_fim_tag(self):
         """
-        根据接口数据更新FIM_PREFIX、FIM_MIDDLE、FIM_SUFFIX
+        Update FIM_PREFIX, FIM_MIDDLE, FIM_SUFFIX according to interface data
         """
         self.is_codellama = 'codellama' in self.model.lower() or 'codegen' in self.model.lower()
         is_deepseek = 'deepseek-coder' in self.model.lower()
         if self.is_codellama:
-            self.FIM_PREFIX = "<PRE> "
-            self.FIM_MIDDLE = " <MID>"
-            self.FIM_SUFFIX = " <SUF>"
-            self.FIM_STOP = ["</s>", SPIECE_UNDERLINE_EOT, "<EOT>", "▁<MID>", " <MID>"]
+            self.FIM_PREFIX = "<liuweiRE> "
+            self.FIM_MIDDLE = " <liuweiID>"
+            self.FIM_SUFFIX = " <liuweiUE>"
+            self.FIM_STOP = ["liuweis", SPIECE_UNDERLINE_EOT, "<liuweiOT>", " <liuweiID>", " <liuweiID>"]
         elif is_deepseek:
-            self.FIM_PREFIX = "<｜fim▁begin｜>"
-            self.FIM_MIDDLE = "<｜fim▁end｜>"
-            self.FIM_SUFFIX = "<｜fim▁hole｜>"
-            self.FIM_STOP = ["<｜end▁of▁sentence｜>", "<|EOT|>", "▁<MID>"]
+            self.FIM_PREFIX = "<｜liuwei begin｜>"
+            self.FIM_MIDDLE = "<｜liuwei end｜>"
+            self.FIM_SUFFIX = "<｜liuwei hole｜>"
+            self.FIM_STOP = ["<｜end of liuwei｜>", "<|liuweiOT|>", " <liuweiID>"]
 
     def convert_nl_to_win(self, s):
         if self.is_windows:
@@ -145,15 +145,15 @@ class TGIProxyV2:
 
     def prepare_stop_words(self, suffix, data=None):
         """
-        处理stop_words列表方法，当后缀非空时，只用默认的stop_words
+        Handle stop_words list method, when the suffix is not empty, only the default stop_words are used
         """
         if data.get('stop'):
             self.request_stop_words.extend(data.get('stop', []))
         self.request_stop_words.extend(self.FIM_STOP)
         self.all_stop_words.extend(self.request_stop_words)
         if os.environ.get("ADD_SYSTEM_STOP_WORDS", "true") == 'true' or not suffix or not len(suffix.strip()):
-            # 当后缀为空时添加stop_words列表实现完整代码块截断效果
-            # 当连续出现2~3个换行符号时，一般是新起代码块场景，作为stop标志符号，使补全内容尽可能是完整代码块
+            # When the suffix is empty, add the stop_words list to achieve complete code block truncation effect
+            # When 2~3 line breaks appear consecutively, it is generally a new code block scenario, which is used as a stop sign, so that the completed content is as complete as possible
             self.all_stop_words.extend([LINUX_NL * 3, LINUX_NL * 2])
             language_id = data.get('languageId', data.get('language_id', None))
             if language_id and language_id.lower() in self.stop_words_dict.keys():
@@ -165,16 +165,16 @@ class TGIProxyV2:
     def generate(self, data, context_and_intention):
         prompt = data['prompt']
 
-        # windows换行符统一处理
+        # Unified processing of windows line breaks
         prompt = self.convert_nl_to_linux(prompt)
         suffix = self.convert_nl_to_linux(context_and_intention.suffix)
 
-        # 停用词准备
+        # Stop word preparation
         self.prepare_stop_words(suffix, data)
 
         model_start_time = time.time()
         is_cache = False
-        # 获取completion缓存
+        # Get completion cache
         text_cached = get_completion_cache(self.cache, self.completion_cache_time, prompt)
         if len(text_cached):
             text = text_cached
@@ -186,10 +186,10 @@ class TGIProxyV2:
                                                    temperature=data['temperature'])
 
             text = self.client_strategy.choices_process(response, context_and_intention, self.max_model_cost_time)
-            # 缓存prompt 和 响应结果
+            # Cache prompt and response results
             completion_make_cache(self.cache, self.completion_cache_time, prompt, text)
 
-        # stop word处理
+        # Stop word processing
         text = self.split_code_completion_by_request_stop_word(self.request_stop_words, text)
 
         text = self.convert_nl_to_win(text)
@@ -205,7 +205,7 @@ class TGIProxyV2:
     @staticmethod
     def split_code_completion_by_request_stop_word(stop_word_list: list, text: str):
         """
-        根据请求参数 stop_words 截断处理
+        Truncated processing based on request parameter stop_words
         """
         for stop_word in stop_word_list:
             if stop_word in text:
@@ -217,24 +217,24 @@ class TGIProxyV2:
     @staticmethod
     def split_code_completion_by_system_stop_word(stop_word_list: list, generated_text: str):
         """
-        根据系统默认 stop_words 截断处理
-        考虑 \n + 零或多个空格 场景
+        Truncated processing based on system default stop_words
+        Consider \n + zero or more spaces scenario
         """
         match_list = list()
         if stop_word_list and len(stop_word_list) == 0:
             return generated_text
         for stop_word in stop_word_list:
-            # 如果结束词是单个换行，直接匹配换行符
+            # If the end word is a single line break, directly match the line break
             if stop_word in ['\n', '\r']:
                 pattern = r'^.*?(?=' + stop_word + r')'
-            #  有正常结束词,匹配以\n开头中间包含0~n个空格，再以stop_word为末尾的字符串
+            #  There are normal end words, matching strings starting with \n and containing 0~n spaces in the middle, and ending with stop_word
             else:
                 pattern = r'^.*?(?=\n\s{0,4}' + stop_word + r')'
             match = re.search(pattern, generated_text, re.DOTALL | re.MULTILINE)
             if match:
                 match_list.append(match.group(0))
 
-        # 返回最短的匹配
+        # Returns the shortest match
         cut_generated_text = ""
         if match_list:
             cut_generated_text = min(match_list, key=len)
@@ -261,31 +261,31 @@ class TGIProxyV2:
 
     @staticmethod
     def get_time_str(st):
-        """获取时间的格式化字符串"""
+        """Get the formatted string of time"""
         dt = datetime.fromtimestamp(st)
         dt_in_shanghai = dt.astimezone(pytz.timezone('Asia/Shanghai'))
         time_str = dt_in_shanghai.strftime('%Y-%m-%dT%H:%M:%S.%f%z')
         return time_str
 
     def get_tokens(self, prompt: str) -> list:
-        """获取 tokens 编码列表"""
+        """Get tokens encoding list"""
         tokens = self.tokenizer.encode(prompt)
         return tokens.ids
 
     def tokens_decode(self, tokens: list) -> str:
         """
-        将 tokens 编码列表 解码为 prompt
-        tokens：编码列表
+        Decode tokens encoding list to prompt
+        tokens：encoding list
         """
         return self.tokenizer.decode(tokens)
 
     def get_token_num(self, prompt):
-        """获取token数量"""
+        """Get the number of tokens"""
         return len(self.get_tokens(prompt))
 
     def get_prompt_template(self, prefix, suffix, code_context=""):
         """
-        prompt拼接策略
+        prompt splicing strategy
         :param prefix:
         :param suffix:
         :param code_context
@@ -295,7 +295,7 @@ class TGIProxyV2:
 
     def prepare_prompt(self, prefix, suffix, code_context=""):
         """
-         前后缀长度处理后对prompt进行拼接
+         After processing the length of the prefix and suffix, splice the prompt
         :param prefix:
         :param suffix:
         :param code_context:
@@ -312,13 +312,13 @@ class TGIProxyV2:
 
     def handle_prompt(self, prompt, is_prefix=True, optional_prompt=None, min_prompt_token=1000):
         """
-        如果prompt超过最大token数，则截断它
-        前缀截掉前面部分
-        后缀截掉后面部分
+        If the prompt exceeds the maximum number of tokens, truncate it
+        The prefix truncates the front part
+        The suffix truncates the back part
         :param prompt:
         :param is_prefix:
-        :param optional_prompt: 额外上下文
-        :param min_prompt_token: 至少保留prompt多少token
+        :param optional_prompt: Extra context
+        :param min_prompt_token: How many tokens should the prompt keep at least
         :return: prompt, optional_prompt
         """
         optional_prompt_tokens = 0
@@ -334,12 +334,12 @@ class TGIProxyV2:
             truncated_tokens = None
             truncated_optional_tokens = None
 
-            # 如果截断前缀后，剩余的token数大于最小token数，则直接截断prompt
+            # If the number of remaining tokens is greater than the minimum number of tokens after truncating the prefix, truncate the prompt directly
             if is_prefix and requested_tokens - need_cut_tokens >= min_prompt_token:
                 truncated_tokens = prompt_tokens[need_cut_tokens:]
-            # 如果截断前缀后，剩余的token数小于最小token数，则截断保留最小token数，然后截断optional_prompt
+            # If the number of remaining tokens is less than the minimum number of tokens after truncating the prefix, truncate to keep the minimum number of tokens, and then truncate optional_prompt
             elif is_prefix and requested_tokens - need_cut_tokens < min_prompt_token:
-                # 保留最小token数（担心前缀小于min_prompt_token，导致关联上下文内容减少）
+                # Keep the minimum number of tokens (worry that the prefix is less than min_prompt_token, resulting in reduced context content)
                 actual_min = min(min_prompt_token, requested_tokens)
                 truncated_tokens = prompt_tokens[-actual_min:]
                 optional_token = self.get_tokens(optional_prompt)
@@ -347,20 +347,20 @@ class TGIProxyV2:
             elif not is_prefix:
                 truncated_tokens = prompt_tokens[:-need_cut_tokens]
 
-            # 将截断的tokens解码回字符串
+            # Decode the truncated tokens back to a string
             if truncated_tokens:
                 prompt = self.tokens_decode(truncated_tokens)
 
             if truncated_optional_tokens:
                 optional_prompt = self.tokens_decode(truncated_optional_tokens)
 
-            # 保证切割处为完整行，若不完整 将其移除
+            # Ensure that the cut is a complete line, if it is not complete, remove it
             lines = prompt.splitlines(True)
             if len(lines) > 0:
-                if is_prefix:  # 前缀处理首行
+                if is_prefix:  # Prefix processing first line
                     if any([lines[0].startswith('\n'), lines[0].startswith('\r\n')]) is False:
                         lines = lines[1:]
-                else:  # 后缀处理尾行
+                else:  # Suffix processing last line
                     if any([lines[-1].endswith('\n'), lines[-1].endswith('\r\n')]) is False:
                         lines = lines[:-1]
                 prompt = ''.join(lines)
@@ -392,11 +392,11 @@ class TGIProxyV2:
             code_context = data.get('code_context', '')
         language = data.get("language_id")
         try:
-            # 补全模型初始化（模型策略选择，tokenizer初始化，特殊token初始化等）
+            # Completion model initialization (model strategy selection, tokenizer initialization, special token initialization, etc.)
             self.init_completion_model_info(data)
             logger.info(f"model={self.model}, self.FIM_PREFIX={self.FIM_PREFIX}")
 
-            # 补全前置处理 （拼接prompt策略，单行/多行补全策略）
+            # Completion pre-processing (prompt splicing strategy, single-line/multi-line completion strategy)
             prompt, prompt_tokens, prefix, suffix = self.prepare_prompt(prefix, suffix, code_context)
             data['prompt'] = prompt
             data['prompt_tokens'] = prompt_tokens
@@ -411,7 +411,7 @@ class TGIProxyV2:
 
             logger.info(f"language={language}, is_single_completion={is_single_completion}")
 
-            # 请求补全
+            # Request completion
             if prompt_tokens > 0:
                 context_and_intention = CompletionContextAndIntention(
                     language=language,
@@ -435,7 +435,7 @@ class TGIProxyV2:
             choices = []
             prompt_tokens = 0
 
-        # 补全后置处理-内容丢弃
+        # Completion post-processing - content discarding
         if choices:
             model_choices = copy.deepcopy(choices)
 
@@ -448,32 +448,32 @@ class TGIProxyV2:
                 is_python_text(choices[0].get('text', ''))):
             choices = []
 
-        # 补全后置处理-补全内容处理
+        # Completion post-processing - completion content processing
         if choices and choices[0]['text']:
             text = choices[0].get('text', '')
 
-            # 补全内容去重
+            # Completion content deduplication
             text = cut_repetitive_text(text)
 
-            # 补全内容重叠裁剪
+            # Completion content overlap clipping
             text = cut_suffix_overlap(text, prefix, suffix)
 
-            # 语法后置处理的逻辑已改成了流式过程处理
-            # 详见：https://ipd.atrust.sangfor.com/ipd/team/7768/board?group_by=assigner&issue_type=global
-            # # 在单行补全场景 且 存在无效的括号 则对补全内容所在的完整行进行括号错配处理
+            # The logic of syntax post-processing has been changed to streaming process processing
+            # See: https://ipd.atrust.sangfor.com/ipd/team/7768/board?group_by=assigner&issue_type=global
+            # # In the single-line completion scenario and there are invalid parentheses, the parenthesis mismatch processing is performed on the complete line where the completion content is located
             # if is_single_completion and not is_valid_brackets(cursor_line_prefix + text + cursor_line_suffix):
             #     text = cut_text_by_tree_sitter(language, text, cursor_line_prefix, cursor_line_suffix, st,
             #                                    self.max_cost_time)
             #
-            # # 前后缀 + 完整补全内容 进行语法校验, 不满足则进行切割
+            # # Prefix + suffix + complete completion content for syntax verification, and cut if not satisfied
             # text = cut_text_by_tree_sitter(language, text, prefix, suffix, st,
             #                                self.max_cost_time)
 
-            # 无实际补全内容，置为空
+            # If there is no actual completion content, set it to empty
             if not is_valid_content(text):
                 text = ""
             if text != choices[0]['text']:
-                logger.info(f"触发补全后置处理完成，处理后的结果如下：{text}")
+                logger.info(f"Trigger completion post-processing completed, the processed result is as follows: {text}")
             choices[0]['text'] = text
 
         if model_choices and model_choices[0].get('text') and choices != model_choices:
@@ -496,7 +496,7 @@ class TGIProxyV2:
         }
         completion['user_code_upload_delay'] = int(os.environ.get("USER_CODE_UPLOAD_DELAY", "0"))
         completion['code_context_strategy'] = data.get('code_context_strategy')
-        # 系统插件配置，用于更新插件端的默认配置
+        # System plugin configuration, used to update the default configuration of the plugin end
         completion['system_plugin_configs'] = {
             'context_lines_limit': int(os.environ.get("CONTEXT_LINES_LIMIT", "80")),
             'one_file_max_length': int(os.environ.get('ONE_FILE_MAX_LENGTH', '10000')),
@@ -510,5 +510,5 @@ class TGIProxyV2:
             'suggestion_delay': int(os.environ.get('SUGGESTION_DELAY', '75')),
         }
         logger.info(f"{data['x-complete-id']} Returned completion in {(ed - st) * 1000} ms")
-        # 统一响应，不再支持客户端流式响应
+        # Unified response, no longer supports client-side streaming response
         return json.dumps(completion)

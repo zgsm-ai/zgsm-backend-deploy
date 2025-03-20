@@ -12,11 +12,11 @@ from models.base_model import BaseModel
 
 
 class ApiRule(BaseModel):
-    """api权限规则"""
+    """api permission rules"""
     RULE_TYPE_CHOICES = ApiRuleConstant.RULE_TYPE_CHOICES
 
     class Meta:
         table_name = 'api_rule'
 
-    rule_type = CharField(default='', choices=RULE_TYPE_CHOICES, verbose_name='类型')
-    rule_info = CharField(default='', verbose_name='内容', help_text='部门：多级部门使用 “/” 隔开，例：研发体系/项目管理部<br>用户：姓名+工号')
+    rule_type = CharField(default='', choices=RULE_TYPE_CHOICES, verbose_name='Type')
+    rule_info = CharField(default='', verbose_name='Content', help_text='Department: Use "/" to separate multi-level departments, e.g., R&D System/Project Management Department<br>User: Name + Employee ID')

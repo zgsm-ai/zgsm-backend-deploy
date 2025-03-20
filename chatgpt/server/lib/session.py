@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 """
-@Author  ：范立伟33139
+@Author  ：Fan Liwei 33139
 @Date    ：2023/3/16 9:37
 """
 
@@ -18,7 +18,7 @@ class SessionService:
     @classmethod
     def gen_state(cls, length=32):
         """
-        生成随机的state，防止csrf
+        Generate a random state to prevent CSRF
         """
         return secrets.token_urlsafe(nbytes=length)[0:length]
 
@@ -27,4 +27,3 @@ class SessionService:
         user = ApplicationContext.get_current()
         if user:
             ApplicationContext.clear_session()
-

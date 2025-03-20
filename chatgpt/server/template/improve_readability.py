@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-    简单介绍
+    Simple introduction
 
-    :作者: 苏德利 16646
-    :时间: 2023/3/3 17:35
-    :修改者: 苏德利 16646
-    :更新时间: 2023/3/3 17:35
+    :Author: Sudeli 16646
+    :Time: 2023/3/3 17:35
+    :Modifier: Sudeli 16646
+    :UpdateTime: 2023/3/3 17:35
 """
 
-# 优化代码初始提问模板
+# Optimized code initial question template
 INITIAL_PROMPT = """
 ## Instructions
 How could the readability of the code below be improved?
@@ -35,7 +35,7 @@ Must reply with Chinese.
 ## Readability Improvements
 """
 
-# 优化代码连续提问模板
+# Optimized code continuous question template
 RESPONSE_PROMPT = """
 ## Instructions
 Continue the conversation below.

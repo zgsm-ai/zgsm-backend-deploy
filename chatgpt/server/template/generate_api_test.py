@@ -6,36 +6,36 @@
 # @File    : generate_api_test.py
 # @Software: PyCharm
 # @Project : chatgpt-server
-# @Desc    : 生成api测试prompt模板
+# @Desc    : generate api test prompt template
 
-# 生成测试点初始提问模板
+# generate test point initial question template
 INITIAL_API_TEST_POINT_PROMPT = r"""
-## 指令
-您是一个经验丰富的API接口测试工程师。
-# 上下文 #
-输入API文档内容，主要包括接口名称、接口url，请求参数示例，和返回参数示例。
-测试点设计规范：
- - 准确了解接口功能、参数说明和示例，根据接口功能和参数说明或示例设计测试点。
- - 只需要针对有明确约束的参数生成测试点，测试点覆盖正常场景和异常场景。如果针对某参数提供的约束不足，不需要生成该参数的用例。**不要**自行对参数增加约束！！！
- - 每一个测试点**提供具体示例**，例子放在（）内部。例子不要仅仅给出对异常情况的描述！！！
- - 异常测试点的多样化。例如验证string的合法性时，应生成含有多种不同非法字符的string的测试点。
- - 覆盖公共测试范围，测试范围参考：{test_range}
-# 目标 #
-根据接口功能和测试设计规范设计接口的测试点。
+## Instructions
+You are an experienced API interface testing engineer.
+# Context #
+Input API documentation content, mainly including interface name, interface url, request parameter examples, and return parameter examples.
+Test point design specifications:
+ - Accurately understand the interface function, parameter descriptions, and examples, and design test points based on the interface function and parameter descriptions or examples.
+ - Only generate test points for parameters with clear constraints, covering normal and abnormal scenarios. If insufficient constraints are provided for a parameter, do not generate test cases for that parameter. **Do not** add constraints to parameters yourself!!!
+ - Each test point should **provide specific examples**, placed inside parentheses. Examples should not only describe abnormal situations!!!
+ - Diversify abnormal test points. For example, when verifying the validity of a string, generate test points containing various different illegal characters.
+ - Cover common test ranges, refer to the test range: {test_range}
+# Target #
+Design test points for the interface based on interface functions and test design specifications.
 
-# 格式 #
-参考【output 示例】格式返回json数据，数据只包含test_params_description和test_points，test_params_description值为待测参数说明，正则表达式需要详细解释正则规则；test_points值为测试点描述，多个测试点之间使用"\n"进行分割。
+# Format #
+Refer to the [output example] format to return JSON data, including test_params_description and test_points. The test_params_description value is the parameter description to be tested, and the regular expression needs to explain the regular rules in detail; the test_points value is the test point description, and multiple test points are separated by "\n".
 
 ## Chain-of-Thought example
 ### input
-- 接口名称
-新增产品接口
-- 接口url
+- Interface Name
+Add Product Interface
+- Interface URL
 /api/dmp/product
-- 接口请求类型
+- Interface Request Type
 POST
-- 接口请求参数
-body参数：
+- Interface Request Parameters
+body parameters:
 body_param = {
     "admin": "",
     "bg_code": "",
@@ -47,62 +47,62 @@ body_param = {
     "sort_number": 0
 }
 
-query参数：
+query parameters:
 query_param="is_enable=true&product_id=9"
-- 参数说明
-body参数：
-    "admin_id": "必填，参数类型：string，参数说明：产品管理员ID，符合正则表达式模式：^[1-9][0-9]{5,6}$,参数示例：929629",
-    "bg_code": "必填，参数类型：string，参数说明：所属BG",
-    "devops_product_ids": "非必填，参数类型：string，参数说明：绑定的devops产品，多选，逗号隔开",
-    "handler": "必填，参数类型：string，参数说明：产品负责人",
-    "is_enable": "必填，参数类型：boolean，参数说明：是否启用，true/false，参数示例：true",
-    "cell_phone": "必填：参数类型：string，参数说明：手机号，合法长度为11，参数示例：13680201225",
-    "mail": "非必填，参数类型：short，参数说明：所属父级，没有父级则为空",
-    "ip": "必填，参数类型：string，参数说明：ip地址，参数示例：127.0.0.0"
-query参数：
-    "is_enable": "必填，参数类型：boolean，参数说明：是否启用，true/false，参数示例：true",
-    "product_id": "必填：参数类型：string，参数说明：产品id，不能为空，参数示例：9，最大长度：200",
+- Parameter Description
+body parameters:
+    "admin_id": "Required, Parameter Type: string, Parameter Description: Product administrator ID, matches the regular expression pattern: ^[1-9][0-9]{5,6}$, Parameter Example: 929629",
+    "bg_code": "Required, Parameter Type: string, Parameter Description: BG to which it belongs",
+    "devops_product_ids": "Optional, Parameter Type: string, Parameter Description: Bound devops products, multiple selections, separated by commas",
+    "handler": "Required, Parameter Type: string, Parameter Description: Product负责人",
+    "is_enable": "Required, Parameter Type: boolean, Parameter Description: Whether to enable, true/false, Parameter Example: true",
+    "cell_phone": "Required: Parameter Type: string, Parameter Description: Cell phone number, valid length is 11, Parameter Example: 13680201225",
+    "mail": "Optional, Parameter Type: short, Parameter Description: Parent level, empty if no parent level",
+    "ip": "Required, Parameter Type: string, Parameter Description: ip address, Parameter Example: 127.0.0.0"
+query parameters:
+    "is_enable": "Required, Parameter Type: boolean, Parameter Description: Whether to enable, true/false, Parameter Example: true",
+    "product_id": "Required: Parameter Type: string, Parameter Description: Product ID, cannot be empty, Parameter Example: 9, Maximum Length: 200",
 
-待测参数（生成用例仅关注此参数，其他参数使用固定值）：
-    admin_id、ip、cell_phone、product_id
+Parameters to be tested (generate test cases only focus on this parameter, other parameters use fixed values):
+    admin_id, ip, cell_phone, product_id
 
-### output 示例
+### output example
 {
 "test_params_description": {
-"admin_id":"产品管理员ID，合法长度为6-7位，以1到9之间的数字开头，后面必须跟着5到6个数字，且这些数字必须是0到9之间的数字。"
-"cell_phone": "手机号，合法长度为11",
-"ip": "ip地址，合法的ipv4地址",
-"product_id": "产品id，不能为空"
+"admin_id":"Product administrator ID, valid length is 6-7 digits, starting with a digit between 1 and 9, followed by 5 to 6 digits, and these digits must be between 0 and 9."
+"cell_phone": "Cell phone number, valid length is 11",
+"ip": "ip address, valid ipv4 address",
+"product_id": "Product ID, cannot be empty"
 },
-"test_points": "1.测试接口参数正常-admin_id长度在合理范围内（长度为6，例如632589）\n2.测试接口参数异常-admin_id长度为最大长度+1（长度为8，例如47128635）\n3.测试接口参数异常-admin_id不符合正则表达式，第一位为0（059645）\n4.测试接口参数异常-admin_id包含特殊字符（5!16_68）（这里的示例应该涵盖尽量多种特殊字符，并且插入在字符串的不同位置中）\n5.测试接口参数正常-ip为合法地址（192.168.0.6）\n6.测试接口参数异常-ip为非法地址（255.255.255.256）\n7.测试接口参数正常-cell_phone为11位合法手机号（13680201225）\n8.测试接口参数异常-cell_phone为12位非法号码（136802012250）\n9.测试接口参数正常-参数product_id长度在合理范围内（12）\n10.测试接口参数异常-参数product_id长度为最大长度+1（长度为201）"
+"test_points": "1. Test interface parameter normal - admin_id length is within a reasonable range (length is 6, e.g. 632589)\n2. Test interface parameter abnormal - admin_id length is maximum length + 1 (length is 8, e.g. 47128635)\n3. Test interface parameter abnormal - admin_id does not conform to the regular expression, first digit is 0 (059645)\n4. Test interface parameter abnormal - admin_id contains special characters (5!16_68) (This example should cover as many special characters as possible and insert them in different positions in the string)\n5. Test interface parameter normal - ip is a valid address (192.168.0.6)\n6. Test interface parameter abnormal - ip is an invalid address (255.255.255.256)\n7. Test interface parameter normal - cell_phone is a 11-digit valid cell phone number (13680201225)\n8. Test interface parameter abnormal - cell_phone is a 12-digit invalid number (136802012250)\n9. Test interface parameter normal - parameter product_id length is within a reasonable range (12)\n10. Test interface parameter abnormal - parameter product_id length is maximum length + 1 (length is 201)"
 }
 
 ## input
-- 接口名称
+- Interface Name
 {api_name}
-- 接口url
+- Interface URL
 {api_url}
-- 接口请求类型
+- Interface Request Type
 {api_request_type}
-- 接口请求参数
-body参数：
+- Interface Request Parameters
+body parameters:
 ```python
 body_param = {request_info}
 ```
-query参数：
+query parameters:
 query_param="{url_param}"
-- 请求参数说明
-body参数：
+- Request Parameter Description
+body parameters:
 {api_request_info_desc}
-query参数：
+query parameters:
 {api_url_param_desc}
-待测参数（生成测试点仅关注此参数，其他参数使用固定值，若参数类型为array则只关注array容量合法性和array参数类型合法性测试，不需要展开测试array里面参数）：
+Parameters to be tested (generate test points only focus on this parameter, other parameters use fixed values. If the parameter type is array, only focus on array capacity validity and array parameter type validity test, do not expand to test parameters inside the array):
 {waiting_test_param}
 
 ## output
 """.strip()
 
-# 生成测试集初始提问模板
+# generate test set initial question template
 INITIAL_API_TEST_SET_PROMPT = """
 ## Instructions
 You are an experienced API interface testing engineer.
@@ -120,12 +120,12 @@ When generating a string given its length L, output like this: "a*L"
 ## Chain-of-Thought example
 ### input
 - 接口名称
-新增产品接口
+Add Product Interface
 - 接口url
 /api/dmp/product
 - 接口请求类型
 POST
-- 接口请求参数
+- Interface Request Parameters
 body参数：
 body_param = {
     "admin": "",
@@ -138,32 +138,32 @@ body_param = {
     "sort_number": 0
 }
 
-query参数：
+query parameters:
 query_param="is_enable=true&product_id=9"
-- 参数说明
-body参数：
-    "admin": "必填，参数类型：string，参数说明：产品管理员，多选，逗号隔开",
-    "bg_code": "必填，参数类型：string，参数说明：所属BG",
-    "devops_product_ids": "非必填，参数类型：string，参数说明：绑定的devops产品，多选，逗号隔开",
-    "handler": "必填，参数类型：string，参数说明：产品负责人",
-    "is_enable": "必填，参数类型：boolean，参数说明：是否启用，true/false，参数示例：true",
-    "name": "必填：参数类型：string，参数说明：产品名，不能为空，最大长度128，参数示例：devops",
-    "parent_id": "非必填，参数类型：short，参数说明：所属父级，没有父级则为空",
-    "sort_number": "必填，参数类型：short，参数说明：产品排序号"
-query参数：
-    "is_enable": "必填，参数类型：boolean，参数说明：是否启用，true/false，参数示例：true",
-    "product_id": "必填：参数类型：string，参数说明：产品id，不能为空，参数示例：9，最大长度：50",
+- Parameter Description
+body parameters:
+    "admin": "Required, Parameter Type: string, Parameter Description: Product administrator, multiple selections, separated by commas",
+    "bg_code": "Required, Parameter Type: string, Parameter Description: BG to which it belongs",
+    "devops_product_ids": "Optional, Parameter Type: string, Parameter Description: Bound devops products, multiple selections, separated by commas",
+    "handler": "Required, Parameter Type: string, Parameter Description: Product负责人",
+    "is_enable": "Required, Parameter Type: boolean, Parameter Description: Whether to enable, true/false, Parameter Example: true",
+    "name": "Required: Parameter Type: string, Parameter Description: Product name, cannot be empty, maximum length 128, Parameter Example: devops",
+    "parent_id": "Optional, Parameter Type: short, Parameter Description: Parent level, empty if no parent level",
+    "sort_number": "Required, Parameter Type: short, Parameter Description: Product sort number"
+query parameters:
+    "is_enable": "Required, Parameter Type: boolean, Parameter Description: Whether to enable, true/false, Parameter Example: true",
+    "product_id": "Required: Parameter Type: string, Parameter Description: Product ID, cannot be empty, Parameter Example: 9, Maximum Length: 50",
 
-测试点：
-    1.测试接口参数异常-缺少非必填参数parent_id
-    2.测试接口参数异常-参数值类型不对,parent_id应该为字符串
-    3.测试接口参数异常-参数product_id长度为51（最大长度+1）
+Test points:
+    1.Test interface parameter abnormal - missing optional parameter parent_id
+    2.Test interface parameter abnormal - parameter value type is incorrect, parent_id should be a string
+    3.Test interface parameter abnormal - parameter product_id length is 51 (maximum length + 1)
 
 ### output
 {
     "test_sets": [
         {
-            "name": "测试接口参数异常-缺少非必填参数parent_id",
+            "name": "Test interface parameter abnormal - missing optional parameter parent_id",
             "test_case_title": "test_lack_unnecessary_param_parent_id_case",
             "input_body_param": {
                 "admin": "sudeli",
@@ -179,7 +179,7 @@ query参数：
             "output_status_code": 200
         },
         {
-            "name": "测试接口参数异常-参数值类型不对,parent_id应该为字符串",
+            "name": "Test interface parameter abnormal - parameter value type is incorrect, parent_id should be a string",
             "test_case_title"： "test_parent_id_wrong_param_type_case",
             "input_body_param": {
                 "admin": "sudeli",
@@ -196,7 +196,7 @@ query参数：
             "output_status_code": 400
         },
         {
-            "name": "测试接口参数异常-参数product_id长度为51（最大长度+1）",
+            "name": "Test interface parameter abnormal - parameter product_id length is 51 (maximum length + 1)",
             "test_case_title"： "test_parent_id_wrong_param_type_case",
             "input_body_param": {
                 "admin": "sudeli",
@@ -216,26 +216,26 @@ query参数：
 }
 
 ## input
-- 接口名称
+- Interface Name
 {api_name}
-- 接口url
+- Interface URL
 {api_url}
-- 接口请求类型
+- Interface Request Type
 {api_request_type}
-- 接口请求参数
-body参数：
+- Interface Request Parameters
+body parameters:
 ```python
 body_param = {request_info}
 ```
-query参数：
+query parameters:
 query_param="{url_param}"
-- 请求参数说明
-body参数：
+- Request Parameter Description
+body parameters:
 {api_request_info_desc}
-query参数：
+query parameters:
 {api_url_param_desc}
 
-测试点：（生成测试集仅针对以下测试点）
+Test points: (Generate test sets only for the following test points)
 {test_points}
 
 ## output
@@ -247,7 +247,7 @@ from pytest_micro.wraps import tag, title, grpcmock
 @tag(id='{testcase_id}', level="bvt")
 @title("{test_point_name}")
 def {test_case_title}(mock_api, http_service):
-    '''http mock的案例举例'''
+    '''http mock example'''
     mock_api.add('/inner/test1', code=200)
     mock_api.add('/inner/test2', code=400)
     json_body = {request_json}
@@ -258,19 +258,19 @@ def {test_case_title}(mock_api, http_service):
 
 DEFAULT_API_TEST_RANGE = [
     {
-        "dimension": "数字类型边界值测试",
-        "coverage": ["最大值", "最大值+1", "最小值", "最小值-1", "中间值", "空值"],
+        "dimension": "Numeric type boundary value test",
+        "coverage": ["Maximum value", "Maximum value + 1", "Minimum value", "Minimum value - 1", "Middle value", "Null value"],
         "data_types": ["integer", "number"],
         "ignore_scenarios": []
     },
     {
-        "dimension": "字符串合法性",
+        "dimension": "String validity",
         "coverage": [
-            "参数长度为最大长度值",
-            "测试参数长度为最大长度值+1",
-            "特殊字符（特殊字符不能下发：&|\"',%<>/\\）",
-            "具体场景相关（IP子网，IP范围，mac合法性，url合法性，域名合法性，日期合法性，时间合法性，特殊字符测试）",
-            "字符多样性（全角，半角，大小写，中英文结合）"
+            "Parameter length is the maximum length value",
+            "Test parameter length is the maximum length value + 1",
+            "Special characters (special characters cannot be issued: &|\"',%<>/\\)",
+            "Specific scenario related (IP subnet, IP range, mac validity, url validity, domain name validity, date validity, time validity, special character test)",
+            "Character diversity (full-width, half-width, uppercase, lowercase, Chinese and English combination)"
         ],
         "data_types": ["string"],
         "ignore_scenarios": [
@@ -285,18 +285,18 @@ DEFAULT_API_TEST_RANGE = [
         ]
     },
     {
-        "dimension": "容量合法性测试",
+        "dimension": "Capacity validity test",
         "coverage": [
-            "数组是有容量边界的，比如最小允许1条，最大允许30条，那就要验证0,1,30,31 这些边界值"
+            "The array has capacity boundaries, such as a minimum of 1 and a maximum of 30, so you need to verify these boundary values: 0, 1, 30, 31"
         ],
         "data_types": ["Array"],
         "ignore_scenarios": []
     },
     {
-        "dimension": "选填和必填测试",
+        "dimension": "Optional and required test",
         "coverage": [
-            "必填携带不全",
-            "只填写必填（需要验证选填返回的是否是默认值）"
+            "Required not fully carried",
+            "Only fill in the required (need to verify whether the optional return is the default value)"
         ],
         "data_types": ["Array"],
         "ignore_scenarios": []

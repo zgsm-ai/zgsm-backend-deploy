@@ -10,7 +10,7 @@ from services.action.base_service import ActionStrategy, ChatbotOptions
 from services.system.configuration_service import ConfigurationService
 from services.agents.agent_data_classes import ChatRequestData
 
-# 诸葛普通聊天
+# Zhuge normal chat
 class NormalChatStrategy(ActionStrategy):
     name = ActionsConstant.ZHUGE_NORMALCHAT
 

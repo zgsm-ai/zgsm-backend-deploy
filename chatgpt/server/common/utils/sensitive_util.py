@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
- 敏感词处理工具
-@Author  : 黄伟伦w82676
+ Sensitive word processing tool
+@Author  : huangweilenw82676
 @Date    : 2024/5/31 15:45
 """
 import re
@@ -12,8 +12,8 @@ from common.constant import PromptConstant
 
 def sensitization_process(text):
     """
-    敏化处理
-    text: 需要敏化的文本
+    Sensitization processing
+    text: The text that needs to be sensitized
     """
 
     for target_word, replace_word in PromptConstant.SENSITIVE_WORD_MAP.items():
@@ -24,8 +24,8 @@ def sensitization_process(text):
 
 def desensitization_process(text):
     """
-    脱敏处理
-    text: 需要脱敏的文本
+    Desensitization processing
+    text: The text that needs to be desensitized
     """
     for target_word, replace_word in PromptConstant.TARGET_WORD_MAP.items():
         if target_word in text:

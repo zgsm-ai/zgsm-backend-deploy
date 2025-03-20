@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-    简单介绍
+    Simple introduction
 
-    :作者: 陈烜 42766
-    :时间: 2023/3/24 14:12
-    :修改者: 陈烜 42766
-    :更新时间: 2023/3/24 14:12
+    :Author: Chen Xuan 42766
+    :Time: 2023/3/24 14:12
+    :Modifier: Chen Xuan 42766
+    :UpdateTime: 2023/3/24 14:12
 """
 import logging
 import re
@@ -25,7 +25,7 @@ from services.system.configuration_service import ConfigurationService
 
 def stream_error_response(func):
     """
-    控制流式错误响应
+    Control the streaming error response
     """
 
     def wrapper(*args, **kwargs):
@@ -44,34 +44,34 @@ def stream_error_response(func):
 
 class ChatbotOptions:
     """
-    对话机器人设置
+    Chatbot settings
     """
     def __init__(self, data: Dict[str, any] = None):
         """
-        初始化函数，用于设置请求配置和模型参数。
+        Initialization function for setting request configurations and model parameters.
 
-        参数:
-        - data (Dict[str, any]): 用户请求自带的对话机器人设置，默认为空字典。
+        Parameters:
+        - data (Dict[str, any]): Chatbot settings that come with the user request, default is an empty dictionary.
 
-        属性:
-        - stream (bool): 是否启用流式传输，默认为 False。
-        - temperature (int): 生成数据的温度参数，默认为 0。
-        - model (str): 本轮对话使用的模型名称，默认为空字符串。
-        - context_association (bool): 是否保留上下文，默认为 True。
-        - systems (List[str]): 自定义预置系统的列表，默认为空列表。如果传入的是字符串，则自动转换为列表。
+        Attributes:
+        - stream (bool): Whether to enable streaming transmission, default is False.
+        - temperature (int): Temperature parameter for generating data, default is 0.
+        - model (str): The name of the model used in this round of conversation, default is an empty string.
+        - context_association (bool): Whether to keep the context, default is True.
+        - systems (List[str]): A list of custom preset systems, default is an empty list. If a string is passed, it will be automatically converted to a list.
         """
         if not data:
             data = {}
         # self.raw_data = data
-        # 请求配置
+        # Request configuration
         self.stream: bool = data.get('stream', False)
-        # 指定LLM生成数据的选项参数
+        # Specifies the option parameters for LLM to generate data
         self.temperature: int = data.get('temperature', 0)
-        # 本轮对话使用的模型：GPTModelConstant.GPT_TURBO
+        # Model used in this round of conversation: GPTModelConstant.GPT_TURBO
         self.model: str = data.get('model', '')
-        # 是否保留上下文
+        # Whether to retain context
         self.context_association: bool = data.get('context_association', True)
-        # 自定义预置
+        # Custom preset
         systems = data.get("systems", list())
         if isinstance(systems, str):
             systems = [systems]
@@ -91,15 +91,15 @@ class ActionStrategy:
 
     def get_prompt_template(self, attribute_key: str = '') -> str:
         """
-        获取指定属性键对应的提示模板。
+        Get the prompt template corresponding to the specified attribute key.
 
-        该函数用于兼容同一Action类中存在多个提示模板的场景。如果未提供attribute_key，则默认使用self.name作为属性键。
+        This function is used to be compatible with scenarios where there are multiple prompt templates in the same Action class. If attribute_key is not provided, self.name is used as the attribute key by default.
 
-        参数:
-        - attribute_key (str): 属性键，用于指定要获取的提示模板。如果为空，则使用self.name作为默认值。
+        Parameters:
+        - attribute_key (str): Attribute key, used to specify the prompt template to be obtained. If empty, self.name is used as the default value.
 
-        返回:
-        - str: 返回与指定属性键对应的提示模板。
+        Returns:
+        - str: Returns the prompt template corresponding to the specified attribute key.
         """
         attribute_key = attribute_key if attribute_key else self.name
         prompt_template = ConfigurationService.get_prompt_template(attribute_key=attribute_key)
@@ -121,9 +121,9 @@ class ActionStrategy:
 
     def get_systems(self, data: ChatRequestData = None, options: ChatbotOptions = None):
         """
-        获取聊天机器人的角色提示词设定，返回设定的字符串列表。
-        优先使用配置项设定的角色提示词设定，如果配置未设定，则使用缺省的聊天机器人角色设定
-        该设定可以被各个Action改写，以实现不同的角色设定
+        Get the role prompt settings of the chatbot and return a list of strings of the settings.
+        The role prompt setting set by the configuration item is preferred. If the configuration is not set, the default chatbot role setting is used.
+        This setting can be rewritten by each Action to achieve different role settings.
         """
         options = options or self.get_default_options()
         return options.systems
@@ -136,51 +136,51 @@ class ActionStrategy:
 
     def get_history(self,  options: ChatbotOptions = None) -> ChatHistory:
         """
-        获取聊天历史记录。
+        Get chat history.
 
-        参数:
-        - options (ChatbotOptions, 可选): 聊天机器人的配置选项。默认为None。
+        Parameters:
+        - options (ChatbotOptions, optional): Configuration options for the chatbot. Defaults to None.
 
-        返回:
-        - ChatHistory: 聊天历史记录对象。如果self.history为None，则创建一个新的ChatHistory对象。
+        Returns:
+        - ChatHistory: Chat history object. If self.history is None, a new ChatHistory object is created.
         """
         history = self.history or ChatHistory(self.get_conversation_db(options))
         return history
 
     def set_history(self, history: ChatHistory) -> None:
         """
-        指定使用该聊天历史记录对象。
+        Specify to use this chat history object.
         """
         self.history = history
 
     def set_logger(self, logger: logging.Logger):
         """
-        指定日志输出器
+        Specify the log output
         """
         self.logger = logger
 
     def get_prompt(self, data: ChatRequestData):
         """
-        根据用户请求，获取完整的提示信息。各个Action类会加工用户请求，构造提示，以获得更高质量的模型回复
+        Get complete prompt information according to user requests. Each Action class will process user requests and construct prompts to obtain higher-quality model replies.
         """
         return data.prompt
 
     def make_chatbot(self, data: ChatRequestData = None, options: ChatbotOptions = None):
         """
-        创建一个聊天机器人实例。
+        Create a chatbot instance.
 
-        参数:
-        - data (ChatRequestData): 聊天请求的数据，默认为None。
-        - options (ChatbotOptions): 聊天机器人的配置选项，默认为None。
+        Parameters:
+        - data (ChatRequestData): Chat request data, default is None.
+        - options (ChatbotOptions): Chatbot configuration options, default is None.
 
-        返回:
-        - apiBot: 一个聊天机器人实例，包含历史记录、提示生成器和模型。
+        Returns:
+        - apiBot: A chatbot instance containing history, prompt generator, and model.
 
-        步骤:
-        1. 根据提供的选项获取模型。
-        2. 根据提供的选项获取历史记录。
-        3. 创建一个提示生成器，使用系统配置和模型。
-        4. 返回一个包含历史记录、提示生成器和模型的聊天机器人实例。
+        Steps:
+        1. Get the model according to the provided options.
+        2. Get the history according to the provided options.
+        3. Create a prompt generator using system configuration and model.
+        4. Return a chatbot instance containing history, prompt generator, and model.
         """
         model = self.get_model(options)
         history = self.get_history(options)
@@ -189,23 +189,23 @@ class ActionStrategy:
 
     def ask(self, data: ChatRequestData, options: ChatbotOptions = None):
         """
-        向聊天机器人发送请求并获取响应。
+        Sends a request to the chatbot and retrieves the response.
 
-        参数:
-        - data (ChatRequestData): 包含请求信息的ChatRequestData对象。
-        - options (ChatbotOptions, 可选): 配置聊天机器人行为的选项。如果未提供，将使用默认选项。
+        Parameters:
+        - data (ChatRequestData): ChatRequestData object containing request information.
+        - options (ChatbotOptions, optional): Options to configure the behavior of the chatbot. If not provided, default options will be used.
 
-        返回:
-        - 聊天机器人的响应。如果options.stream为True，则返回流式响应；否则返回完整响应。
+        Returns:
+        - The response from the chatbot. Returns a streaming response if options.stream is True; otherwise, returns a complete response.
 
-        流程:
-        1. 如果未提供options，则使用默认选项。
-        2. 根据data和options创建聊天机器人实例。
-        3. 获取会话ID。
-        4. 检查请求的提示信息。
-        5. 记录请求的详细信息。
-        6. 根据options.stream的值选择合适的请求方法（流式或非流式）。
-        7. 调用聊天机器人的ask方法，并返回响应。
+        Process:
+        1. If options are not provided, default options are used.
+        2. Create a chatbot instance based on data and options.
+        3. Get the session ID.
+        4. Check the prompt information of the request.
+        5. Record the details of the request.
+        6. Select the appropriate request method (streaming or non-streaming) based on the value of options.stream.
+        7. Call the chatbot's ask method and return the response.
         """
         options = options or self.get_default_options()
         chatbot = self.make_chatbot(data, options)
@@ -221,14 +221,14 @@ class ActionStrategy:
 
     def make_result(self, data: ChatRequestData, options: ChatbotOptions = None):
         """
-        生成聊天结果
+        Generate chat results
 
-        参数:
-        - data (ChatRequestData): 聊天请求的数据
-        - options (ChatbotOptions, 可选): 聊天机器人的选项，默认为None
+        Parameters:
+        - data (ChatRequestData): Chat request data
+        - options (ChatbotOptions, optional): Chatbot options, default is None
 
-        返回:
-        - 返回通过`ask`方法生成的聊天结果
+        Returns:
+        - Returns the chat results generated by the `ask` method
         """
         return self.ask(data, options=options)
 
@@ -237,10 +237,10 @@ def process_code_retract(request_data, code):
     if not code:
         return code
     try:
-        source_first_line = next((v for v in request_data.code.splitlines() if v.strip()), '')  # 输入代码非空首行
+        source_first_line = next((v for v in request_data.code.splitlines() if v.strip()), '')  # The first non-empty line of the input code
         if '\t' in source_first_line:
-            return code  # 输入代码含制表符，不做缩进处理
-        source_strip_count = len(source_first_line) - len(source_first_line.lstrip())  # 空格数
+            return code  # If the input code contains tabs, no indentation processing is done
+        source_strip_count = len(source_first_line) - len(source_first_line.lstrip())  # Number of spaces
         first_line = next((v for v in code.splitlines() if v.strip()), '')
         res_strip_count = len(first_line) - len(first_line.lstrip())
         offset = source_strip_count - res_strip_count
@@ -257,11 +257,11 @@ def process_code_retract(request_data, code):
                 new_code += '\n'
             return new_code
     except Exception as e:
-        logging.error('缩进处理异常', e)
+        logging.error('Indentation processing exception', e)
     return code
 
 
-# 处理返回代码缩进
+# Process return code indentation
 def process_retract(func):
     def inner(*args, **kwargs):
         res = func(*args, **kwargs)
@@ -279,7 +279,7 @@ def process_retract(func):
                             new_code += '\n'
                         res['choices'][0]['message']['content'] = response_content.replace(code, new_code)
         except Exception as e:
-            logging.error('缩进处理异常', e)
+            logging.error('Indentation processing exception', e)
         return res
 
     return inner

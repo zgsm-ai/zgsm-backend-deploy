@@ -2,31 +2,31 @@
 
 . ./configure.sh
 
-# 定义最大等待时间（秒，0 表示无限等待）
+# Define the maximum waiting time (seconds, 0 means wait indefinitely)
 MAX_WAIT=0
-echo "正在检查 APISIX 服务状态..."
+echo "Checking APISIX service status..."
 start_time=$(date +%s)
 while : ; do
-  # 通过检测端口是否监听判断服务状态
+  # Determine the service status by checking if the port is listening
   if curl -sSf http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" >/dev/null; then
-    echo "APISIX 已成功启动（管理接口响应正常）"
+    echo "APISIX started successfully (management interface responds normally)"
     break
   fi
 
-  # 超时检测
+  # Timeout detection
   if [ $MAX_WAIT -ne 0 ]; then
     current_time=$(date +%s)
     if (( current_time - start_time > MAX_WAIT )); then
-      echo "错误：在 ${MAX_WAIT} 秒内未检测到 APISIX 启动"
+      echo "Error: APISIX startup not detected within ${MAX_WAIT} seconds"
       exit 1
     fi
   fi
 
-  echo "等待 APISIX 启动...（已等待 $(( $(date +%s) - start_time )) 秒）"
+  echo "Waiting for APISIX to start... (waited $(( $(date +%s) - start_time )) seconds)"
   sleep 5
 done
 
-# chatgpt的RESTful API端口
+# RESTful API port for chatgpt
 curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT  -d '{
     "id": "chatgpt",
     "nodes": {
@@ -35,7 +35,7 @@ curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT 
     "type": "roundrobin"
   }'
 
-# chatgpt的WebSocket端口
+# WebSocket port for chatgpt
 curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT  -d '{
     "id": "websocket",
     "nodes": {

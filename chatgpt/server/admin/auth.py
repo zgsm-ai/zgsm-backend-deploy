@@ -12,7 +12,7 @@ class AdminPermission(BaseView):
     def is_accessible(self):
         from services.system.users_service import UsersService
         username = ApplicationContext.get_current_username()
-        # 测试或者开发环境使用
+        # Use in test or development environment
         _env = os.environ.get("FLASK_ENV")
         if not username:
             user = UsersService().create_test_user()
@@ -32,7 +32,7 @@ class AdminPermission(BaseView):
 class AdminIndexView(AdminPermission):
 
     def __init__(self):
-        super(AdminIndexView, self).__init__(name='主页', endpoint='admin', url='/admin/', static_folder='static')
+        super(AdminIndexView, self).__init__(name='Home', endpoint='admin', url='/admin/', static_folder='static')
 
     @expose()
     def index(self):

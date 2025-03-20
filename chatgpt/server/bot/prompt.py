@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-    简单介绍
+    Simple introduction
 
-    :作者: 陈烜 42766
-    :时间: 2023/3/24 14:12
-    :修改者: 陈烜 42766
-    :更新时间: 2023/3/24 14:12
+    :Author: Chen Xuan 42766
+    :Time: 2023/3/24 14:12
+    :Modifier: Chen Xuan 42766
+    :UpdateTime: 2023/3/24 14:12
 """
 import logging
 import os
@@ -60,8 +60,8 @@ class Prompt:
 
     def cut_messages(self, messages):
         """
-        对超大messages信息进行裁剪，保证发给接口的信息tokens数不能超过最大限制
-        :param messages: 问询AI的上下文信息
+        Cut oversized messages information to ensure that the number of tokens sent to the interface does not exceed the maximum limit
+        :param messages: Contextual information for questioning AI
         :return messages:
         """
         # Check if prompt tokens over max_token
@@ -78,46 +78,46 @@ class Prompt:
                 over_tokens = False
                 break
         if messages_cut:
-            logging.warning("【删除历史提问】提问信息超长，自动删除部分最早的用户提问记录")
+            logging.warning("【Delete Historical Questions】The question information is too long, automatically delete some of the earliest user question records")
         if len(messages) <= 1:
-            # 用户的提问字符串数量就超上限了，直接mock数据，后续使用
+            # The number of user's question strings exceeds the limit, directly mock the data for subsequent use
             messages = [{"role": "assistant", "content": PromptConstant.TOKENS_OVER_LENGTH}]
         elif over_tokens:
-            # 如果删除的信息数量超max_remove之后tokens还是超了,直接mock数据，后续使用
+            # If the number of deleted information exceeds max_remove and the tokens still exceed, directly mock the data for subsequent use
             messages = [{"role": "assistant", "content": PromptConstant.TOKENS_OVER_LENGTH}]
         return messages
 
     def construct_messages(self, history_list: list, new_prompt: str, context_association: bool = True):
         """
-        构造发送给LLM的消息列表
+        Construct a message list to send to the LLM
 
-        参数:
-        - history_list (list): 聊天历史列表，包含对话历史信息。
-        - new_prompt (str): 用户输入的新提示信息。
-        - context_association (bool): 是否关联上下文信息。默认为True。
+        Parameters:
+        - history_list (list): Chat history list containing chat history information.
+        - new_prompt (str): New prompt information entered by the user.
+        - context_association (bool): Whether to associate context information. The default is True.
 
-        返回:
-        - tuple: 包含两个元素的元组，第一个元素是构造好的消息列表，第二个元素是消息列表的token数量。
+        Returns:
+        - tuple: A tuple containing two elements, the first element is the constructed message list, and the second element is the number of tokens in the message list.
 
-        功能描述:
-        1. 初始化一个空的消息列表。
-        2. 将基础提示信息（base_prompt）添加到消息列表中。
-        3. 如果context_association为True，则将聊天历史中的上下文信息添加到消息列表中。
-        4. 将用户输入的新提示信息添加到消息列表中。
-        5. 调用cut_messages方法对消息列表进行裁剪。
-        6. 调用num_tokens_from_messages方法计算消息列表的token数量。
-        7. 返回构造好的消息列表及其token数量。
+        Function description:
+        1. Initialize an empty message list.
+        2. Add basic prompt information (base_prompt) to the message list.
+        3. If context_association is True, add the context information in the chat history to the message list.
+        4. Add the new prompt information entered by the user to the message list.
+        5. Call the cut_messages method to crop the message list.
+        6. Call the num_tokens_from_messages method to calculate the number of tokens in the message list.
+        7. Returns the constructed message list and the number of tokens.
 
-        注意:
-        - 在添加上下文信息时，仅处理了用户和助手的消息，其他角色的消息可能需要进一步处理。
+        Note:
+        - When adding context information, only user and assistant messages are processed, and messages from other roles may need to be further processed.
         """
         messages = []
         for system in self.base_prompt:
             messages.append({"role": "system", "content": system})
         if context_association:
-            # 添加上下文
+            # Add context
             for message in history_list:
-                # FIXME: 可能有其他场景
+                # FIXME: Possible other scenarios
                 if message["role"] == self.username or message["role"] == 'user':
                     messages.append({"role": "user", "content": message['content']})
                 if message['role'] == self.ainame or message["role"] == 'assistant':
@@ -133,4 +133,3 @@ class Prompt:
             messages.append({"role": "system", "content": system})
         messages.append({"role": "user", "content": new_prompt})
         return messages
-

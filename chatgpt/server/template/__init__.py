@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-    简单介绍
+    Simple introduction
 
-    :作者: 苏德利 16646
-    :时间: 2023/3/3 15:20
-    :修改者: 苏德利 16646
-    :更新时间: 2023/3/3 15:20
+    :Author: Su Deli 16646
+    :Time: 2023/3/3 15:20
+    :Modifier: Su Deli 16646
+    :UpdateTime: 2023/3/3 15:20
 """
 from common.constant import ActionsConstant, ConfigurationConstant
 from template.advise import ADVISE_PROMPT
@@ -25,7 +25,7 @@ from template.generate_api_test import INITIAL_API_TEST_POINT_PROMPT, INITIAL_AP
 
 
 """
-prompt默认模板
+prompt default template
 """
 DEFAULT_TEMPLATE_MAP = {
     ActionsConstant.FIND_BUGS: FIND_BUGS_INITIAL_PROMPT,
@@ -40,6 +40,6 @@ DEFAULT_TEMPLATE_MAP = {
     ActionsConstant.ADD_COMMENT: ADD_COMMENT_INITIAL_PROMPT,
     ActionsConstant.PICK_COMMON_FUNC: PICK_COMMON_FUNC_INITIAL_PROMPT,
     ActionsConstant.SIMPLIFY_CODE: SIMPLIFY_CODE_INITIAL_PROMPT,
-    # 续写内容
+    # Continue writing content
     ConfigurationConstant.CONTINUE_PROMPT: CONTINUE_CONTENT_INITIAL_PROMPT,
 }

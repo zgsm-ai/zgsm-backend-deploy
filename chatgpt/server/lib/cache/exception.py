@@ -9,7 +9,7 @@ class CacheNoConnectionError(CacheError):
 
 
 class CacheKeyError(KeyError):
-    def __init__(self, err='缓存中未存有该键值'):
+    def __init__(self, err='Key does not exist in cache'):
         super().__init__(err)
 
 

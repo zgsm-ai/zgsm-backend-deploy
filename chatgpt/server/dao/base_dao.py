@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-    简单介绍
+    simple introduction
 
-    :作者: 苏德利 16646
-    :时间: 2023/3/14 15:39
-    :修改者: 苏德利 16646
-    :更新时间: 2023/3/14 15:39
+    :Author: Su Deli 16646
+    :Time: 2023/3/14 15:39
+    :Modifier: Su Deli 16646
+    :UpdateTime: 2023/3/14 15:39
 """
 
 from peewee import DoesNotExist, Model, fn
@@ -35,9 +35,9 @@ class BaseDao:
     @classmethod
     def get_or_create_v2(cls, **kwargs):
         """
-        将查询条件和插入数据区分
-        kwargs['defaults']：插入数据
-        其余参数：查询条件
+        Distinguish query conditions from inserted data
+        kwargs['defaults']：insert data
+        Other parameters: query conditions
         """
         defaults = kwargs.pop('defaults', {})
         query, total = cls.list(**kwargs)
@@ -62,16 +62,16 @@ class BaseDao:
     @classmethod
     def update_by_id(cls, mid, **kwargs):
         """
-        在软删除后也能获取到对象
+        The object can also be obtained after soft deletion
         """
         cls.model.update(**kwargs).where(cls.model.id == mid).execute()
 
     @classmethod
     def create_or_update(cls, **kwargs):
         """
-        将查询条件和插入/更新数据区分
-        kwargs['defaults']：插入/更新数据
-        其余参数：查询条件
+        Distinguish query conditions from inserted/updated data
+        kwargs['defaults']：insert/update data
+        Other parameters: query conditions
         """
         defaults = kwargs.pop('defaults', {})
         query = cls.get_or_none(**kwargs)
@@ -109,7 +109,7 @@ class BaseDao:
     def count_sort(cls, column, conditions=(True,), process_query=None, limit=5, min_count=1, order='desc', **kwargs):
         column_field = getattr(cls.model, column, None)
         if not column_field:
-            raise ModelException(f'指定的字段 {column} 在 {cls.model} 中不存在')
+            raise ModelException(f'The specified field {column} does not exist in {cls.model}')
         count_field = 'c_count'
 
         count_column = fn.COUNT(column_field).alias(count_field)
@@ -132,7 +132,7 @@ class BaseDao:
 
     @classmethod
     def _parse_kw_to_conditions(cls, kw, like=True):
-        # 自行实现 kw 转 conditions 元祖的解析
+        # Implement the parsing of kw to conditions tuple yourself
         conditions = list()
         if like:
             name = kw.pop('name', None)
@@ -161,8 +161,8 @@ class BaseDao:
     @classmethod
     def bulk_update(cls, check_fields, update_fields, conditions=(True,)):
         """
-        此方法为批量操作，部分场景不能适用（没有操作日志， 跳过update_by_id 在某些场景可能会有问题），
-        故未在base service调用，使用时在对应service层自行调用
+        This method is a batch operation and is not applicable to some scenarios (no operation log, skipping update_by_id may cause problems in some scenarios),
+        Therefore, it is not called in the base service, and the corresponding service layer is called by itself during use
         """
         conditions = (*conditions, *cls._parse_kw_to_conditions(check_fields))
         for k in update_fields.keys():
@@ -186,15 +186,15 @@ class BaseDao:
         query = cls.model.select()
         if process_query and callable(process_query):
             query = process_query(query)
-        # 多余的关键字参数会传到 _parse_kw_to_conditions 里解析
+        # Redundant keyword parameters will be passed to _parse_kw_to_conditions for parsing
         query = query.where(*conditions, *cls._parse_kw_to_conditions(kwargs, like=like))
-        # _parse_kw_to_order_by解析排序参数
+        # _parse_kw_to_order_by parses sorting parameters
         query = cls._parse_kw_to_order_by(query, kwargs)
-        # 是否需要total，不需要则返回0，默认需要
+        # Whether total is needed, 0 is returned if not needed, the default is needed
         is_need_total = kwargs.get('is_need_total', True)
         total = 0
         if is_need_total:
-            # total返回的是总数量而不是单页的数量，大数据量计算total对数据库影响比较大
+            # Total returns the total number instead of the number of single pages. Calculating total with large amounts of data has a greater impact on the database.
             total = query.count(database=cls.model._meta.database)
         if page and per:
             query = query.paginate(int(page), int(per))
@@ -219,7 +219,7 @@ class BaseDao:
     @classmethod
     def remove_invalid_fields(cls, fields):
         """
-        移除无效字段，例: ''空字符、'-'不合法字符
+        Remove invalid fields, such as: '' empty characters, '-' illegal characters
         """
         # valid_fields = [item[0] for item in self.get_valid_fields(queryset, view, {'request': request})]
         def term_valid(term):
@@ -244,7 +244,7 @@ class BaseDao:
         if params:
             sort_null = kw.pop('sort_null', None)
             null_param = {}
-            # 是否null值靠前
+            # Whether null value comes first
             if sort_null:
                 null_param['nulls'] = 'LAST'
 
@@ -254,12 +254,12 @@ class BaseDao:
                 ordering = [cls.get_ordering_value(param, null_param) for param in ordering]
                 return query.order_by(*ordering)
 
-        # 没有排序字段，或者所有排序字段都无效
+        # There is no sorting field, or all sorting fields are invalid
         return query
 
     @classmethod
     def _parse_kw_to_order_by(cls, query, kw):
-        # 多字段排序
+        # Multi-field sorting
         if kw.get('ordering'):
             return cls.order_by_filter(query, kw)
 
@@ -292,6 +292,6 @@ class BaseDao:
         query = cls.model.select(fn.COUNT(1))
         if process_query and callable(process_query):
             query = process_query(query)
-        # 多余的关键字参数会传到 _parse_kw_to_conditions 里解析
+        # Redundant keyword parameters will be passed to _parse_kw_to_conditions for parsing
         query = query.where(*conditions, *cls._parse_kw_to_conditions(kwargs, like=like))
         return query.count()

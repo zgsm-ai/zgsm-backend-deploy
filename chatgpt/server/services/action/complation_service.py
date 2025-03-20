@@ -12,6 +12,7 @@ class CompletionService(BaseService):
     @classmethod
     def validate_fields(cls, fields):
         """校验创建数据参数，去除冗余参数"""
+        """Verify the creation data parameters and remove redundant parameters"""
         rules = [
             {'label': 'system_prompt', 'type': list, 'optional': True, 'name': '系统预设'},
             {'label': 'prompt', 'type': str, 'name': 'prompt'},
@@ -21,6 +22,7 @@ class CompletionService(BaseService):
             {'label': 'max_tokens', 'type': int, 'optional': True},
             {'label': 'response_format', 'type': str, 'optional': True},
             {'label': 'replace_forbidden_word', 'type': bool, 'optional': True},  # 是否自动替换敏感词
+            {'label': 'replace_forbidden_word', 'type': bool, 'optional': True},  # Whether to automatically replace sensitive words
             {'label': 'context', 'type': str, 'optional': True, 'name': '上下文'}
         ]
         return cls._validate(fields, rules)

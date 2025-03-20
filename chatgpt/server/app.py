@@ -29,12 +29,12 @@ MODELS = [
 ]
 
 WHITE_LIST_PATHS = [
-    '/favicon.ico', # 图标访问时省掉校验逻辑
+    '/favicon.ico', # Skip the validation logic when accessing the icon
     '/api/test',
     '/api/sessions/idtrust',
     '/api/sessions/idtrust_callback',
     # '/api/users/current'
-    # TODO agent 过程的 context 更新接口，给 dify 用的，后续再考虑鉴权
+    # TODO agent process context update interface, used by dify, consider authentication later
     '/api/configuration',
     '/api/v4/agent/context',
     "/api/inference/v1/chat/completions",
@@ -44,9 +44,9 @@ WHITE_LIST_PATHS = [
 
 def software_version():
     """
-    获取软件版本
-    正常情况下软件版本定义在代码中，随着软件代码变更由程序员维护，
-    特殊情况下，系统管理员可以通过环境变量CHATGPT_VERSION定义版本号
+    Get software version
+    Under normal circumstances, the software version is defined in the code and maintained by the programmer as the software code changes.
+    In special cases, the system administrator can define the version number through the environment variable CHATGPT_VERSION
     """
     if "CHATGPT_VERSION" in os.environ:
         return os.environ["CHATGPT_VERSION"]
@@ -95,16 +95,16 @@ def create_app():
     @app.before_request
     def check_request():
         """
-        根据规则校验请求是否能够通过
+        Check whether the request can pass according to the rules
         """
         access = True
-        # api黑名单规则
+        # API blacklist rules
         current_path = request.path
         access = access and access_by_rules(current_path)
-        # 其他禁用规则
+        # Other forbidden rules
         # ·····
         if not access:
-            return Result.fail(message='禁止访问')
+            return Result.fail(message='Prohibited access')
         try:
             if current_path in WHITE_LIST_PATHS:
                 return
@@ -112,22 +112,22 @@ def create_app():
                 return
             if request.path.startswith("/static"):
                 return
-            # 跨域验证
+            # Cross-domain verification
             if request.method == 'OPTIONS':
                 return Result.success()
             access_info = ApplicationContext.get_current()
             if not access_info:
-                raise Exception('认证失败')
-            # 当前请求用户信息缓存到当前请求上下文，需要使用数据可用 g.current_user 获取
+                raise Exception('Authentication failed')
+            # Cache the current request user information to the current request context, you need to use the data available g.current_user to get
             g.current_user = access_info
             g.authorization = request.headers.get("Authorization", None)
         except Exception as err:
             app.logger.error(f'Unauthorized: {str(err)}, path: {current_path}, headers: {request.headers.__dict__}')
             if not request.headers.get('api-key'):
-                # 这里针对插件历史版本提供一个更新提示，老版本无api-key
-                return make_response('检测到当前插件版本不是最新版本，请打开"扩展"页面，升级插件版本。', 401)
+                # Here is an update prompt for the historical version of the plug-in. The old version does not have an api-key
+                return make_response('It is detected that the current plug-in version is not the latest version. Please open the "Extensions" page to upgrade the plug-in version.', 401)
             else:
-                return make_response('Unauthorized: 认证失败，请重新登陆', 401)
+                return make_response('Unauthorized: Authentication failed, please log in again', 401)
 
 
     @app.after_request
@@ -148,26 +148,26 @@ def create_app():
     @app.route("/")
     def index():
         """
-        空
+        empty
         ---
         tags:
         - system
         responses:
         200:
-            result: 结果
+            result: result
         """
         return "hello"
 
     @app.route("/models")
     def models():
         """
-        模型列表
+        Model list
         ---
         tags:
         - LLM
         responses:
         200:
-            result: 结果
+            result: result
         """
         return make_response(jsonify(MODELS))
 

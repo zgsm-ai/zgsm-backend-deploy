@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-    简单介绍
+    Simple introduction
 
-    :作者: 陈烜 42766
-    :时间: 2023/3/24 14:12
-    :修改者: 刘鹏 z10807
-    :更新时间: 2023/4/21 15:22
+    :Author: 陈烜 42766
+    :Time: 2023/3/24 14:12
+    :Modifier: 刘鹏 z10807
+    :UpdateTime: 2023/4/21 15:22
 """
 import os
 import re
@@ -19,10 +19,10 @@ from common.constant import ServeConstant
 load_dotenv()
 
 
-# 线上
-# 千流AI
-# Client ID：163777834
-# Client Secret：c0885d9f91a833d61d549165bf261655
+# Online
+# Qianliu AI
+# Client ID: 163777834
+# Client Secret: c0885d9f91a833d61d549165bf261655
 
 class BaseConfigModel:
     def __init__(self, data=None):
@@ -75,11 +75,11 @@ class BaseConfigModel:
     def __getitem__(self, k, default=None):
         return self.__dict__.get(k, default)
 
-    # 支持从系统环境变量中获取配置 格式为 redis_host: ${redis_host:xxx.xxx.xxx} 冒号前为环境变量配置值，后边为default_value
-    # 支持从yml文件中配置默认参数 如果系统环境变量中不存在所需的配置值，就获取default_val填充。default_val可不写，如redis_host: ${redis_host}
-    # 环境变量 Key 中不允许包含 ":"    默认值中允许包含 ":"
+    # Support getting configuration from system environment variables. The format is redis_host: ${redis_host:xxx.xxx.xxx}. The value before the colon is the environment variable configuration value, and the latter is the default_value
+    # Support configuring default parameters from yml files. If the required configuration value does not exist in the system environment variables, get the default_val to fill. default_val can be omitted, such as redis_host: ${redis_host}
+    # The environment variable Key is not allowed to contain ":" The default value is allowed to contain ":"
     def match_key(self, string):
-        p2 = re.compile(r'[$][{](.*)[}]', re.S)  # 最外匹配
+        p2 = re.compile(r'[$][{](.*)[}]', re.S)  # outer match
         if re.findall(p2, string).__len__() > 0:
             return re.findall(p2, string)[0]
         else:
@@ -111,7 +111,7 @@ class BaseConfigModel:
 
 
 class Config:
-    # 不按环境变量改动与更新的配置文件
+    # Configuration files that are not changed or updated according to environment variables
     buildin_config = ['logging', 'ut']
 
     runtime_path = os.path.dirname(os.path.relpath(__file__))

@@ -43,7 +43,7 @@ def handle_key(func):
         args = args[len(args) + 1 - required_args_count:]
         if bool([k for k in keys
                  if (not isinstance(k, str)) and (not isinstance(k, int))]):
-            raise CacheKeyError('不合法Key')
+            raise CacheKeyError('Invalid Key')
         return func(self, *[self.make_key(keys), *args], **kwargs)
 
     return wrapper
@@ -63,7 +63,7 @@ class BaseCache:
         else:
             self.serializer = pickle
 
-        # 确保每次都是连接同一个连接池
+        # Ensure that each connection is to the same connection pool
         if not self.pool:
             raise CacheNoConnectionError
         if not self.connection:
@@ -80,18 +80,18 @@ class BaseCache:
             BaseCache.pools_dict[self.url] = self.pool
 
     def serialize(self, value):
-        """序列化"""
+        """Serialization"""
         if isinstance(value, dict):
-            # 字典类型存map
+            # Dictionary type stores map
             # return {k: self.serializer.dumps(v) for k, v in value.items()}
             return self.serializer.dumps(value)
         else:
             return self.serializer.dumps(value)
 
     def deserialize(self, value):
-        """反序列化"""
+        """Deserialization"""
         if isinstance(value, dict):
-            # key 要编码成utf8,否则取出来是bytes
+            # key needs to be encoded into utf8, otherwise it will be bytes when taken out
             return {k.decode('utf-8'): self.serializer.loads(v) for k, v in value.items()}
         elif isinstance(value, (list, set)):
             return [self.serializer.loads(v) for v in value]
@@ -99,7 +99,7 @@ class BaseCache:
             return self.serializer.loads(value)
 
     def make_key(self, *args):
-        """构造缓存key"""
+        """Construct cache key"""
         if len(args) < 1:
             raise CacheKeyError('missing key(s)')
         if len(args) == 1 and isinstance(args[0], (list, tuple)):
@@ -184,13 +184,13 @@ class BaseCache:
     @handle_key
     def expire(self, key, seconds):
         """
-        设置过期时间(单位为秒)
+        Set expiration time (in seconds)
         """
         return self.connection.expire(key, timedelta(seconds=seconds))
 
     def clear(self, rule=None):
         """
-        清除当前命名空间下的缓存
+        Clear the cache under the current namespace
         """
         if not rule:
             rule = "*"
@@ -200,9 +200,9 @@ class BaseCache:
 
     def flushall(self):
         """
-        清空全部缓存
+        Clear all caches
         """
-        print('清空全部缓存')
+        print('Clear all caches')
         self.connection.flushall()
 
     @handle_key
@@ -224,13 +224,13 @@ class BaseCache:
     @handle_key
     def blpop(self, key, timeout):
         """
-        定义函数blpop, 用于从Redis中弹出左侧第一个元素
-        会阻塞redis动作，直到超时时间后弹出
+        Define the function blpop to pop the first element from the left side of Redis
+        It will block redis actions until the timeout period before popping
         args:
-            key: 要操作的键
-            timeout: 超时时间，单位为秒
+            key: the key to operate on
+            timeout: timeout period in seconds
         return:
-            被弹出的元素
+            the popped element
         """
         return self.connection.blpop(key, timeout=timeout)
 
@@ -283,7 +283,7 @@ class BaseCache:
     @handle_key
     def expire_second(self, key, second):
         """
-        设置过期时间(单位为天)
+        Set expiration time (in days)
         """
         return self.connection.expire(key, second)
 

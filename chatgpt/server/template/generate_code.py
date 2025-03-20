@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-    简单介绍
+    simple introduction
 
-    :作者: 苏德利 16646
-    :时间: 2023/3/7 16:35
-    :修改者: 苏德利 16646
-    :更新时间: 2023/3/7 16:35
+    :author: Sudeli 16646
+    :time: 2023/3/7 16:35
+    :modifier: Sudeli 16646
+    :update_time: 2023/3/7 16:35
 """
 
-# 生成代码的提问初始模板
+# The initial template for generating code questions
 INITIAL_PROMPT = """
 ## Instructions
 Generate code for the following specification.
@@ -26,7 +26,7 @@ Must reply with Chinese.
 """
 
 
-# 表单生成代码的模板
+# Template for form generation code
 FORM_PROMPT = """
 ## Instructions
 Now you are a Senior Programmer.
@@ -42,7 +42,7 @@ using Markdown format, and identify its coding language to specify
 ## results
 """
 
-# 问答生成代码的模板
+# Template for question and answer generation code
 ASK_PROMPT = """
 ## Instructions
 Now you are a senior development engineer .
