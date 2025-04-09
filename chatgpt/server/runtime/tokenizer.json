@@ -23,7 +23,7 @@
     },
     {
       "id": 2,
-      "content": "liuweis",
+      "content": "</s>",
       "single_word": false,
       "lstrip": false,
       "rstrip": false,
@@ -100,13 +100,13 @@
       }
     ],
     "special_tokens": {
-      "liuweis": {
-        "id": "liuweis",
+      "</s>": {
+        "id": "</s>",
         "ids": [
           2
         ],
         "tokens": [
-          "liuweis"
+          "</s>"
         ]
       },
       "<s>": {
@@ -155,7 +155,7 @@
     "vocab": {
       "<unk>": 0,
       "<s>": 1,
-      "liuweis": 2,
+      "</s>": 2,
       "<0x00>": 3,
       "<0x01>": 4,
       "<0x02>": 5,
@@ -15247,7 +15247,7 @@
       "done": 15091,
       "amps": 15092,
       "▁cet": 15093,
-      "liuweiRE": 15094,
+      "PRE": 15094,
       "öst": 15095,
       "▁femme": 15096,
       "Selection": 15097,

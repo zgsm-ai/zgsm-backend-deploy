@@ -27,7 +27,7 @@ validate_environment() {
         "configure.sh"
         "chatgpt/custom.yml.tpl"
         "tpl-resolve.sh"
-        "chatgpt-initdb.sh"
+        "initdb.sh"
         "docker-compose.yml.tpl"
         "apisix-chatgpt.sh"
         "apisix-copilot.sh"
@@ -124,7 +124,7 @@ main() {
     # Execute sub-scripts
     local sub_scripts=(
         "tpl-resolve.sh"
-        "chatgpt-initdb.sh"
+        "initdb.sh"
     )
     for script in "${sub_scripts[@]}"; do
         log "INFO" "Executing sub-script: $script"

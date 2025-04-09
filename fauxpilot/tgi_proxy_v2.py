@@ -23,7 +23,7 @@ from services.completion_line_service import CompletionLineHandler
 from services.model_client_service import ModelClientStrategy, OpenAIClientStrategy, LocalClientStrategy
 from models import CompletionContextAndIntention
 
-SPIECE_UNDERLINE_EOT = " <liuweiOT>"
+SPIECE_UNDERLINE_EOT = "▁<EOT>"
 
 default_tokenizer_path = 'cgtok/starcoder_tokenizer.json'
 MAIN_TOKENIZER = load_tokenizer(get_tokenizer_path(ModelType.MAIN, default_tokenizer_path))
@@ -75,9 +75,9 @@ class TGIProxyV2:
         self.client = None
         self.client_strategy = None
         self.tokenizer = None
-        self.FIM_PREFIX = "<｜liuwei begin｜>"
-        self.FIM_MIDDLE = "<｜liuwei end｜>"
-        self.FIM_SUFFIX = "<｜liuwei hole｜>"
+        self.FIM_PREFIX = "<｜fim▁begin｜>"
+        self.FIM_MIDDLE = "<｜fim▁end｜>"
+        self.FIM_SUFFIX = "<｜fim▁hole｜>"
         self.FIM_STOP = ["<|endoftext|>"]
         self.main_model_type = 'default'
 
@@ -124,15 +124,15 @@ class TGIProxyV2:
         self.is_codellama = 'codellama' in self.model.lower() or 'codegen' in self.model.lower()
         is_deepseek = 'deepseek-coder' in self.model.lower()
         if self.is_codellama:
-            self.FIM_PREFIX = "<liuweiRE> "
-            self.FIM_MIDDLE = " <liuweiID>"
-            self.FIM_SUFFIX = " <liuweiUE>"
-            self.FIM_STOP = ["liuweis", SPIECE_UNDERLINE_EOT, "<liuweiOT>", " <liuweiID>", " <liuweiID>"]
+            self.FIM_PREFIX = "<PRE> "
+            self.FIM_MIDDLE = " <MID>"
+            self.FIM_SUFFIX = " <SUF>"
+            self.FIM_STOP = ["</s>", SPIECE_UNDERLINE_EOT, "<EOT>", "▁<MID>", " <MID>"]
         elif is_deepseek:
-            self.FIM_PREFIX = "<｜liuwei begin｜>"
-            self.FIM_MIDDLE = "<｜liuwei end｜>"
-            self.FIM_SUFFIX = "<｜liuwei hole｜>"
-            self.FIM_STOP = ["<｜end of liuwei｜>", "<|liuweiOT|>", " <liuweiID>"]
+            self.FIM_PREFIX = "<｜fim▁begin｜>"
+            self.FIM_MIDDLE = "<｜fim▁end｜>"
+            self.FIM_SUFFIX = "<｜fim▁hole｜>"
+            self.FIM_STOP = ["<｜end▁of▁sentence｜>", "<|EOT|>", "▁<MID>"]
 
     def convert_nl_to_win(self, s):
         if self.is_windows:

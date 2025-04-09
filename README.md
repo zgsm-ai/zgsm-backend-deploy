@@ -89,7 +89,7 @@ keycloak-import.sh
 ### 6. Initialize the database and create the database tables needed by chatgpt
 
 ```sh
-chatgpt-initdb.sh
+initdb.sh
 ```
 
 ### 7. Configure the vscode-zgsm extension and adjust the server URL to the actual address
