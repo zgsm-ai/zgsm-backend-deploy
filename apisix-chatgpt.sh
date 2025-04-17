@@ -73,8 +73,18 @@ curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT 
 curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
     "uris": ["/api/*"],
     "id": "chatgpt-api",
+    "name": "chatgpt-api",
     "upstream_id": "chatgpt",
     "plugins": {
+      "openid-connect": {
+        "client_id": "'"$KEYCLOAK_CLIENT_ID"'",
+        "client_secret": "'"$KEYCLOAK_CLIENT_SECRET"'",
+        "discovery": "'"$KEYCLOAK_ADDR"'/realms/'"$KEYCLOAK_REALM"'/.well-known/openid-configuration",
+        "introspection_endpoint_auth_method": "client_secret_basic",
+        "realm": "'"$KEYCLOAK_REALM"'",
+        "bearer_only": true,
+        "ssl_verify": false
+      },
       "limit-req": {
         "rate": 1,
         "burst": 1,
@@ -102,6 +112,15 @@ curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d
     "upstream_id": "websocket",
     "enable_websocket": true,
     "plugins": {
+      "openid-connect": {
+        "client_id": "'"$KEYCLOAK_CLIENT_ID"'",
+        "client_secret": "'"$KEYCLOAK_CLIENT_SECRET"'",
+        "discovery": "'"$KEYCLOAK_ADDR"'/realms/'"$KEYCLOAK_REALM"'/.well-known/openid-configuration",
+        "introspection_endpoint_auth_method": "client_secret_basic",
+        "realm": "'"$KEYCLOAK_REALM"'",
+        "bearer_only": true,
+        "ssl_verify": false
+      },
       "file-logger": {
         "path": "logs/access.log",
         "include_req_body": true,

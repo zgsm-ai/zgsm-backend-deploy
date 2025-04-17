@@ -42,6 +42,15 @@ curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d
     "name": "one-api",
     "upstream_id": "one-api",
     "plugins": {
+       "openid-connect": {
+         "client_id": "'"$KEYCLOAK_CLIENT_ID"'",
+         "client_secret": "'"$KEYCLOAK_CLIENT_SECRET"'",
+         "discovery": "'"$KEYCLOAK_ADDR"'/realms/'"$KEYCLOAK_REALM"'/.well-known/openid-configuration",
+         "introspection_endpoint_auth_method": "client_secret_basic",
+         "realm": "'"$KEYCLOAK_REALM"'",
+         "bearer_only": true,
+         "ssl_verify": false
+       },
       "limit-req": {
         "rate": 1,
         "burst": 1,

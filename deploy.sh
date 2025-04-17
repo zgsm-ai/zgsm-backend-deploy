@@ -171,7 +171,7 @@ main() {
     sleep 10
 
     log "INFO" "所有操作执行完成"
-    log "INFO" "请登录 one-api 后台 [http://localhost:${ONE_API_PORT}] (默认账户root，密码123456), 在渠道添加你的大模型api-key！（如打开页面空白，请等待，容器启动需要一定的时间）"
+    log "INFO" "请登录 one-api 后台 [http://${SERVER_IP}:${ONE_API_PORT}] (默认账户root，密码123456), 在渠道添加你的大模型api-key！（如打开页面空白，请等待，容器启动需要一定的时间）"
 }
 
 main "$@"

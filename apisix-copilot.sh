@@ -13,6 +13,7 @@ curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT 
 curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
     "uris": ["/v1/completions", "/v2/completions", "/copilot_internal/*", "/v2/engines/*", "/v1/engines/*"],
     "id": "copilot",
+    "name": "copilot",
     "upstream_id": "copilot",
     "plugins": {
       "openid-connect": {
