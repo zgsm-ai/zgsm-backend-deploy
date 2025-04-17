@@ -305,6 +305,42 @@ services:
     networks:
       - shenma
 
+  one-api:
+    image: "${REGISTRY:-docker.io}/justsong/one-api:latest"
+    container_name: one-api
+    restart: always
+    command: "--log-dir /app/logs --port {{ONE_API_PORT}}"
+    ports:
+      - "{{ONE_API_PORT}}:{{ONE_API_PORT}}"
+    volumes:
+      - ./logs:/app/logs
+    environment:
+      - SQL_DSN=postgres://keycloak:{{PASSWORD_POSTGRES}}@postgres:{{PORT_POSTGRES}}/oneapi
+      - SQL_MAX_IDLE_CONNS=10
+      - SQL_MAX_OPEN_CONNS=100
+      - SQL_CONN_MAX_LIFETIME=30
+      - REDIS_CONN_STRING=redis://default:{{PASSWORD_REDIS}}@redis:{{PORT_REDIS}}
+      - REDIS_PASSWORD={{PASSWORD_REDIS}}
+      - SESSION_SECRET=zgsm-one-api-fxjwgs
+      - GLOBAL_API_RATE_LIMIT=180
+      - GLOBAL_WEB_RATE_LIMIT=180
+      - RELAY_TIMEOUT=180
+      - TZ=Asia/Shanghai
+      - INITIAL_ROOT_TOKEN={{ONE_API_INITIAL_ROOT_KEY}}
+      - INITIAL_ROOT_ACCESS_TOKEN={{ONE_API_INITIAL_ROOT_ACCESS_TOKEN}}
+      - SYNC_FREQUENCY=60
+    depends_on:
+      - redis
+      - postgres
+    healthcheck:
+      test: [ "CMD-SHELL", "wget -q -O - http://localhost:{{ONE_API_PORT}}/api/status | grep -o '\"success\":\\s*true' | awk -F: '{print $2}'" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - shenma
+
+
 networks:
   shenma:
     driver: bridge
