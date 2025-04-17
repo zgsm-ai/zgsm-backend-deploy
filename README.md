@@ -52,7 +52,7 @@
 #### 使用自己部署的模型实例
 
 1. 一台最低配置16C，32G，512G存储的X64硬件设备，具有支持模型推理服务运行的显卡(至少2张RTX4090,或1张A800)
-2. 安装好centos7,nvidia-docker,docker-compose等必要组件
+2. 安装好centos7或wsl ubuntu,nvidia-docker,docker-compose等必要组件
 
 #### 使用第三方API服务，或自行部署模型实例
 
@@ -62,35 +62,19 @@
 ### 1. 根据需求，修改配置
 
 ```sh
+vim deploy.sh
 vim configure.sh
-tpl-resolve.sh
 ```
 
-### 2. 下载模型数据
-
-### 3. 启动docker-compose
-
-```sh
-docker compose up -d
+### 2. 执行部署脚本
+```shell
+bash deploy.sh
 ```
 
-### 4. 配置路由
+### 3. 在one-api后台页面配置大模型api-key
+     默认的地址 http://localhost:30000，默认账号root，密码123456.
+     点击渠道，新增渠道，选择大模型供应商，填写名字、key即可，其余可不填写。
 
-```sh
-apisix-*.sh
-```
-
-### 5. 导入keycloak的配置
-
-```sh
-keycloak-import.sh
-```
-
-### 6. 初始化数据库，创建chatgpt需要的数据库表
-
-```sh
-chatgpt-initdb.sh
-```
-
-### 7. 配置vscode-zgsm扩展，调整服务器URL为实际地址
+### 4. 在zhuge shenma插件配置apisix地址
+    zhuge shenma baseurl: 默认 http://{本机ip}:8090/v1 （注：使用localhost可能有问题，建议ipconfig获取实际IP地址）。
 

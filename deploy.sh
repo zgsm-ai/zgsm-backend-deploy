@@ -5,13 +5,19 @@ SCRIPT_NAME=$(basename "$0")
 LOG_FILE="${SCRIPT_NAME%.*}.log"
 exec > >(tee -a "$LOG_FILE") 2>&1
 # -------------------------- 常量定义 --------------------------
-declare -r SERVER_IP='192.168.14.133'
-declare -r CHAT_MODEL_IP='http://127.74.1.32:8888'
-declare -r CHAT_MODEL_TYPE='deepseek-chat'
-declare -r CHAT_API_KEY='sk-edd332b8844445f6ef8c683b754141d'
-declare -r COMPLETION_MODEL_IP='http://127.74.1.32:9999/v1/completions'
-declare -r COMPLETION_MODEL_TYPE='DeepSeek-Coder-V2-Lite-Base'
-declare -r COMPLETION_API_KEY='sk-e0d435b568876745f4438c583b4561d'
+# one-api root key，自定义, uuidgen | tr -d '-' 命令可生成，会配置到apisix网关proxy-rewrite插件中。真实大模型api-key 在one-api 后台页面上配置
+declare -r ONE_API_INITIAL_ROOT_KEY="966c3157fe65461dbc731cd540b6cd5d"
+declare -r ONE_API_PORT=30000
+declare -r CHAT_MODEL_IP="http://one-api:${ONE_API_PORT}"  # 统一接入one-api， 模型配置在one-api上
+declare -r CHAT_MODEL_TYPE='deepseek-chat'    # 对话模型
+declare -r CHAT_API_KEY=${ONE_API_INITIAL_ROOT_KEY}
+declare -r COMPLETION_MODEL_IP="http://one-api:${ONE_API_PORT}/v1/completions" # 统一接入one-api， 模型配置在one-api上
+declare -r COMPLETION_MODEL_TYPE='deepseek-chat'  # 补全模型
+declare -r COMPLETION_API_KEY=${ONE_API_INITIAL_ROOT_KEY}
+
+# 获取自己机器ip
+SERVER_IP=$(hostname -I | awk '{ print $1 }')
+declare -r SERVER_IP
 declare -r BASE_DIR=$(pwd)
 
 # -------------------------- 函数定义 --------------------------
@@ -117,6 +123,8 @@ main() {
     safe_sed "s#server_url: \".*\"#server_url: \"$CHAT_MODEL_IP\"#g" chatgpt/custom.yml.tpl
     safe_sed "s/api_key: \".*\"/api_key: \"$CHAT_API_KEY\"/g" chatgpt/custom.yml.tpl
     safe_sed "s/CHAT_MODEL=\".*\"/CHAT_MODEL=\"$CHAT_MODEL_TYPE\"/g" configure.sh
+    safe_sed "s/ONE_API_INITIAL_ROOT_KEY=\".*\"/ONE_API_INITIAL_ROOT_KEY=\"$ONE_API_INITIAL_ROOT_KEY\"/g" configure.sh
+    safe_sed "s/ONE_API_PORT=\".*\"/ONE_API_PORT=$ONE_API_PORT/g" configure.sh
 
     # 修改目录权限
     safe_chown
@@ -149,6 +157,7 @@ main() {
         "apisix-copilot.sh"
         "apisix-issue.sh"
         "apisix-keycloak.sh"
+        "apisix-oneapi.sh"
         "keycloak-import.sh"
     )
     for script in "${apisix_scripts[@]}"; do
@@ -162,6 +171,7 @@ main() {
     sleep 10
 
     log "INFO" "所有操作执行完成"
+    log "INFO" "请登录 one-api 后台 [http://localhost:${ONE_API_PORT}] (默认账户root，密码123456), 在渠道添加你的大模型api-key！（如打开页面空白，请等待，容器启动需要一定的时间）"
 }
 
 main "$@"
