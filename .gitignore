@@ -1,4 +1,5 @@
 .vscode
+.idea
 *.log
 apisix/config.yaml
 apisix_dashboard/conf.yaml
