@@ -94,7 +94,7 @@ curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d
 
 # Generate verification code
 curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
-    "uris": ["/realms/'"$KEYCLOAK_REALM"'/captcha/code'],
+    "uris": ["/realms/'"$KEYCLOAK_REALM"'/captcha/code"],
     "id": "keycloak-captcha",
     "upstream_id": "kaptcha",
     "plugins": {

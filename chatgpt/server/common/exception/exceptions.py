@@ -1,13 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    simple introduction
-
-    :Author: 苏德利 16646
-    :Time: 2023/3/14 15:42
-    :Modifier: 苏德利 16646
-    :UpdateTime: 2023/3/14 15:42
-"""
 import logging
 
 from flask import current_app

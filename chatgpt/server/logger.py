@@ -1,13 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    Registration log processing module
 
-    :Author: Su Deli 16646
-    :Time: 2023/3/29 9:47
-    :Modifier: Su Deli 16646
-    :UpdateTime: 2023/3/29 9:47
-"""
 import os
 import logging
 from logging import Formatter

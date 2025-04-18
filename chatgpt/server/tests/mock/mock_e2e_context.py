@@ -1,9 +1,5 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""
-@Author  : 范立伟33139
-@Date    : 2024/8/6 12:33
-"""
 
 context_dict = {
     "associated_keywords": {

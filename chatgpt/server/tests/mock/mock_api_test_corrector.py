@@ -1,12 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# @Time    : 2024/5/21 16:47
-# @Author  : 苏德利16646
-# @Contact : 16646@sangfor.com
-# @File    : mock_api_test_corrector.py
-# @Software: PyCharm
-# @Project : chatgpt-server
-# @Desc    : mock test_api_test_case_corrector.py模块测试数据
 
 # api文档的模拟数据，包含array格式数据，
 # 参考地址http://devapi.sangfor.com/independent/home/api-studio/inside/IvrAAgq34371b47badaf040f4efcd8378d0b0a0fe99a657/

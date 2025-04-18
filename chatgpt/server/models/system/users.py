@@ -1,13 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    user list
-
-    :Author: Sudeli 16646
-    :Time: 2023/3/14 14:14
-    :Modifier: Sudeli 16646
-    :UpdateTime: 2023/3/14 14:14
-"""
 
 from peewee import CharField, TextField, BooleanField
 from models.base_model import BaseModel

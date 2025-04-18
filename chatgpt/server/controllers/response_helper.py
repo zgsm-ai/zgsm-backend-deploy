@@ -1,16 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-"""
-@Author  ：范立伟33139
-@Date    ：2023/3/16 14:17
-"""
+
 from typing import Iterator
 from flask import jsonify, make_response, request, Response, stream_with_context
 
 
 class Result:
     @classmethod
-    def message(cls, state_str="成功"):
+    def message(cls, state_str="success"):
         method_name = request.method
         if "GET" == method_name:
             return f"Get {state_str}"
@@ -70,7 +67,7 @@ class Result:
     @classmethod
     def stream_response(cls, result: Iterator[str]):
         """
-        返回流式响应,流式输出结果sse协议封装，将数据流式输出到客户端
+        Return streaming response, stream output results using SSE protocol encapsulation, stream data to the client
         @param result: iterator
         @return: http response
         """
@@ -85,11 +82,10 @@ class Result:
     @staticmethod
     def gen_data_chunk(result: Iterator) -> Iterator[str]:
         """
-        生组装成sse协议的chunk
+        Generate and assemble SSE protocol chunks
         @param result:
         @return:
         """
-        # sse协议的message格式
         # sse protocol message format
         message_chunk = "data: {}\n\n"
         for res in result:

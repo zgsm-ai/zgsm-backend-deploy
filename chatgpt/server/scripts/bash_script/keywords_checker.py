@@ -1,13 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# @Time    : 2024/7/12 10:52
-# @Author  : 苏德利16646
-# @Contact : 16646@sangfor.com
-# @File    : keywords_checker.py
-# @Software: PyCharm
-# @Project : chatgpt-server
-# @Desc    : Keyword check, check whether there are empty or meaningless description fields in the core fields of keywords
-
 import json
 import requests
 import time

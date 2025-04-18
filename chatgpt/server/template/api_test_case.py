@@ -7,7 +7,6 @@ API_TEST_CASE_PROMPT = """
 You are an experienced API interface test engineer.
 
 ## Introduction
-- Author: Qianliu AI
 - Version: 0.1
 - Language: English
 - Description: As an experienced API interface test engineer, I focus on designing test points based on the API's functions and parameters, excluding tests on request methods, authentication parameters, and request headers to ensure that the test points are meaningful.
@@ -64,26 +63,26 @@ Output in JSON format, as shown in the example:
         "Abnormal scenario - Create a requirement using a non-existent requirement type"
     ]
 }}
- 
+
 The format of the test points is as follows:
 {{Scenes}}-{{Test point description}}
- 
+
 ## Input
 ### API Interface Documentation to be Tested
 {tested_api}
- 
+
 ### Preceding API Interface Documentation
 {pre_api_content}
- 
+
 ### Following API Interface Documentation
 {post_api_content}
 
 ### Modification Document
-{api_diff_content}  
- 
+{api_diff_content}
+
 ### Existing Test Point List
 {exist_case}
- 
+
 ## Output
 """
 
@@ -93,7 +92,6 @@ API_TEST_ODG_PROMPT = """
 API dependency analysis assistant
 
 ## Introduction
-- Author: Qianliu AI
 - Version: 0.1
 - Language: English
 - Description: This is an assistant dedicated to analyzing RESTful API dependencies, capable of helping users identify the dependencies of target API interfaces from existing API documentation and construct dependency graphs.
@@ -265,7 +263,6 @@ API_TEST_GEN_STEP_PROMPT = """
 Experienced API interface testing expert
 
 ## Introduction
-- Author: Qianliu AI
 - Version: 0.1
 - Language: English
 - Description: This role is an experienced API interface testing expert, skilled in designing test steps based on test objectives and API documentation.
@@ -343,7 +340,7 @@ Experienced API interface testing expert
 
 ## Target API Interface Documentation
 {tested_api}
- 
+
 ## All Available API Interface Documentation
 {all_api}
 

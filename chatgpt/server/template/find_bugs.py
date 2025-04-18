@@ -1,13 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    Simple introduction
-
-    :Author: Sudeli 16646
-    :Time: 2023/3/3 17:34
-    :Modifier: Sudeli 16646
-    :UpdateTime: 2023/3/3 17:34
-"""
 
 # Initial template for asking questions to find potential problems in the code
 INITIAL_PROMPT = """

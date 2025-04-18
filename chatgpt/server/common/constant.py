@@ -1,15 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    Project Constants
-
-    :Author: Su Deli 16646
-    :Time: 2023/3/3 15:31
-    :Modifier: Liu Peng z10807
-    :UpdateTime: 2023/4/21 9:26
-"""
-
-
 class ActionsConstant:
     FIND_BUGS = "findProblems"
     ADD_TEST = "addTests"

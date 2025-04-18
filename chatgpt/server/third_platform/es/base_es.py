@@ -1,13 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    simple introduction
-
-    :Author: Sudeli 16646
-    :Time: 2023/3/16 20:23
-    :Modifier: Sudeli 16646
-    :UpdateTime: 2023/3/16 20:23
-"""
 
 import logging
 import json
@@ -39,7 +31,7 @@ def init_es():
     logger.info(f"ES_HOST: {ES_HOST}")
     if ES_PASSWORD is None:
         logger.info(f"ES_PASSWORD:")
-        es = Elasticsearch(ES_HOST)  
+        es = Elasticsearch(ES_HOST)
     else:
         logger.info(f"ES_PASSWORD: *****")
         es = Elasticsearch([ES_HOST], http_auth=('elastic', ES_PASSWORD))

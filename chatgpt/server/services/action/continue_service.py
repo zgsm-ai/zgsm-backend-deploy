@@ -5,15 +5,7 @@ from common.constant import ActionsConstant
 
 
 class ContinueStrategy(ActionStrategy):
-    """
-    Continue strategy class
-    """
     name = ActionsConstant.CONTINUE
 
     def get_prompt(self, data):
-        """
-        Get prompt
-        :param data: data
-        :return: prompt
-        """
         return data.prompt

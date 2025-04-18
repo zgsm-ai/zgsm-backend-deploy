@@ -1,13 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# @Time    : 2024/7/11 15:18
-# @Author  : 苏德利16646
-# @Contact : 16646@sangfor.com
-# @File    : check_annotations.py
-# @Software: PyCharm
-# @Project : chatgpt-server
-# @Desc    : Used to check AF automation keyword specification https://ipd.atrust.sangfor.com/ipd/team/3580/issue/905355
-
 import os
 import re
 import pandas as pd

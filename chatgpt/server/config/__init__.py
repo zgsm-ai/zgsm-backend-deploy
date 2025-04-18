@@ -1,13 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    Simple introduction
 
-    :Author: 陈烜 42766
-    :Time: 2023/3/24 14:12
-    :Modifier: 刘鹏 z10807
-    :UpdateTime: 2023/4/21 15:22
-"""
 import os
 import re
 
@@ -17,12 +10,6 @@ from dotenv import load_dotenv
 from common.constant import ServeConstant
 
 load_dotenv()
-
-
-# Online
-# Qianliu AI
-# Client ID: 163777834
-# Client Secret: c0885d9f91a833d61d549165bf261655
 
 class BaseConfigModel:
     def __init__(self, data=None):

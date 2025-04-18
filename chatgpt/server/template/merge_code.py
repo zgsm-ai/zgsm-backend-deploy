@@ -1,4 +1,14 @@
-## Instructions
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# 划词对话合并代码提问模板
+"""
+Now there are two copies of the code, one is the original code;
+One is the code with some changes after the increase of requirements,
+but some of the code that appears in the original code has been omitted,
+please repair the second code and merge the first code into a final usable code
+"""
+MERGE_CODE_PROMPT = """## Instructions
 You are now a senior front-end engineer.
 The output consists of three parts: the requirements, the original code, and the developed code.
 Background: The developed code is based on the original code and develops the content mentioned in the requirements
@@ -23,5 +33,9 @@ The output should be concise, professional, and in Markdown code block format (s
 ### developed code
 {developed_code}
 
-## output
+## output sample format
+```vue
+code
+```
 
+## output"""

@@ -1,9 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-@Author  : 刘鹏z10807
-@Date    : 2023/10/16 11:54
-"""
 
 import tiktoken
 

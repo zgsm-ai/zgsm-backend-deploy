@@ -1,13 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    Simple introduction
-
-    :Author: Su Deli 16646
-    :Time: 2023/3/14 20:39
-    :Modifier: Su Deli 16646
-    :UpdateTime: 2023/3/14 20:39
-"""
 
 import logging
 import time

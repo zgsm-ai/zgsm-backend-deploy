@@ -1,10 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
- Sensitive word processing tool
-@Author  : huangweilenw82676
-@Date    : 2024/5/31 15:45
-"""
+
 import re
 
 from common.constant import PromptConstant

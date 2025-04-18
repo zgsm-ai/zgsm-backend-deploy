@@ -1,10 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-"""
-@File    :zhuge_normal_chat.py
-@Author  :阚其禄 w27966
-@Date    :2024/8/29 19:42
-"""
+
 from common.constant import ActionsConstant
 from services.action.base_service import ActionStrategy, ChatbotOptions
 from services.system.configuration_service import ConfigurationService

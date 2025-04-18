@@ -1,13 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    simple introduction
 
-    :Author: Sudeli 16646
-    :Time: 2023/3/14 12:00
-    :Modifier: Sudeli 16646
-    :UpdateTime: 2023/3/14 12:00
-"""
 """Peewee migrations -- 001_add_models.py.
 
 Some examples (model - class or model name)::

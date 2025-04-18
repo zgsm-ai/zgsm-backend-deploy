@@ -1,13 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    Simple introduction
-
-    :Author: Sudeli 16646
-    :Time: 2023/3/14 14:16
-    :Modifier: Sudeli 16646
-    :UpdateTime: 2023/3/14 14:16
-"""
 
 from playhouse.shortcuts import _clone_set, Field, Alias
 from peewee import Model, ForeignKeyField, callable_, SqliteDatabase, BooleanField, DateTimeField

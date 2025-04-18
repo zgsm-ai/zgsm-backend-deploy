@@ -1,13 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    simple introduction
 
-    :Author: 苏德利 16646
-    :Time: 2023/3/14 15:56
-    :Modifier: 苏德利 16646
-    :UpdateTime: 2023/3/14 15:56
-"""
 from common.utils.util import is_valid_regex
 from dao.base_dao import BaseDao
 from common.exception.exceptions import ModelException

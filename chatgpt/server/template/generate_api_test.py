@@ -1,12 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# @Time    : 2024/1/24 15:57
-# @Author  : 苏德利16646
-# @Contact : 16646@sangfor.com
-# @File    : generate_api_test.py
-# @Software: PyCharm
-# @Project : chatgpt-server
-# @Desc    : generate api test prompt template
 
 # generate test point initial question template
 INITIAL_API_TEST_POINT_PROMPT = r"""

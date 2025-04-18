@@ -1,12 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # flake8: noqa
-"""
-    :Author: Huang Weilian z24224
-    :Time: 2023/9/7 14:18
-    :Modifier: Huang Weilian z24224
-    :UpdateTime: 2023/9/7 14:18
-"""
 
 # Initial question template for highlighting word dialogue
 INITIAL_PROMPT = """## Instructions
@@ -195,7 +189,7 @@ Your tasks can be summarized as follows:
 - If relevant "API Documents" are provided, you will need to learn the contents of each document and perhaps use them when generating code.
 - If "Selected Code" is provided, it must be based on this code,
   implement the code that meets the "Requirements" without considering the integrity of the context,
-  and retain the original code structure and indentation format. 
+  and retain the original code structure and indentation format.
   The generated code as the "Result".
 - else, you need to directly implement the code that meets the "Requirements" as the "Result".
 - The "Result" only needs to meet the "Requirements" without considering other dependencies,
@@ -508,7 +502,7 @@ Your tasks can be summarized as follows:
 - Accurately understand the meaning and semantics of "Requirements" and the implementation steps involved.
 - You must be based on "Selected Code",
   then follow the steps in Requirements and step by step implement the code that satisfies the meaning of the steps,
-  and retain the original code structure and indentation format. 
+  and retain the original code structure and indentation format.
   The generated code as the "Result".
 - When generating code,
   the knowledge points involved must already exist or be covered in selected code.

@@ -1,13 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    simple introduction
-
-    :Author: Su Deli 16646
-    :Time: 2023/3/16 20:33
-    :Modifier: Su Deli 16646
-    :UpdateTime: 2023/3/16 20:33
-"""
 
 import pytz
 from datetime import datetime

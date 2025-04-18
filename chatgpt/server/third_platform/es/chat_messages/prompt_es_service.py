@@ -1,13 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    simple introduction
-
-    :Author: Sude Li 16646
-    :Time: 2023/3/16 20:33
-    :Modifier: Sude Li 16646
-    :UpdateTime: 2023/3/16 20:33
-"""
 
 import pytz
 from datetime import datetime
@@ -21,10 +13,10 @@ class PromptESService(BaseESService):
 
     @staticmethod
     def _calc_rid(data):
-        return calc_rid(data.get("conversation_id", ""), 
-                        data.get("chat_id", ""), 
+        return calc_rid(data.get("conversation_id", ""),
+                        data.get("chat_id", ""),
                         data.get("action", "chat"))
-    
+
     def insert_prompt(self, data, response_content='', usage=None):
         """
         Insert prompt request data, insert exceptions do not affect the main process execution
@@ -39,11 +31,11 @@ class PromptESService(BaseESService):
             if rid and self.es.exists(index=self.index, id=rid):
                 self.update_by_id(id=rid, update_data={'is_accept': data.get('isAccept', False),
                                                'accept_num': data.get('acceptNum', 0)})
-            else:               
+            else:
                 obj_dict = {
-                    **data, 
+                    **data,
                     "id": rid,
-                    "usage": usage, 
+                    "usage": usage,
                     "response": response_content
                 }
                 obj_dict["finish_at"] = datetime.now(pytz.timezone('Asia/Shanghai'))

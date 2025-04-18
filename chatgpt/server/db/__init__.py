@@ -1,13 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    Brief introduction
 
-    :Author: SudeLi 16646
-    :Time: 2023/3/14 11:38
-    :Modifier: SudeLi 16646
-    :UpdateTime: 2023/3/14 11:38
-"""
 from peewee import Proxy
 from playhouse.db_url import connect
 from config import conf

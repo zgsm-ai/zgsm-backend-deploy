@@ -1,14 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    Service initialization command set
-
-    :Author: su deli 16646
-    :Time: 2023/3/14 14:35
-    :Modifier: su deli 16646
-    :UpdateTime: 2023/3/14 14:35
-"""
-
 import click
 from flask.cli import FlaskGroup
 from app import create_app

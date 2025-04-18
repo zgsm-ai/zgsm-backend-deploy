@@ -1,9 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-"""
-@Author  ：范立伟33139
-@Date    ：2023/3/16 14:09
-"""
 
 from flask import Blueprint, request
 
@@ -19,15 +15,6 @@ users = Blueprint('users', __name__)
 
 @users.route('/current', methods=['GET'])
 def current():
-    """
-    当前用户
-    ---
-    tags:
-      - 用户管理
-    responses:
-      200:
-        res: 结果
-    """
     # current user
     # ---
     # tags:
@@ -41,15 +28,6 @@ def current():
 
 @users.route("/key", methods=["GET", "POST"])
 def generate_api_key():
-    """
-    用于获取或重置api key
-    ---
-    tags:
-      - 用户管理
-    responses:
-      200:
-        res: 结果
-    """
     # Used to get or reset the API key
     # ---
     # tags:
@@ -65,15 +43,6 @@ def generate_api_key():
 
 @users.route("/code_completion_log", methods=['POST'])
 def code_completion_log():
-    """
-    用于记录 用户在使用 千流ai插件中代码补全 或 生成代码的上报数据。
-    ---
-    tags:
-      - 用户管理
-    responses:
-      200:
-        res: 结果
-    """
     # Used to record the reported data of code completion or code generation when users use the Qianliu AI plugin.
     # ---
     # tags:
@@ -99,15 +68,6 @@ def code_completion_log():
 
 @users.route("/code_copy_log", methods=['POST'])
 def code_copy_log():
-    """
-    用于记录 用户在使用 千流ai插件 或者 web 端中 复制代码的上报数据。
-    ---
-    tags:
-      - 用户管理
-    responses:
-      200:
-        res: 结果
-    """
     # Used to record the reported data of code copying when users use Qianliu AI plugin or web.
     # ---
     # tags:

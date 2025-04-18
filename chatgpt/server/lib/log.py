@@ -1,14 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    Set whether the log debug mode is enabled
 
-    :Author: Sudeli 16646
-    :Time: 2023/3/29 10:01
-    :Modifier: Sudeli 16646
-    :UpdateTime: 2023/3/29 10:01
-"""
-# -*- coding: utf-8 -*-
 from logging import Filter, Formatter, Logger
 from config import conf
 from contextlib import contextmanager

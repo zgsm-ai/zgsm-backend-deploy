@@ -1,13 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    Introduction
 
-    :Author: Sudeli 16646
-    :Time: 2023/3/14 16:58
-    :Modifier: Sudeli 16646
-    :UpdateTime: 2023/3/14 16:58
-"""
 import base64
 import random
 

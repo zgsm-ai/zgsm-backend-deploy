@@ -1,13 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    simple introduction
 
-    :Author: 陈烜 42766
-    :Time: 2023/3/24 14:12
-    :Modifier: 陈烜 42766
-    :UpdateTime: 2023/3/24 14:12
-"""
 from services.action.add_comment_service import AddCommentCodeStrategy
 from services.action.add_debug_code_service import AddDebugCodeStrategy
 from services.action.add_stronger_code_service import AddStrongerCodeStrategy

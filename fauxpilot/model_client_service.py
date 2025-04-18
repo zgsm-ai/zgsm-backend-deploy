@@ -1,10 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-@Author: 黄鹏龙 20036
-@Date  :  2024/07/24
-@Desc : Completion model processing class
-"""
 
 import time
 import json

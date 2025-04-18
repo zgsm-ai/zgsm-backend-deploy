@@ -67,10 +67,8 @@ class AgentChatBot:
         except json.decoder.JSONDecodeError:
             self.logger.error(f"_get_advise() error: result: {result}")
             iostream.print_agent_advise([{
-                    "title": "输出更多选择", "prompt": "输出更多可选方案"
                     "title": "Output more options", "prompt": "Output more alternative solutions"
                 }, {
-                    "title": "推荐最佳方案", "prompt": "推荐一个最佳方案"
                     "title": "Recommend the best solution", "prompt": "Recommend the best solution"
                 }])
 
@@ -111,13 +109,10 @@ class AgentChatBot:
                     full_data = chunk_data.get("total_answer", "")
                 iostream.print_chunk(
                     chunk_data,
-                    sender="诸葛神码",
-                    sender_icon=None
                     sender="Zhuge Shenma",
                     sender_icon=None
                 )
         self._get_advise(req, username)
         # In order to ensure the normal operation of the subsequent Q&A, construct a complete historical conversation stream here
-        # To ensure the normal operation of the subsequent Q&A, construct a complete historical conversation stream here
         self.history.add_user_message(req.prompt)
         self.history.add_ai_message(full_data)

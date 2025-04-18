@@ -1,13 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    simple introduction
-
-    :Author: Su Deli 16646
-    :Time: 2023/3/14 15:39
-    :Modifier: Su Deli 16646
-    :UpdateTime: 2023/3/14 15:39
-"""
 
 from peewee import DoesNotExist, Model, fn
 

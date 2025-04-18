@@ -1,13 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    simple introduction
 
-    :Author: su deli 16646
-    :Create Time: 2023/3/16 20:33
-    :Modifier: su deli 16646
-    :Update Time: 2023/3/16 20:33
-"""
 import pytz
 from datetime import datetime
 from third_platform.es.base_es import BaseESService, calc_rid

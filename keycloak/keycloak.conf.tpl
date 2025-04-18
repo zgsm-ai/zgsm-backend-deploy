@@ -1,4 +1,3 @@
-```
 # Basic settings for running in production. Change accordingly before deploying the server.
 # Database
 # The database vendor.
@@ -42,9 +41,9 @@ spi-phone-provider-config-area-locked=true
 spi-phone-default-service=ntc
 # sms expires,default 60 second
 spi-phone-default-token-expires-in=300
-# How many send from ip address sms count in one hour, Zero is no limit. default 10 
+# How many send from ip address sms count in one hour, Zero is no limit. default 10
 spi-phone-default-source-hour-maximum=50
-# How many send to phone number sms count in one hour, Zero is no limit, default 3 
+# How many send to phone number sms count in one hour, Zero is no limit, default 3
 spi-phone-default-target-hour-maximum=10
 # allow one phone register multi user, default: false
 spi-phone-default-gw-duplicate-phone=false
@@ -53,12 +52,12 @@ spi-phone-default-gw-default-number-regex=^\+?\d+$
 # valid phone number, default: true
 spi-phone-default-gw-valid-phone=false
 #whether to parse user-supplied phone numbers and put into canonical International E.163 format.  _Required for proper duplicate phone number detection_
-#[E164,INTERNATIONAL,NATIONAL,RFC3966], default: "" un-canonicalize;  
+#[E164,INTERNATIONAL,NATIONAL,RFC3966], default: "" un-canonicalize;
 spi-phone-default-gw-canonicalize-phone-numbers=E164
 #a default region to be used when parsing user-supplied phone numbers. Lookup codes at https://www.unicode.org/cldr/cldr-aux/charts/30/supplemental/territory_information.html
-#default: use realm setting's default Locate; 
+#default: use realm setting's default Locate;
 spi-phone-default-gw-phone-default-region=CN
-#if compatible is true then search user will be use all format phone number 
+#if compatible is true then search user will be use all format phone number
 #default: false
 spi-phone-default-gw-compatible=true
 #Prevent 2FA from always happening for a period of time

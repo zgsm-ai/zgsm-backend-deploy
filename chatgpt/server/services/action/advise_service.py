@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-@Author  : zbc
-@Date    : 2024/11/20 08:53
-"""
+
 from services.action.base_service import ActionStrategy, ChatbotOptions
 from services.agents.agent_data_classes import ChatRequestData
 

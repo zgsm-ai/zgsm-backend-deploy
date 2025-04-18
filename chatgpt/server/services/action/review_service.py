@@ -1,13 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    simple introduction
 
-    :Author: Chen Xuan 42766
-    :Time: 2023/3/24 14:12
-    :Modifier: Chen Xuan 42766
-    :UpdateTime: 2023/3/24 14:12
-"""
 from common.constant import ActionsConstant, ConfigurationConstant
 from services.action.base_service import ActionStrategy
 

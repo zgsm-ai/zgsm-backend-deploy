@@ -1,13 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    Simple introduction
-
-    :Author: Su Deli 16646
-    :Time: 2023/3/3 17:35
-    :Modifier: Su Deli 16646
-    :UpdateTime: 2023/3/3 17:35
-"""
 
 # Generate the initial question template for unit testing
 INITIAL_PROMPT = """

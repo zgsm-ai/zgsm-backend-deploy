@@ -1,13 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    users corresponding service business logic layer
 
-    :Author: Su Deli 16646
-    :Time: 2023/3/14 16:01
-    :Modified by: Su Deli 16646
-    :Update time: 2023/3/14 16:01
-"""
 import logging
 import re
 
@@ -47,7 +40,7 @@ class UsersService(BaseService):
             'avatar_color': avatar_color
         }
         return cls.get_or_create_v2(**search_kw, defaults=defaults)
-    
+
     @classmethod
     def create_zgsm_user(cls, username, display_name, host_ip, token):
         """

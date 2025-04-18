@@ -1,9 +1,5 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-@Author  : 刘鹏z10807
-@Date    : 2023/6/30 10:05
-"""
 
 import logging
 

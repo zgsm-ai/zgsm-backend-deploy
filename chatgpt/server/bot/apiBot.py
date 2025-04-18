@@ -1,13 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    A simple wrapper for the official ChatGPT API
-
-    :Author: Chen Xuan 42766
-    :Time: 2023/3/24 14:12
-    :Modifier: Chen Xuan 42766
-    :UpdateTime: 2023/3/24 14:12
-"""
 import os
 import re
 from typing import List
@@ -89,7 +81,7 @@ class ChatPocket:
         self.start_time = None
         self.first_response_time = None
         self.end_time = None
-    
+
     def save_time(self, start_time: datetime = None,
                  first_response_time: datetime = None,
                  end_time: datetime = None):
@@ -127,7 +119,7 @@ class ChatPocket:
             "completion_tokens": self.completion_tokens,
             "total_tokens": self.prompt_tokens + self.completion_tokens
         }
-    
+
     def to_request(self) -> dict:
         """
         Convert to data sent to the chat.completion.create interface
@@ -147,7 +139,7 @@ class ChatPocket:
         if max_tokens is not None:
             kwargs['max_tokens'] = max_tokens
         return kwargs
-    
+
     def to_record(self) -> dict:
         """
         Convert to data recorded in ES
@@ -178,10 +170,10 @@ class Chatbot:
     Official ChatGPT API
     """
 
-    def __init__(self, 
-        history: ChatHistory = None, 
+    def __init__(self,
+        history: ChatHistory = None,
         prompter: Prompt = None,
-        model: str = ENGINE, 
+        model: str = ENGINE,
         logger: logging.Logger = None,
     ) -> None:
         """
@@ -480,7 +472,7 @@ class Chatbot:
         """
         Construct message list messages according to conversation history
         """
-        prompter = self.promper 
+        prompter = self.promper
         if prompter is None:
             prompter = Prompt()
         history = self.history
@@ -563,7 +555,7 @@ class Chatbot:
 
             # Change to gpt3.5's chat model in chat scenarios
             messages, prompt_tokens = self.construct_messages(question, context_association)
-            chat = ChatPocket(model=self.model, 
+            chat = ChatPocket(model=self.model,
                 messages=messages,
                 temperature=temperature,
                 stream=True,

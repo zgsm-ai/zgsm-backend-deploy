@@ -1,13 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    define basic response structure
-
-    :Author: su deli 16646
-    :Time: 2023/3/14 15:45
-    :Modifier: su deli 16646
-    :UpdateTime: 2023/3/14 15:45
-"""
 from typing import Iterator
 from flask import jsonify, make_response, request, Response, stream_with_context
 from peewee import ModelSelect, Model

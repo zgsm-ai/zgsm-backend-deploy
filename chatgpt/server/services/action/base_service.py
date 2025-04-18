@@ -1,13 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    Simple introduction
 
-    :Author: Chen Xuan 42766
-    :Time: 2023/3/24 14:12
-    :Modifier: Chen Xuan 42766
-    :UpdateTime: 2023/3/24 14:12
-"""
 import logging
 import re
 import json

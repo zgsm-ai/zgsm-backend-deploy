@@ -1,14 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    Platform service related errors
-    error_code： 170 start
-
-    :Author: Su Deli 16646
-    :Time: 2023/3/16 20:40
-    :Modifier: Su Deli 16646
-    :UpdateTime: 2023/3/16 20:40
-"""
 
 from .custom_exception import CustomException
 

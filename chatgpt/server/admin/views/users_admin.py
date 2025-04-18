@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-@Author  : 刘鹏z10807
-@Date    : 2023/3/30 14:36
-"""
+
 from flask import flash
 from flask_admin.actions import action
 

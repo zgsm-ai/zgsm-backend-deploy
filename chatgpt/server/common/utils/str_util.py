@@ -1,9 +1,6 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
-# @author  : 王政
-# @time    : 2024/9/10 15:04
-# @desc:
-# -*- coding: utf-8 -*-
+
 import hashlib
 import random
 import re

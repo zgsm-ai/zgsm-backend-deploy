@@ -1,13 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    Simple introduction
 
-    :Author: Su Deli 16646
-    :Time: 2023/3/3 15:20
-    :Modifier: Su Deli 16646
-    :UpdateTime: 2023/3/3 15:20
-"""
 from common.constant import ActionsConstant, ConfigurationConstant
 from template.advise import ADVISE_PROMPT
 from template.add_comment import INITIAL_PROMPT as ADD_COMMENT_INITIAL_PROMPT

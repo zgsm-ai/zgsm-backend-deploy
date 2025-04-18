@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-@Author  : 刘鹏z10807
-@Date    : 2023/4/19 14:18
-"""
+
 import json
 
 from flask import Blueprint, Response
@@ -29,7 +26,7 @@ def give_like(fields):
     responses:
       200:
         result: Stream
-    
+
     """
     conv_id = fields.pop("conversation_id")
     name = fields.pop("agent_name")
@@ -55,7 +52,7 @@ def user_feedbacks():
     responses:
       200:
         res: Result
-    
+
     """
     try:
         status = 200

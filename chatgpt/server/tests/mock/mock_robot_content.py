@@ -1,9 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-"""
-@Author  ：范立伟33139
-@Date    ：2024/8/27 20:37
-"""
 
 mock_manual_case_data_no_post = {
     "display_name": "范立伟33139",
