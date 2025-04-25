@@ -16,14 +16,24 @@ curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d
     "name": "copilot",
     "upstream_id": "copilot",
     "plugins": {
-      "openid-connect": {
-        "client_id": "'"$KEYCLOAK_CLIENT_ID"'",
-        "client_secret": "'"$KEYCLOAK_CLIENT_SECRET"'",
-        "discovery": "'"$KEYCLOAK_ADDR"'/realms/'"$KEYCLOAK_REALM"'/.well-known/openid-configuration",
-        "introspection_endpoint_auth_method": "client_secret_basic",
-        "realm": "'"$KEYCLOAK_REALM"'",
-        "bearer_only": true,
-        "ssl_verify": false
+       "openid-connect": {
+         "client_id": "'"$OIDC_CLIENT_ID"'",
+         "client_secret": "'"$OIDC_CLIENT_SECRET"'",
+         "discovery": "'"http://$OIDC_HOST:$OIDC_PORT""$OIDC_BASE_URL"'/.well-known/openid-configuration",
+         "introspection_endpoint_auth_method": "client_secret_basic",
+         "realm": "'"$KEYCLOAK_REALM"'",
+         "bearer_only": true,
+         "set_userinfo_header": true,
+         "ssl_verify": false
+       },
+      "response-rewrite": {
+          "headers": {
+              "set": {
+                    "Location": "'"http://$ZGSM_BACKEND:$PORT_APISIX_ENTRY"'/login/vscode"
+                }
+            },
+            "status_code": 302,
+            "vars":[ [ "status","==",401] ]
       },
       "limit-req": {
         "rate": 1,

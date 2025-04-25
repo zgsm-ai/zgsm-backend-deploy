@@ -96,6 +96,21 @@ services:
     networks:
       - shenma
 
+#  dex:
+#    image: dexidp/dex:latest
+#    command:
+#      - dex
+#      - serve
+#      - /etc/dex/cfg/config.yaml
+#    ports:
+#      - "5556:5556"
+#    volumes:
+#      - ./dex/config.yaml:/etc/dex/cfg/config.yaml
+#    networks:
+#      - shenma
+#    depends_on:
+#      - postgres
+
   portal:
     image: nginx:1.27.1
     restart: always
@@ -109,17 +124,17 @@ services:
     networks:
       - shenma
 
-  trampoline:
-    image: zgsm/trampoline:1.0.241018
-    restart: always
-    environment:
-      TZ: "Asia/Shanghai"
-    volumes:
-      - ./trampoline/data:/opt/trampoline/resources
-    ports:
-      - "{{PORT_TRAMPOLINE}}:8080/tcp"
-    networks:
-      - shenma
+#  trampoline:
+#    image: zgsm/trampoline:1.0.241018
+#    restart: always
+#    environment:
+#      TZ: "Asia/Shanghai"
+#    volumes:
+#      - ./trampoline/data:/opt/trampoline/resources
+#    ports:
+#      - "{{PORT_TRAMPOLINE}}:8080/tcp"
+#    networks:
+#      - shenma
 
   kaptcha:
     image: zgsm/kaptcha-generator:0.6.0
@@ -170,40 +185,40 @@ services:
     networks:
       - shenma
 
-  chatgpt:
-    image: zgsm/chat-server:1.2.0
-    command: ["/sbin/entrypoint.sh", "app:start"]
-    restart: always
-    volumes:
-      - ./chatgpt/server:/server
-      - ./chatgpt/supervisor:/var/log/supervisor
-      - ./chatgpt/logs:/server/logs
-      - ./chatgpt/custom.yml:/custom.yml
-    ports:
-      - "{{PORT_CHATGPT_API}}:5000/tcp"
-      - "{{PORT_CHATGPT_WS}}:8765/tcp"
-      - "5555:5555/tcp"
-    environment:
-      - TZ=Asia/Shanghai
-      - CACHE_DB=chatgpt
-      - REDIS_URL=redis://{{ZGSM_BACKEND}}:{{PORT_REDIS}}/0
-      - SERVE_THREADS=200
-      - SERVE_CONNECTION_LIMIT=512
-      - PG_URL={{ZGSM_BACKEND}}:{{PORT_POSTGRES}}
-      - DB_NAME=chatgpt
-      - DATABASE_URI=postgresext+pool://keycloak:{{PASSWORD_POSTGRES}}@{{ZGSM_BACKEND}}/chatgpt
-      - ES_SERVER=http://{{ZGSM_BACKEND}}:{{PORT_ES}}
-      - ES_PASSWORD={{PASSWORD_ELASTIC}}
-      - CUSTOM_CONFIG_FILE=/custom.yml
-      - DEFAULT_MODEL_NAME={{CHAT_MODEL}}
-      - GEVENT_SUPPORT=True
-      - NO_COLOR=1
-      - DEPLOYMENT_TYPE=all
-    depends_on:
-      - redis
-      - postgres
-    networks:
-      - shenma
+#  chatgpt:
+#    image: zgsm/chat-server:1.2.0
+#    command: ["/sbin/entrypoint.sh", "app:start"]
+#    restart: always
+#    volumes:
+#      - ./chatgpt/server:/server
+#      - ./chatgpt/supervisor:/var/log/supervisor
+#      - ./chatgpt/logs:/server/logs
+#      - ./chatgpt/custom.yml:/custom.yml
+#    ports:
+#      - "{{PORT_CHATGPT_API}}:5000/tcp"
+#      - "{{PORT_CHATGPT_WS}}:8765/tcp"
+#      - "5555:5555/tcp"
+#    environment:
+#      - TZ=Asia/Shanghai
+#      - CACHE_DB=chatgpt
+#      - REDIS_URL=redis://{{ZGSM_BACKEND}}:{{PORT_REDIS}}/0
+#      - SERVE_THREADS=200
+#      - SERVE_CONNECTION_LIMIT=512
+#      - PG_URL={{ZGSM_BACKEND}}:{{PORT_POSTGRES}}
+#      - DB_NAME=chatgpt
+#      - DATABASE_URI=postgresext+pool://keycloak:{{PASSWORD_POSTGRES}}@{{ZGSM_BACKEND}}/chatgpt
+#      - ES_SERVER=http://{{ZGSM_BACKEND}}:{{PORT_ES}}
+#      - ES_PASSWORD={{PASSWORD_ELASTIC}}
+#      - CUSTOM_CONFIG_FILE=/custom.yml
+#      - DEFAULT_MODEL_NAME={{CHAT_MODEL}}
+#      - GEVENT_SUPPORT=True
+#      - NO_COLOR=1
+#      - DEPLOYMENT_TYPE=all
+#    depends_on:
+#      - redis
+#      - postgres
+#    networks:
+#      - shenma
 
   fauxpilot:
     image: zgsm/copilot_proxy:1.5.15
