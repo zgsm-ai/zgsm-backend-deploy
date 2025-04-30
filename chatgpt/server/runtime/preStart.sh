@@ -1,16 +1,16 @@
 #!/bin/sh
-# 该脚本用于pod启动执行preStop.sh脚本停止的worker
+# This script is used to start workers stopped by the preStop.sh script when the pod starts
 
 host_name=$(hostname)
-# 启动的时候不能使用active_queues获取
+# Cannot use active_queues when starting
 celery_group_list=$(cat /server/runtime/supervisord-celery.conf |grep 'queues=' |awk -F 'queues=' '{print $2}' |awk '{print $1}')
-# 添加默认的celery
+# Add default celery
 celery_group_list="celery ${celery_group_list}"
 
-# 启动worker消费
+# Start worker consumption
 for celery_group in ${celery_group_list};
 do
   echo "[${host_name}][`date`] add celery worker ${celery_group}"
   celery -A tasks control add_consumer ${celery_group} -d celery@${host_name}
-  # 启动是add_consumer
+  # Use add_consumer when starting
 done

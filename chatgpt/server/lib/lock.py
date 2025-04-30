@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-"""
-@Author  ：范立伟33139
-@Date    ：2023/3/16 22:17
-"""
+
 import functools
 import time
 import uuid
@@ -30,10 +27,10 @@ class BaseLock:
 
 
 class RedisLock(BaseLock):
-    """redis锁, 通过redis限制并发操作"""
+    """Redis lock, limit concurrent operations through Redis"""
 
     def get_lock(self, key, *args, **kwargs):
-        """获取redis锁"""
+        """Get Redis lock"""
         self.key = key
         end = time.time() + self.acquire_time
         while time.time() < end:
@@ -47,7 +44,7 @@ class RedisLock(BaseLock):
         return False
 
     def release_lock(self, *args, **kwargs):
-        """释放锁"""
+        """Release lock"""
         pip = cache.pipeline(True)
         while True:
             try:
@@ -56,7 +53,7 @@ class RedisLock(BaseLock):
                 if not lock_value:
                     return True
                 if lock_value == self.value:
-                    # 删除缓存的key
+                    # Delete cached key
                     pip.multi()
                     pip.delete(self.key)
                     pip.execute()
@@ -68,7 +65,7 @@ class RedisLock(BaseLock):
         return False
 
     def get_perform_lock(self, key):
-        """获取执行锁"""
+        """Get execution lock"""
         value = uuid.uuid1().hex
         if cache.setnx(key, value):
             cache.expire_second(key, self.acquire_time)
@@ -77,12 +74,12 @@ class RedisLock(BaseLock):
             return False
 
     def clear_perform_lock(self, key):
-        """释放执行锁"""
+        """Release execution lock"""
         cache.clear(key)
 
 
 def lock_check(lock: BaseLock, key=None, prefix='lock_key', index=None):
-    # redis锁,限制并发操作
+    # Redis lock, limit concurrent operations
     def inner(func):
         @functools.wraps(func)
         def wrap(*args, **kwargs):

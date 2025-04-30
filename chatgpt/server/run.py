@@ -10,7 +10,7 @@ from common.constant import ServeConstant
 from waitress import serve
 import logging
 
-# serve 并发配置
+# Serve Concurrency Configuration
 threads = int(conf.get("serve_threads", ServeConstant.THREADS))
 connection_limit = int(conf.get("serve_connection_limit", ServeConstant.CONNECTION_LIMIT))
 logging.warning(f"waitress.serve config threads: {threads}, connection_limit: {connection_limit}")

@@ -1,22 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-"""
-@Author  ：范立伟33139
-@Date    ：2024/8/27 20:37
-"""
 
 mock_manual_case_data_no_post = {
-    "display_name": "范立伟33139",
+    "display_name": "Fan Liwei33139",
     "case_code": "WeakPWD_Func_Default_01_001_os",
     "case_id": 2798507,
-    "case_name": "默认弱口令设置测试",
-    "case_pre_step": "1.AF设备运行正常；",
-    "case_step": "1. 新建web应用防护模板P1，仅启用口令防护；   <br>2. 检查高级配置中口令防护选项默认配置；   <br>3. 新增安全防护策略，仅启用web应用防护，引用模板为P1   <br>4. PC通过AF访问web服务，输入账号密码登录，密码为8位纯字母   <br>5.修改系统时间为10分钟后，在安全日志查看弱口令日志信息；",
-    "case_expect": "2.web口令防护设置全勾选  <br>5.在安全日志中能查看到WEB登录明文传输检测日志信息；",
+    "case_name": "Default Weak Password Setting Test",
+    "case_pre_step": "1. AF device running normally;",
+    "case_step": "1. Create a new web application protection template P1, only enable password protection;   <br>2. Check the default configuration of password protection options in advanced configuration;   <br>3. Add a new security protection policy, only enable web application protection, use template P1   <br>4. PC accesses web services through AF, enter account password to log in, the password is 8 digits of pure letters   <br>5. Change the system time to 10 minutes later, check the weak password log information in the security log;",
+    "case_expect": "2. All web password protection settings are checked  <br>5. WEB login plaintext transmission detection log information can be found in the security log;",
     "case_post_step": "",
-    "case_remark": "[AT_GIT_URL][林贤杰11956] 默认弱口令设置测试.robot  <br>1.默认弱口令设置；",
+    "case_remark": "[AT_GIT_URL][Lin Xianjie11956] Default Weak Password Setting Test.robot  <br>1. Default weak password setting;",
     "case_level": "BVT",
-    "case_module": "基线/01-新架构用例基线/002-安全能力[bvt986,手动475-UI172]/04-策略(Strategy)/02-安全基础能力-蒋世齐/01-WAF(周梦园)/01-传统防护/01-基础防护能力/04-口令防护/02-WEB登录弱口令检测/02-功能效果/01-口令设置方式测试/01-默认弱口令设置/默认弱口令设置测试",
+    "case_module": "Baseline/01-New Architecture Case Baseline/002-Security Capability[bvt986,manual475-UI172]/04-Strategy(Strategy)/02-Basic Security Capability-Jiang Shiqi/01-WAF(Zhou Mengyuan)/01-Traditional Protection/01-Basic Protection Capability/04-Password Protection/02-WEB Login Weak Password Detection/02-Functional Effect/01-Password Setting Method Test/01-Default Weak Password Setting/Default Weak Password Setting Test",
     "product_id": 17,
     "product_name": "AF"
 }
@@ -27,47 +23,47 @@ Resource    resource/common/keywords.robot
 Test Setup     _setup
 
 *** Test Cases ***
-BVT-默认弱口令设置测试
-    [Tags]    级别-BVT    ID-WeakPWD_Func_Default_01_001_os    状态-未调试    拓扑-待补充    作者-千流AI    系统ID-2798507
+BVT-Default Weak Password Setting Test
+    [Tags]    Level-BVT    ID-WeakPWD_Func_Default_01_001_os    Status-Not Debugged    Topology-To Be Added    Author-Qianliu AI    SystemID-2798507
 
-    #@step   1. 新建web应用防护模板P1，仅启用口令防护；
-    新增WEB应用防护模板    模板名称=P1    应用隐藏=否    口令防护=是    权限控制=否    数据泄密防护=否    HTTP异常检测=否    漏洞防扫描=否    期望结果=成功
+    #@step   1. Create a new web application protection template P1, only enable password protection;
+    Add WEB Application Protection Template    TemplateName=P1    ApplicationHiding=No    PasswordProtection=Yes    AccessControl=No    DataLeakageProtection=No    HTTPAnomalyDetection=No    VulnerabilityProtection=No    ExpectedResult=Success
 
-    #@step   2. 检查高级配置中口令防护选项默认配置；
-    #@expect 2.web口令防护设置全勾选
-    检查WEB应用防护模板配置    模板名称=P1    口令防护=是    期望结果=成功
+    #@step   2. Check the default configuration of password protection options in advanced configuration;
+    #@expect 2. All web password protection settings are checked
+    Check WEB Application Protection Template Configuration    TemplateName=P1    PasswordProtection=Yes    ExpectedResult=Success
 
-    #@step   3. 新增安全防护策略，仅启用web应用防护，引用模板为P1
-    新增安全策略    名称=web_protection    类型=server    源区域=lan    目的区域=wan    WEB应用防护=是    WEB应用防护模版=P1    动作=permit    期望结果=成功
-    等待    时间=5
+    #@step   3. Add a new security protection policy, only enable web application protection, use template P1
+    Add Security Policy    Name=web_protection    Type=server    SourceZone=lan    DestinationZone=wan    WEBApplicationProtection=Yes    WEBApplicationProtectionTemplate=P1    Action=permit    ExpectedResult=Success
+    Wait    Time=5
 
-    #@step   4. PC通过AF访问web服务，输入账号密码登录，密码为8位纯字母
-    账号密码登录控制台    网关IP=${AF_IP}    用户名=admin    密码=abcdefgh    期望结果=成功
+    #@step   4. PC accesses web services through AF, enter account password to log in, the password is 8 digits of pure letters
+    Login Console with Account Password    GatewayIP=${AF_IP}    Username=admin    Password=abcdefgh    ExpectedResult=Success
 
-    #@step   5.修改系统时间为10分钟后，在安全日志查看弱口令日志信息；
-    #@expect 5.在安全日志中能查看到WEB登录明文传输检测日志信息；
-    CLI    设备名称=dut1    命令=config; clock time ${10分钟后时间}; clock date ${当前日期}
-    syslog日志检查    设备名称=${DeviceName}    日志类型=WEB应用防护    查询结果检查点=WEB登录明文传输检测    检查次数=5    期望结果=成功
+    #@step   5. Change the system time to 10 minutes later, check the weak password log information in the security log;
+    #@expect 5. WEB login plaintext transmission detection log information can be found in the security log;
+    CLI    DeviceName=dut1    Command=config; clock time ${10MinutesLaterTime}; clock date ${CurrentDate}
+    Check Syslog    DeviceName=${DeviceName}    LogType=WEB Application Protection    QueryResultCheckPoint=WEB Login Plaintext Transmission Detection    CheckTimes=5    ExpectedResult=Success
 
 *** Keywords ***
 _setup
-    #@step   1.AF设备运行正常；
-    检查AF设备状态    设备名称=${DeviceName}    期望结果=成功
+    #@step   1. AF device running normally;
+    Check AF Device Status    DeviceName=${DeviceName}    ExpectedResult=Success
 """
 
 
 mock_manual_case_data_no_pre = {
-    "display_name": "范立伟33139",
+    "display_name": "Fan Liwei33139",
     "case_code": "WeakPWD_Func_Default_01_001_os",
     "case_id": 2798507,
-    "case_name": "默认弱口令设置测试",
+    "case_name": "Default Weak Password Setting Test",
     "case_pre_step": "",
-    "case_step": "1. 新建web应用防护模板P1，仅启用口令防护；   <br>2. 检查高级配置中口令防护选项默认配置；   <br>3. 新增安全防护策略，仅启用web应用防护，引用模板为P1   <br>4. PC通过AF访问web服务，输入账号密码登录，密码为8位纯字母   <br>5.修改系统时间为10分钟后，在安全日志查看弱口令日志信息；",
-    "case_expect": "2.web口令防护设置全勾选  <br>5.在安全日志中能查看到WEB登录明文传输检测日志信息；",
-    "case_post_step": "1.删除web应用防护模板P1",
-    "case_remark": "[AT_GIT_URL][林贤杰11956] 默认弱口令设置测试.robot  <br>1.默认弱口令设置；",
+    "case_step": "1. Create a new web application protection template P1, only enable password protection;   <br>2. Check the default configuration of password protection options in advanced configuration;   <br>3. Add a new security protection policy, only enable web application protection, use template P1   <br>4. PC accesses web services through AF, enter account password to log in, the password is 8 digits of pure letters   <br>5. Change the system time to 10 minutes later, check the weak password log information in the security log;",
+    "case_expect": "2. All web password protection settings are checked  <br>5. WEB login plaintext transmission detection log information can be found in the security log;",
+    "case_post_step": "1. Delete web application protection template P1",
+    "case_remark": "[AT_GIT_URL][Lin Xianjie11956] Default Weak Password Setting Test.robot  <br>1. Default weak password setting;",
     "case_level": "BVT",
-    "case_module": "基线/01-新架构用例基线/002-安全能力[bvt986,手动475-UI172]/04-策略(Strategy)/02-安全基础能力-蒋世齐/01-WAF(周梦园)/01-传统防护/01-基础防护能力/04-口令防护/02-WEB登录弱口令检测/02-功能效果/01-口令设置方式测试/01-默认弱口令设置/默认弱口令设置测试",
+    "case_module": "Baseline/01-New Architecture Case Baseline/002-Security Capability[bvt986,manual475-UI172]/04-Strategy(Strategy)/02-Basic Security Capability-Jiang Shiqi/01-WAF(Zhou Mengyuan)/01-Traditional Protection/01-Basic Protection Capability/04-Password Protection/02-WEB Login Weak Password Detection/02-Functional Effect/01-Password Setting Method Test/01-Default Weak Password Setting/Default Weak Password Setting Test",
     "product_id": 17,
     "product_name": "AF"
 }
@@ -78,32 +74,32 @@ Resource    resource/common/keywords.robot
 Test Teardown    _teardown
 
 *** Test Cases ***
-BVT-默认弱口令设置测试
-    [Tags]    级别-BVT    ID-WeakPWD_Func_Default_01_001_os    状态-未调试    拓扑-待补充    作者-千流AI    系统ID-2798507
+BVT-Default Weak Password Setting Test
+    [Tags]    Level-BVT    ID-WeakPWD_Func_Default_01_001_os    Status-Not Debugged    Topology-To Be Added    Author-Qianliu AI    SystemID-2798507
 
-    #@step   1. 新建web应用防护模板P1，仅启用口令防护；
-    新增WEB应用防护模板    模板名称=P1    应用隐藏=否    口令防护=是    权限控制=否    数据泄密防护=否    HTTP异常检测=否    漏洞防扫描=否    期望结果=成功
+    #@step   1. Create a new web application protection template P1, only enable password protection;
+    Add WEB Application Protection Template    TemplateName=P1    ApplicationHiding=No    PasswordProtection=Yes    AccessControl=No    DataLeakageProtection=No    HTTPAnomalyDetection=No    VulnerabilityProtection=No    ExpectedResult=Success
 
-    #@step   2. 检查高级配置中口令防护选项默认配置；
-    #@expect 2.web口令防护设置全勾选
-    检查WEB应用防护模板配置    模板名称=P1    口令防护=是    期望结果=成功
+    #@step   2. Check the default configuration of password protection options in advanced configuration;
+    #@expect 2. All web password protection settings are checked
+    Check WEB Application Protection Template Configuration    TemplateName=P1    PasswordProtection=Yes    ExpectedResult=Success
 
-    #@step   3. 新增安全防护策略，仅启用web应用防护，引用模板为P1
-    新增安全策略    名称=web_protection    类型=server    源区域=lan    目的区域=wan    WEB应用防护=是    WEB应用防护模版=P1    动作=permit    期望结果=成功
-    等待    时间=5
+    #@step   3. Add a new security protection policy, only enable web application protection, use template P1
+    Add Security Policy    Name=web_protection    Type=server    SourceZone=lan    DestinationZone=wan    WEBApplicationProtection=Yes    WEBApplicationProtectionTemplate=P1    Action=permit    ExpectedResult=Success
+    Wait    Time=5
 
-    #@step   4. PC通过AF访问web服务，输入账号密码登录，密码为8位纯字母
-    账号密码登录控制台    网关IP=${AF_IP}    用户名=admin    密码=abcdefgh    期望结果=成功
+    #@step   4. PC accesses web services through AF, enter account password to log in, the password is 8 digits of pure letters
+    Login Console with Account Password    GatewayIP=${AF_IP}    Username=admin    Password=abcdefgh    ExpectedResult=Success
 
-    #@step   5.修改系统时间为10分钟后，在安全日志查看弱口令日志信息；
-    #@expect 5.在安全日志中能查看到WEB登录明文传输检测日志信息；
-    CLI    设备名称=dut1    命令=config; clock time ${10分钟后时间}; clock date ${当前日期}
-    syslog日志检查    设备名称=${DeviceName}    日志类型=WEB应用防护    查询结果检查点=WEB登录明文传输检测    检查次数=5    期望结果=成功
+    #@step   5. Change the system time to 10 minutes later, check the weak password log information in the security log;
+    #@expect 5. WEB login plaintext transmission detection log information can be found in the security log;
+    CLI    DeviceName=dut1    Command=config; clock time ${10MinutesLaterTime}; clock date ${CurrentDate}
+    Check Syslog    DeviceName=${DeviceName}    LogType=WEB Application Protection    QueryResultCheckPoint=WEB Login Plaintext Transmission Detection    CheckTimes=5    ExpectedResult=Success
 
 *** Keywords ***
 _teardown
-    #@step   1.删除web应用防护模板P1
-    删除WEB应用防护模板    模板名称=P1    期望结果=成功
+    #@step   1. Delete web application protection template P1
+    Delete WEB Application Protection Template    TemplateName=P1    ExpectedResult=Success
 """
 
 mock_robot_case = """
@@ -113,36 +109,36 @@ Test Setup     _setup
 Test Teardown    _teardown
 
 *** Test Cases ***
-BVT-默认弱口令设置测试
-    [Tags]    级别-BVT    ID-WeakPWD_Func_Default_01_001_os    状态-未调试    拓扑-待补充    作者-千流AI    系统ID-2798507
+BVT-Default Weak Password Setting Test
+    [Tags]    Level-BVT    ID-WeakPWD_Func_Default_01_001_os    Status-Not Debugged    Topology-To Be Added    Author-Qianliu AI    SystemID-2798507
 
-    #@step   1. 新建web应用防护模板P1，仅启用口令防护
-    新增WEB应用防护模板    模板名称=P1    应用隐藏=否    口令防护=是    权限控制=否    数据泄密防护=否    HTTP异常检测=否    漏洞防扫描=否    期望结果=成功
+    #@step   1. Create a new web application protection template P1, only enable password protection
+    Add WEB Application Protection Template    TemplateName=P1    ApplicationHiding=No    PasswordProtection=Yes    AccessControl=No    DataLeakageProtection=No    HTTPAnomalyDetection=No    VulnerabilityProtection=No    ExpectedResult=Success
 
-    #@step   2. 检查高级配置中口令防护选项默认配置
-    检查WEB应用防护模板配置    模板名称=P1    口令防护=是    期望结果=成功
+    #@step   2. Check the default configuration of password protection options in advanced configuration
+    Check WEB Application Protection Template Configuration    TemplateName=P1    PasswordProtection=Yes    ExpectedResult=Success
 
-    #@step   3. 新增安全防护策略，仅启用web应用防护，引用模板为P1
-    新增安全策略    名称=web_protection    类型=server    源区域=lan    目的区域=wan    WEB应用防护=是    WEB应用防护模版=P1    动作=permit    期望结果=成功
-    等待    时间=5
+    #@step   3. Add a new security protection policy, only enable web application protection, use template P1
+    Add Security Policy    Name=web_protection    Type=server    SourceZone=lan    DestinationZone=wan    WEBApplicationProtection=Yes    WEBApplicationProtectionTemplate=P1    Action=permit    ExpectedResult=Success
+    Wait    Time=5
 
-    #@step   4. PC通过AF访问web服务，输入账号密码登录，密码为8位纯字母
+    #@step   4. PC accesses web services through AF, enter account password to log in, the password is 8 digits of pure letters
     #@expect
-    账号密码登录控制台    网关IP=${AF_IP}    用户名=admin    密码=abcdefgh    期望结果=成功
+    Login Console with Account Password    GatewayIP=${AF_IP}    Username=admin    Password=abcdefgh    ExpectedResult=Success
 
-    #@step   5. 修改系统时间为10分钟后，在安全日志查看弱口令日志信息
-    #@expect 5. 在安全日志中能查看到WEB登录明文传输检测日志信息
-    CLI    设备名称=dut1    命令=config; clock time ${10分钟后时间}; clock date ${当前日期}
-    syslog日志检查    设备名称=${DeviceName}    日志类型=WEB应用防护    查询结果检查点=WEB登录明文传输检测    检查次数=5    期望结果=成功
+    #@step   5. Change the system time to 10 minutes later, check the weak password log information in the security log
+    #@expect 5. WEB login plaintext transmission detection log information can be found in the security log
+    CLI    DeviceName=dut1    Command=config; clock time ${10MinutesLaterTime}; clock date ${CurrentDate}
+    Check Syslog    DeviceName=${DeviceName}    LogType=WEB Application Protection    QueryResultCheckPoint=WEB Login Plaintext Transmission Detection    CheckTimes=5    ExpectedResult=Success
 
 *** Keywords ***
 _setup
-    #@step   1. AF设备运行正常123
-    检查AF设备状态    设备名称=${DeviceName}    期望结果=成功
+    #@step   1. AF device running normally123
+    Check AF Device Status    DeviceName=${DeviceName}    ExpectedResult=Success
 
 _teardown
-    #@step   1. 删除web应用防护模板P1 123
-    删除WEB应用防护模板    模板名称=P1    期望结果=成功
+    #@step   1. Delete web application protection template P1 123
+    Delete WEB Application Protection Template    TemplateName=P1    ExpectedResult=Success
 """
 
 mock_step_map_expect = [

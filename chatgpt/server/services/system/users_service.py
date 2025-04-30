@@ -1,13 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    users对应的service业务逻辑层
 
-    :作者: 苏德利 16646
-    :时间: 2023/3/14 16:01
-    :修改者: 苏德利 16646
-    :更新时间: 2023/3/14 16:01
-"""
 import logging
 import re
 
@@ -35,7 +28,7 @@ class UsersService(BaseService):
     @classmethod
     def create_test_user(cls):
         """
-        创建测试用户，测试和开发环境使用
+        Create test user, used in test and development environments
         """
         avatar_color = generate_random_avatar_color()
         search_kw = {
@@ -47,11 +40,11 @@ class UsersService(BaseService):
             'avatar_color': avatar_color
         }
         return cls.get_or_create_v2(**search_kw, defaults=defaults)
-    
+
     @classmethod
     def create_zgsm_user(cls, username, display_name, host_ip, token):
         """
-        创建诸葛神码的用户
+        Create Shenma user
         """
         avatar_color = generate_random_avatar_color()
         search_kw = {
@@ -80,7 +73,7 @@ class UsersService(BaseService):
     @cache_evict(CACHE_KEY_API_KEY, index=[3])
     @cache_evict(CACHE_KEY_WORK_ID, index=[2])
     def evict_user_cache(cls, user_id, username, api_key):
-        cls.logger.info(f'清理用户缓存:{username}')
+        cls.logger.info(f'Clearing user cache: {username}')
         return user_id, username, api_key
 
     @classmethod
@@ -89,16 +82,16 @@ class UsersService(BaseService):
     @cache_all_evict(CACHE_KEY_API_KEY)
     @cache_all_evict(CACHE_KEY_WORK_ID)
     def clear_all_user_cache(cls):
-        """清除所有用户相关数据"""
-        cls.logger.info('清理所有用户缓存')
+        """Clear all user-related data"""
+        cls.logger.info('Clearing all user caches')
         return
 
     @classmethod
     def get_or_create_by_username_and_display_name(cls, username, display_name, email=None):
-        """慎用,并发操作时调用，防止创建多个用户"""
+        """Use with caution when calling in concurrent operations to prevent creating multiple users"""
         username = str(username)
         if len(username) not in [5, 6]:
-            cls.logger.info(f'用户名不合法: {username}')
+            cls.logger.info(f'Invalid username: {username}')
             return None
         match = PATTERN_USERNAME.findall(username)
         if match:
@@ -108,13 +101,13 @@ class UsersService(BaseService):
             if not user:
                 user = cls.__lock_get_or_create(username, display_name, email)
             return user
-        cls.logger.info(f'用户名不合法: {username}')
+        cls.logger.info(f'Invalid username: {username}')
         return None
 
     @classmethod
     @lock_check(RedisLock(5), prefix='lock_user', index=[1])
     def __lock_get_or_create(cls, username, display_name, email, is_admin=False):
-        """慎用,并发操作时调用，防止创建多个用户"""
+        """Use with caution when calling in concurrent operations to prevent creating multiple users"""
         api_key = encode_by_base64(f"{display_name}")
         avatar_color = generate_random_avatar_color()
         search_kw = {
@@ -135,8 +128,8 @@ class UsersService(BaseService):
     @cache_able(CACHE_KEY_API_KEY, index=[1])
     def get_user_by_api_key(cls, api_key):
         """
-        :param username: 用于cache缓存key
-        :param api_key: 解析用的
+        :param username: Used for cache key
+        :param api_key: Used for parsing
         :return:
         """
         user_obj = cls.dao.get_or_none(api_key=api_key)

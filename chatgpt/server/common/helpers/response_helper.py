@@ -1,13 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    定义基本的response响应结构
 
-    :作者: 苏德利 16646
-    :时间: 2023/3/14 15:45
-    :修改者: 苏德利 16646
-    :更新时间: 2023/3/14 15:45
-"""
 from typing import Iterator
 from flask import jsonify, make_response, request, Response, stream_with_context
 from peewee import ModelSelect, Model

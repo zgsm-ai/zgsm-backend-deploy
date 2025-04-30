@@ -48,7 +48,7 @@ KEYCLOAK_PASSWORD="123"
 
  # root key
 ONE_API_INITIAL_ROOT_KEY="966c3157fe65461dbc731cd540b6cd5d"
-# 用户认证token，不要超过32位
+# User authentication token, should not exceed 32 characters
 ONE_API_INITIAL_ROOT_ACCESS_TOKEN="e9e3-4cd3-abfc-36707f44ee1e"
 ONE_API_HOST=one-api
 ONE_API_PORT=30000

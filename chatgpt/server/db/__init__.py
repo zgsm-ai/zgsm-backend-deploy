@@ -1,13 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    简单介绍
 
-    :作者: 苏德利 16646
-    :时间: 2023/3/14 11:38
-    :修改者: 苏德利 16646
-    :更新时间: 2023/3/14 11:38
-"""
 from peewee import Proxy
 from playhouse.db_url import connect
 from config import conf
@@ -23,7 +16,7 @@ class CustomProxy(Proxy):
 
         @app.before_request
         def before():
-            """ comment by lyb """
+            """ commented by lyb """
             # self.obj.connect()
             pass
 

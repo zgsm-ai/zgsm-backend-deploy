@@ -1,10 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-"""
-@File    :zhuge_normal_chat.py
-@Author  :阚其禄 w27966
-@Date    :2024/8/29 19:42
-"""
+
 from common.constant import ActionsConstant
 from services.action.base_service import ActionStrategy, ChatbotOptions
 from services.system.configuration_service import ConfigurationService
@@ -12,7 +8,7 @@ from services.agents.agent_data_classes import ChatRequestData
 
 # 诸葛普通聊天
 class NormalChatStrategy(ActionStrategy):
-    name = ActionsConstant.ZHUGE_NORMALCHAT
+    name = ActionsConstant.SHENMA_NORMALCHAT
 
     def get_model(self, options: ChatbotOptions = None):
         if options.model:

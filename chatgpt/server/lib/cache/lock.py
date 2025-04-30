@@ -19,14 +19,14 @@ def get_locker(name: str, **kwargs):
 def parameter_lock(key=None, index=None, prefix_key=None, blocking=True, lock_exist_return=None, fail_run=False,
                    timeout=EXPIRE):
     """
-    带参数的锁，支持用参数进行加锁，位置参数和命名参数
-    :param key: 命名参数时，参数名
-    :param index: 位置参数时，参数位置值，下标从0开始
-    :param prefix_key: 加锁的key前缀, 没有传就用被锁的函数名
-    :param blocking: 遇到相同key，False（跳过不执行）， True(进入排队，继续执行)
-    :param lock_exist_return: 遇到相同key，跳过不执行的返回值
-    :param fail_run: 锁定失败是否执行
-    :param timeout: 锁定超时时间
+    Parameter lock, supports locking with parameters, positional and named arguments
+    :param key: Parameter name when using named parameters
+    :param index: Parameter position value when using positional parameters, index starts from 0
+    :param prefix_key: Lock key prefix, if not provided, the locked function name is used
+    :param blocking: When encountering the same key, False (skip execution), True (queue up, continue execution)
+    :param lock_exist_return: Return value when skipping execution due to the same key
+    :param fail_run: Whether to execute when locking fails
+    :param timeout: Lock timeout
     :return:
     """
 
@@ -41,49 +41,49 @@ def parameter_lock(key=None, index=None, prefix_key=None, blocking=True, lock_ex
 
             redis_key = f'lock:{prefix_key}:{suffix_key}' if prefix_key else f'lock:{func.__qualname__}:{suffix_key}'
 
-            logger.info(f'尝试锁定函数{func.__qualname__}:{redis_key},cache.connection:{BaseCache().connection}')
+            logger.info(f'Attempting to lock function {func.__qualname__}:{redis_key}, cache.connection:{BaseCache().connection}')
             locker = redis_lock.Lock(BaseCache().connection, redis_key, expire=timeout)
 
             try:
                 if blocking:
                     result = locker.acquire(timeout=timeout)
-                    # 表示等待到超时也未拿到锁，返回是false
+                    # False means timeout occurred without getting the lock
                     if not result:
-                        raise redis_lock.NotAcquired("获取锁超时未拿到锁")
+                        raise redis_lock.NotAcquired("Failed to acquire lock within timeout period")
                 else:
                     if not locker.acquire(blocking=blocking):
-                        logger.info(f'锁定函数{func.__qualname__}:{redis_key}失败，已存在')
+                        logger.info(f'Failed to lock function {func.__qualname__}:{redis_key}, already exists')
                         return lock_exist_return
 
-                logger.info(f'锁定函数{func.__qualname__}:{redis_key}成功')
+                logger.info(f'Successfully locked function {func.__qualname__}:{redis_key}')
                 try:
                     ret = func(*args, **kwargs)
                 except Exception as e:
-                    logger.error(f"执行函数{func.__qualname__}:{redis_key}失败, error: {e}", exc_info=True)
+                    logger.error(f"Failed to execute function {func.__qualname__}:{redis_key}, error: {e}", exc_info=True)
                     raise e
                 finally:
                     try:
                         locker.release()
-                        logger.info(f'释放函数{func.__qualname__}:{redis_key}成功')
+                        logger.info(f'Successfully released function {func.__qualname__}:{redis_key}')
                     except redis_lock.NotAcquired as e:
                         logger.error(
-                            f'释放函数{func.__qualname__}:{redis_key}失败，error: {e},{locker._client}', exc_info=True)
+                            f'Failed to release function {func.__qualname__}:{redis_key}, error: {e}, {locker._client}', exc_info=True)
             except redis_lock.NotAcquired as e:
                 if fail_run:
-                    logger.error(f'锁定函数{func.__qualname__}:{redis_key}失败，直接执行, error: {e}', exc_info=True)
+                    logger.error(f'Failed to lock function {func.__qualname__}:{redis_key}, executing directly, error: {e}', exc_info=True)
                     try:
                         ret = func(*args, **kwargs)
                     except Exception as e:
-                        logger.error(f"非锁定情况执行函数{func.__qualname__}:{redis_key}失败, error: {e}",
+                        logger.error(f"Failed to execute function {func.__qualname__}:{redis_key} without lock, error: {e}",
                                      exc_info=True)
                         raise e
                 else:
-                    logger.info(f'锁定函数{func.__qualname__}:{redis_key}失败，不执行, {e}', exc_info=True)
+                    logger.info(f'Failed to lock function {func.__qualname__}:{redis_key}, not executing, {e}', exc_info=True)
                     return lock_exist_return
 
             except Exception as e:
-                logger.error(f"锁定函数{func.__qualname__}:{redis_key}失败, error: {e}", exc_info=True)
-                # 非“获得锁”失败，导致的异常，继续向上抛出
+                logger.error(f"Failed to lock function {func.__qualname__}:{redis_key}, error: {e}", exc_info=True)
+                # For exceptions not related to acquiring the lock, continue to raise
                 raise e
 
             return ret
@@ -96,116 +96,117 @@ def parameter_lock(key=None, index=None, prefix_key=None, blocking=True, lock_ex
 def data_lock(generate_data_id_method=None, job_name='unknown', blocking=True, wait_for=None, wait_blocking=True,
               fail_run=False):
     """
-    带参数的数据互斥锁，数据粒度的锁，用于多个地方同时处理同一条数据，防止两边同时并发进行，保持两边先后顺序，保证数据的完整性
-    :param generate_data_id_method 生成数据id的方法 该方法必须是一个可以调用的对象用于生成数据ID
-    :param job_name: 任务名称（唯一） 默认为 默认 unknown
-    :param wait_for: 是否需要等待对方的 方法/应用执行完成 默认 None
-    :param wait_block: 是否以阻塞的方式等待对方的 方法/应用执行完成 默认 True
-    :param blocking: 是否以阻塞等待的方式去获取自己的锁 默认 True
-    :param fail_run: 锁定失败是否执行 默认 False
+    Data mutex lock with parameters, a lock at the data granularity, used when multiple places process the same data simultaneously.
+    Prevents concurrent execution, ensures sequential order, and maintains data integrity.
+    :param generate_data_id_method: Method to generate data ID, must be a callable object that generates a data ID
+    :param job_name: Task name (unique), default is 'unknown'
+    :param wait_for: Whether to wait for the other method/application to complete, default None
+    :param wait_blocking: Whether to wait for the other method/application to complete in a blocking manner, default True
+    :param blocking: Whether to wait for your own lock in a blocking manner, default True
+    :param fail_run: Whether to execute when locking fails, default False
     :return:
     """
 
     def lock_func(func):
         @wraps(func)
         def wrapper(self, *args, **kwargs):
-            # 没有传获取数据id的方法名称 or 没有定义该方法 or 该方法不能调用 都不处理直接抛异常
+            # If no method name is provided to get the data id, or the method is not defined, or the method is not callable, throw an exception
             if not generate_data_id_method or not hasattr(self, generate_data_id_method) \
                     or not callable(getattr(self, generate_data_id_method)):
-                raise ValueError(f'{func.__qualname__}获取数据id 失败')
+                raise ValueError(f'{func.__qualname__} failed to get data id')
 
             data_id = getattr(self, generate_data_id_method)()
             redis_key = f'lock:data_lock:{job_name}:{data_id}'
-            log_msg = f'数据锁 锁定数据{job_name}函数{func.__qualname__} key:{redis_key}'
+            log_msg = f'Data lock locking data {job_name} function {func.__qualname__} key:{redis_key}'
             self_locker = get_locker(name=redis_key, expire=EXPIRE)
 
             wait_for_key = f'lock:data_lock:{wait_for}:{data_id}'
-            wait_log_msg = f'数据锁 {job_name}函数{func.__qualname__} key:{redis_key} 等待 {wait_for} key:{wait_for_key}任务'
+            wait_log_msg = f'Data lock {job_name} function {func.__qualname__} key:{redis_key} waiting for {wait_for} key:{wait_for_key} task'
             wait_for_locker = get_locker(name=wait_for_key, expire=EXPIRE)
 
             try:
-                # 自己job_name 不能和 wait_for 的任务名一样
+                # Your job_name cannot be the same as wait_for's task name
                 if job_name == wait_for:
-                    raise ValueError('job_name 不能和 wait_for 一样')
+                    raise ValueError('job_name cannot be the same as wait_for')
 
-                # 如果需要等待其它任务先执行，则先去获取等待目标的锁是否存在
+                # If you need to wait for other tasks to execute first, check if the target's lock exists
                 if wait_for:
-                    # 获取对方的锁
-                    # 对方的锁已存在 拿不到锁 则根据wait_blocking 来指定是否阻塞等待
-                    # 对方的锁不存在 拿到了锁 则继续往下执行
+                    # Get the other party's lock
+                    # If the other's lock already exists and you can't get it, follow wait_blocking to determine whether to block and wait
+                    # If the other's lock doesn't exist and you get it, continue execution
                     try:
-                        logging.info(wait_log_msg + ' 开始获取对方锁')
+                        logging.info(wait_log_msg + ' Starting to acquire the other party\'s lock')
                         if not wait_for_locker.acquire(blocking=wait_blocking):
                             raise LockFail(wait_for)
                     except redis_lock.NotAcquired:
                         raise LockFail(wait_for)
-                    logging.info(wait_log_msg + ' 已经获取到对方锁')
+                    logging.info(wait_log_msg + ' Successfully acquired the other party\'s lock')
 
-                # 获取锁
+                # Get lock
                 try:
                     if not self_locker.acquire(blocking=blocking):
                         raise LockFail(job_name)
                 except redis_lock.NotAcquired:
                     raise LockFail(job_name)
 
-                # 加锁成功开始执行
+                # Start execution after successful locking
                 try:
                     ret = func(self, *args, **kwargs)
                 except Exception as e:
-                    logging.error(log_msg + f'执行函数错误：{e}')
+                    logging.error(log_msg + f'Function execution error: {e}')
                     raise e
                 finally:
                     try:
                         self_locker.release()
-                        logging.info(log_msg + ' 释放锁 成功')
+                        logging.info(log_msg + ' Lock released successfully')
                     except redis_lock.NotAcquired:
-                        logging.info(log_msg + ' 释放锁 失败')
+                        logging.info(log_msg + ' Failed to release lock')
 
                     try:
                         wait_for_locker.release()
-                        logging.info(wait_log_msg + ' 释放对方锁 成功')
+                        logging.info(wait_log_msg + ' Released the other party\'s lock successfully')
                     except redis_lock.NotAcquired:
-                        logging.info(wait_log_msg + ' 释放对方锁 失败')
+                        logging.info(wait_log_msg + ' Failed to release the other party\'s lock')
 
             except Exception as e:
-                # 如果是LockFail异常 并且 fail_run 是True 任然继续执行
+                # If it's a LockFail exception and fail_run is True, continue execution
                 if isinstance(e, LockFail):
                     if e.args[0] == wait_for:
-                        logging.info(wait_log_msg + ' 获取对方的锁失败')
+                        logging.info(wait_log_msg + ' Failed to acquire the other party\'s lock')
 
-                    # 获取是获取自己锁失败的时候 ，则需要释放对方的锁
+                    # If it fails to acquire your own lock, release the other party's lock
                     if e.args[0] == job_name:
                         try:
                             wait_for_locker.release()
-                            logging.info(wait_log_msg + ' 释放锁对方锁 成功')
+                            logging.info(wait_log_msg + ' Released the other party\'s lock successfully')
                         except redis_lock.NotAcquired:
-                            logging.info(wait_log_msg + ' 释放锁对方锁 失败')
+                            logging.info(wait_log_msg + ' Failed to release the other party\'s lock')
 
-                    logging.error(log_msg + f'加锁失败, error:{e}', exc_info=True)
+                    logging.error(log_msg + f'Lock acquisition failed, error:{e}', exc_info=True)
                     if fail_run:
-                        logging.info(log_msg + f'锁定失败，直接执行, error:{e}', exc_info=True)
+                        logging.info(log_msg + f'Lock failed, executing directly, error:{e}', exc_info=True)
                         try:
                             ret = func(self, *args, **kwargs)
                         except Exception as e:
-                            logging.error(log_msg + f"锁定失败后执行异常, error: {e}", exc_info=True)
+                            logging.error(log_msg + f"Exception after lock failure, error: {e}", exc_info=True)
                             raise e
                         return ret
                     else:
-                        logging.info(log_msg + f'锁定失败后不执行, error:{e}', exc_info=True)
+                        logging.info(log_msg + f'Not executing after lock failure, error:{e}', exc_info=True)
                         raise e
 
                 else:
-                    # 其它错误则释放锁后直接抛出异常
+                    # For other errors, release the lock and throw the exception
                     try:
                         self_locker.release()
                     except redis_lock.NotAcquired:
-                        logging.info(log_msg + ' 释放锁 成功')
-                    # 释放对方的锁
+                        logging.info(log_msg + ' Lock released successfully')
+                    # Release the other party's lock
                     try:
                         wait_for_locker.release()
-                        logging.info(wait_log_msg + ' 释放锁对方锁 成功')
+                        logging.info(wait_log_msg + ' Released the other party\'s lock successfully')
                     except redis_lock.NotAcquired:
-                        logging.info(wait_log_msg + ' 释放锁对方锁 失败')
+                        logging.info(wait_log_msg + ' Failed to release the other party\'s lock')
 
                     raise e
 
@@ -217,7 +218,7 @@ def data_lock(generate_data_id_method=None, job_name='unknown', blocking=True, w
 
 
 def release_all_lock():
-    # 重启服务时候清除掉锁，防止死锁
+    # Clear locks when restarting the service to prevent deadlocks
     keys = BaseCache().connection.keys('lock*')
     for k in keys:
         BaseCache().connection.delete(k)
@@ -225,7 +226,7 @@ def release_all_lock():
 
 def lock_timed_task(func):
     """
-    60秒内同一个函数，同样的参数，只允许执行一次
+    Allow the same function with the same parameters to execute only once within 60 seconds
     """
 
     @wraps(func)
@@ -234,7 +235,7 @@ def lock_timed_task(func):
         if BaseCache().set(key, 1, nx=True, ex=EXPIRE):
             return func(self, *args, **kwargs)
         else:
-            logging.info(f'{key}在{EXPIRE}秒内已经存在')
+            logging.info(f'{key} already exists within {EXPIRE} seconds')
 
     return wrapper
 
@@ -242,7 +243,7 @@ def lock_timed_task(func):
 @contextmanager
 def named_lock(name):
     """
-    命名锁
+    Named lock
     :param name:
     :type name:
     :return:
@@ -255,4 +256,4 @@ def named_lock(name):
         try:
             locker.release()
         except redis_lock.NotAcquired:
-            logging.error(f'{name}锁已经被释放')
+            logging.error(f'Lock {name} has already been released')

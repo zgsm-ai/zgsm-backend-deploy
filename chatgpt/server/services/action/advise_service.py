@@ -1,15 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-@Author  : zbc
-@Date    : 2024/11/20 08:53
-"""
+
 from services.action.base_service import ActionStrategy, ChatbotOptions
 from services.agents.agent_data_classes import ChatRequestData
 
 class AdviseStrategy(ActionStrategy):
     """
-    LLM给出最可能的下一步操作推荐
+    LLM provides recommendations for the most likely next steps
     """
     name = 'advise'
 

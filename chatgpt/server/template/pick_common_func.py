@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# 公共函数抽取模板
+# Common function extraction template
 INITIAL_PROMPT = """
 ```{language}
 {selectedText}

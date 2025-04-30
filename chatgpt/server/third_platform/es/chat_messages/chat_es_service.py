@@ -5,14 +5,14 @@ from datetime import datetime
 import pytz
 
 class ChatESService(BaseESService):
-    """记录websocket通讯的关键信息"""
+    """Record key information of websocket communication"""
     def __init__(self):
         super(ChatESService, self).__init__()
         self.index = "chat"
 
     def insert_connect(self, sid, user):
         """
-        记录websocket连接信息
+        Record websocket connection information
         """
         try:
             data = {
@@ -23,11 +23,11 @@ class ChatESService(BaseESService):
             }
             self.insert(data, id=sid)
         except Exception as e:
-            self.logger.error(f'es 操作 chat.connect 数据失败，失败日志： {str(e)}')
+            self.logger.error(f'ES operation chat.connect data failed, error log: {str(e)}')
 
     def insert_chat(self, sid, data: dict):
         """
-        记录客户端通过websocket发送的请求对话的信息
+        Record request conversation information sent by the client through websocket
         """
         try:
             exist = self.es.exists(index=self.index, id=sid)
@@ -36,6 +36,6 @@ class ChatESService(BaseESService):
             else:
                 self.update_by_id(id=sid, update_data=data)
         except Exception as e:
-            self.logger.error(f'es 操作 chat 数据失败，失败日志： {str(e)}')
+            self.logger.error(f'ES operation chat data failed, error log: {str(e)}')
 
 chat_es = ChatESService()

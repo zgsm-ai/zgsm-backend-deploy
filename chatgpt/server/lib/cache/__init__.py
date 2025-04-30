@@ -12,7 +12,7 @@ def using_cache(namespace=None):
         def wrapper(*args, **kwargs):
             if namespace is not None:
                 try:
-                    # 约定首字母大写 + Cache 的模块名
+                    # Convention: first letter capitalized + Cache module name
                     cache = globals()[f'{namespace.lower().capitalize()}Cache'](namespace)
                 except KeyError:
                     cache = BaseCache(namespace)

@@ -2,10 +2,10 @@
 
 function usage() {
     echo "tpl-resolve.sh [-f input-filename] [-o output-filename] [-h]"
-    echo "  input-filename: 输入文件名，如果未指定，则处理当前目录下所有.yaml,.yml,.conf文件，包括子目录"
-    echo "  output-filename: 输出文件名，如果未指定，则直接修改输入文件"
-    echo "tpl-resolve.sh从configure.sh文件读取配置项"
-    echo "  将{{和}}括起来的变量定义{{varname}}，替换为变量varname的值"
+    echo "  input-filename: Input filename, if not specified, process all .yaml, .yml, .conf files in the current directory, including subdirectories"
+    echo "  output-filename: Output filename, if not specified, directly modify the input file"
+    echo "tpl-resolve.sh reads configuration items from configure.sh"
+    echo "  Variables defined in {{varname}} will be replaced with the value of the variable varname"
 }
 
 while getopts "f:o:h" opt
@@ -27,9 +27,9 @@ done
 . ./configure.sh
 
 #
-# 处理一个.tpl文件中的变量标记，将变量值决议为实际值
-# @param input_file 输入文件
-# @param output_file 输出文件
+# Process variable markers in a .tpl file, resolve variables to actual values
+# @param input_file Input file
+# @param output_file Output file
 #
 function resolve_file() {
     input_file=$1
@@ -37,14 +37,14 @@ function resolve_file() {
     cp -f "$input_file" "$output_file"
     echo generate $input_file to $output_file ...
 
-    # 查询所有{{变量}}，并进行值替换
+    # Find all {{variables}} and replace with values
     for i in `grep -o -w -E "\{\{([[:alnum:]]|\.|_)*\}\}" $output_file|sort|uniq|tr -d '\r'`; do
-        # 提取键名 
+        # Extract key name
         key=${i:2:(${#i}-4)}
-        # 获取键值：查找文件内容
+        # Get key value: search file content
         value=$(eval echo \$$key)
         echo "$key=>$value"
-        # 替换文件内容
+        # Replace file content
         if echo "$value" | grep -vq '#'; then
             sed -i "s#$i#$value#g" "$output_file";
         elif echo "$value" | grep -vq '/'; then
@@ -52,14 +52,14 @@ function resolve_file() {
         elif echo "$value" | grep -vq ','; then
             sed -i "s,$i,$value,g" "$output_file";
         else
-            echo "$value中同时包含特殊字符“#/,”，无法执行替换"
+            echo "The value $value contains special characters \"#/,\" simultaneously, unable to perform replacement"
         fi
     done
 }
 
 #
-#   处理某目录下的所有.tpl文件
-#   @param dir 目录路径
+#   Process all .tpl files in a directory
+#   @param dir Directory path
 #
 function resolve_dir() {
     dir="$1"
@@ -67,12 +67,12 @@ function resolve_dir() {
 
     for entry in "$dir"/*; do
         if [ -d "$entry" ]; then
-            # 如果是目录，则递归调用
+            # If it's a directory, call recursively
             resolve_dir "$entry"
         elif [ -f "$entry" ] && [[ "$entry" == *.tpl ]]; then
-            # 如果是 .tpl 文件，去掉后缀并输出文件名
-            filename="${entry%.tpl}"  # 去掉 .tpl 后缀
-            # 输出去掉后缀的文件名
+            # If it's a .tpl file, remove the extension and output the filename
+            filename="${entry%.tpl}"  # Remove .tpl extension
+            # Output the filename without the extension
             resolve_file "$entry" "$filename"
         fi
     done

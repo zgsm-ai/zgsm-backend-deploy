@@ -1,16 +1,15 @@
+#### Logger not outputting logs in some scenarios
 
-#### logger部分场景没有输出日志
+Discovery date: 2023-12-28
 
-发现日期: 2023-12-28
+Discovered by: Liu Peng z10807
 
-发现人：刘鹏z10807
+Fix date:
 
-修复日期：
+Fixed by:
 
-修复人：
+Issue description: In some files, logger is used to output logs, but they are not actually output
 
-问题描述：在一些文件中，使用了logger输出日志，但实际并未输出
+Root cause: In the app.py startup file, register_logger() operation is executed after importing those modules
 
-问题原因：app.py启动文件中，register_logger() 注册日志操作，在导入那些模块之后 导致
-
-解决方案：建议启动文件保持干净，将业务代码拎出去
+Solution: Keep the startup file clean, move business code out

@@ -23,13 +23,13 @@ class CustomJsonModule:
         except Exception as err:
             content = args[0].strip()
             if content and content not in ["probe"]:
-                # 判断正则模式匹配 "\d/(.*?)," 这类是正常现象，其余的才打日志
+                # Check regular expression pattern matches "\d/(.*?)," are considered normal, log others
                 if not re.match(r"^\d+/.*?,", content):
                     server_logger.error(f"json loads error: {err}\norigin data: {content}")
             raise err
 
 
-# 创建 Socket.IO 服务端实例
+# Create Socket.IO Server Instance
 sio = socketio.AsyncServer(
     async_mode='aiohttp',
     cors_allowed_origins="*",

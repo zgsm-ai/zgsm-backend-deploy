@@ -1,15 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    简单介绍
 
-    :作者: 苏德利 16646
-    :时间: 2023/3/3 17:35
-    :修改者: 苏德利 16646
-    :更新时间: 2023/3/3 17:35
-"""
-
-# 优化代码初始提问模板
+# Initial template for code readability improvement query
 INITIAL_PROMPT = """
 ## Instructions
 How could the readability of the code below be improved?
@@ -30,12 +22,12 @@ Provide potential improvements suggestions where possible.
 Consider that the code might be perfect and no improvements are possible.
 Include code snippets (using Markdown) and examples where appropriate.
 The code snippets must contain valid {language} code.
-Must reply with Chinese.
+Must reply with English.
 
 ## Readability Improvements
 """
 
-# 优化代码连续提问模板
+# Continuous query template for code readability improvement
 RESPONSE_PROMPT = """
 ## Instructions
 Continue the conversation below.
@@ -70,7 +62,7 @@ Use the style of a documentation article.
 Omit any links.
 Include code snippets (using Markdown) and examples where appropriate.
 The code snippets must contain valid {{language}} code.
-Must reply with Chinese.
+Must reply with English.
 
 ## Response
 Bot:

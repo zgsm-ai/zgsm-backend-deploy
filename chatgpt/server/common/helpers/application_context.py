@@ -1,9 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-"""
-@Author  ：范立伟33139
-@Date    ：2023/3/16 9:38
-"""
 
 import logging
 import jwt
@@ -13,7 +9,7 @@ from lib.jwt_session.session import session
 
 logger = logging.getLogger(__name__)
 
-def get_username_by_token(token: str): 
+def get_username_by_token(token: str):
     decoded = jwt.decode(token, options={"verify_signature": False})
     return decoded.get("preferred_username")
 

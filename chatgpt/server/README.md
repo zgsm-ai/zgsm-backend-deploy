@@ -1,47 +1,47 @@
-## 千流AI项目
+## Qianliu AI Project
 
-### 一、功能列表
+### I. Feature List
 
 
-#### v2/completion接口
-- 使用场景：ide / web生成代码
-- action参数说明
+#### v2/completion Interface
+- Use case: IDE / Web code generation
+- Action parameter description
 
-| action             | 对应功能                                       | 备注                                     |
-| :----------------- | :--------------------------------------------- | :--------------------------------------- |
-| findProblems       | 千流AI：查找bug（旧）                          | 新版本已废弃                             |
-| addTests           | 千流AI：生成测试（旧）测试生成（新）           |                                          |
-| optimize           | 千流AI：优化代码（旧）                         | 新版本已废弃                             |
-| explain            | 千流AI：解释代码（旧）智能问答->解释代码（新） |                                          |
-| chat               | 智能问答                                       |                                          |
-| generateCodeByForm | 生成代码                                       | 根据功能描述、技术栈等信息生成代码       |
-| generateCodeByAsk  | 生成代码（web）                                | 代码生成页面生成代码后，继续追问优化代码 |
-| review             | 代码review                                     | 包含主动reivew、自动review                                         |
-| scribe             | 划词对话功能                                   |                                          |
-| addDebugCode       | 提升调试性                                     |                                          |
-| addStrongerCode    | 提升健壮性                                     |                                          |
-| addComment         | 添加注释                                       |                                          |
-| pickCommonFunc     | 函数提取                                       |                                          |
-| simplifyCode       | 精简代码                                       |                                          |
+| action             | Corresponding feature                                      | Notes                                                        |
+| :----------------- | :--------------------------------------------------------- | :----------------------------------------------------------- |
+| findProblems       | Qianliu AI: Find bugs (old)                                | Deprecated in new version                                    |
+| addTests           | Qianliu AI: Generate tests (old) Test generation (new)     |                                                              |
+| optimize           | Qianliu AI: Optimize code (old)                            | Deprecated in new version                                    |
+| explain            | Qianliu AI: Explain code (old) Smart Q&A->Explain code (new) |                                                              |
+| chat               | Smart Q&A                                                  |                                                              |
+| generateCodeByForm | Generate code                                              | Generate code based on feature description, tech stack, etc. |
+| generateCodeByAsk  | Generate code (web)                                       | Continue to ask and optimize code after code generation      |
+| review             | Code review                                               | Including active review and automatic review                  |
+| scribe             | Selected text conversation feature                         |                                                              |
+| addDebugCode       | Improve debuggability                                      |                                                              |
+| addStrongerCode    | Improve robustness                                         |                                                              |
+| addComment         | Add comments                                               |                                                              |
+| pickCommonFunc     | Function extraction                                        |                                                              |
+| simplifyCode       | Simplify code                                              |                                                              |
 
-对应docs文档地址：https://docs.atrust.sangfor.com/pages/viewpage.action?pageId=303557143
+Corresponding docs address: https://docs.atrust.sangfor.com/pages/viewpage.action?pageId=303557143
 
-### 二 、环境依赖（语言版本，工具版本，额外依赖）
+### II. Environment Dependencies (Language version, Tool version, Additional dependencies)
 ```
 python==3.8.5
 ```
 
-### 三 、项目说明（关键的目录结构，核心方案）
+### III. Project Description (Key directory structure, Core solutions)
 
-### 四 、环境部署
+### IV. Environment Deployment
 
-#### 开发部署
-- 环境教程：https://docs.atrust.sangfor.com/pages/viewpage.action?pageId=304857376
+#### Development Deployment
+- Environment tutorial: https://docs.atrust.sangfor.com/pages/viewpage.action?pageId=304857376
 
-测试部署
+Test Deployment
 
-生产部署
+Production Deployment
 
-五、使用方式
+V. Usage Instructions
 
-六、常见问题
+VI. Common Issues

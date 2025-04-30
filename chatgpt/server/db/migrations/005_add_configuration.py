@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-@Author  : 刘鹏z10807
-@Date    : 2023/4/19 18:09
-"""
+
 import peewee as pw
 
 from models.system.configuration import Configuration

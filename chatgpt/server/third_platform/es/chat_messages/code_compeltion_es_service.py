@@ -1,13 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    简单介绍
-
-    :作者: 苏德利 16646
-    :时间: 2023/3/16 20:33
-    :修改者: 苏德利 16646
-    :更新时间: 2023/3/16 20:33
-"""
 
 import pytz
 from datetime import datetime
@@ -16,7 +8,7 @@ from third_platform.es.base_es import BaseESService
 
 
 class CodeCompeltionESservice(BaseESService):
-    """操作记录es"""
+    """Operation record es"""
 
     def __init__(self):
         super(CodeCompeltionESservice, self).__init__()
@@ -44,32 +36,32 @@ class CodeCompeltionESservice(BaseESService):
                     "actual_completions_text": data.get('actual_completions_text', ''),
                     "show_time": data.get('show_time', 0),
                 }
-                # 新增一个extra_kwargs字段, 格式为dict, 里面的所有参数都保存, 未来新加的字段都可以放这里面。
+                # Add an extra_kwargs field in dict format, all parameters are saved, and future new fields can be placed here.
                 if 'extra_kwargs' in data.keys():
                     for key, value in data['extra_kwargs'].items():
                         try:
-                            # 可能存在iso格式字符串，尝试将字符串解析为 datetime 对象
+                            # There may be ISO format strings, try to parse the string into a datetime object
                             value = datetime.fromisoformat(value)
                         except Exception:
-                            # 只要解析失败，就直接按源格式存储
+                            # If parsing fails, store in the original format
                             pass
                         obj_dict[key] = value
 
-                # 新增 server_extra_kwargs 服务端拓展字段
+                # Add server_extra_kwargs server extension fields
                 if 'server_extra_kwargs' in data.keys():
                     for key, value in data['server_extra_kwargs'].items():
                         try:
-                            # 可能存在iso格式字符串，尝试将字符串解析为 datetime 对象
+                            # There may be ISO format strings, try to parse the string into a datetime object
                             value = datetime.fromisoformat(value)
                         except Exception:
-                            # 只要解析失败，就直接按源格式存储
+                            # If parsing fails, store in the original format
                             pass
                         obj_dict[key] = value
                 self.insert(obj_dict, id=rid)
             else:
                 actual_completions_text = data.get('actual_completions_text', '')
                 if actual_completions_text:
-                    # 当用户真实编码数据为非空时，只更新编码数据字段，避免其他字段被插件更改
+                    # When the user's real coding data is not empty, only update the coding data field to avoid other fields being changed by the plugin
                     self.update_by_id(id=rid,
                                       update_data={"actual_completions_text": actual_completions_text})
                 else:
@@ -78,7 +70,7 @@ class CodeCompeltionESservice(BaseESService):
                                                    'show_time': data.get('show_time', 0)})
 
         except Exception as e:
-            self.logger.error(f"es 操作 code_completion数据失败，失败日志： {str(e)}")
+            self.logger.error(f"Failed to operate code_completion data in es, error log: {str(e)}")
 
 
 code_completion_es_service = CodeCompeltionESservice()

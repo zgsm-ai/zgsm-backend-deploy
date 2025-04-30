@@ -43,7 +43,7 @@ def handle_key(func):
         args = args[len(args) + 1 - required_args_count:]
         if bool([k for k in keys
                  if (not isinstance(k, str)) and (not isinstance(k, int))]):
-            raise CacheKeyError('不合法Key')
+            raise CacheKeyError('Invalid Key')
         return func(self, *[self.make_key(keys), *args], **kwargs)
 
     return wrapper
@@ -80,18 +80,18 @@ class BaseCache:
             BaseCache.pools_dict[self.url] = self.pool
 
     def serialize(self, value):
-        """序列化"""
+        """Serialization"""
         if isinstance(value, dict):
-            # 字典类型存map
+            # Store dictionary type as map
             # return {k: self.serializer.dumps(v) for k, v in value.items()}
             return self.serializer.dumps(value)
         else:
             return self.serializer.dumps(value)
 
     def deserialize(self, value):
-        """反序列化"""
+        """Deserialization"""
         if isinstance(value, dict):
-            # key 要编码成utf8,否则取出来是bytes
+            # Key needs to be encoded as utf8, otherwise it comes back as bytes
             return {k.decode('utf-8'): self.serializer.loads(v) for k, v in value.items()}
         elif isinstance(value, (list, set)):
             return [self.serializer.loads(v) for v in value]
@@ -99,7 +99,7 @@ class BaseCache:
             return self.serializer.loads(value)
 
     def make_key(self, *args):
-        """构造缓存key"""
+        """Construct cache key"""
         if len(args) < 1:
             raise CacheKeyError('missing key(s)')
         if len(args) == 1 and isinstance(args[0], (list, tuple)):
@@ -184,13 +184,13 @@ class BaseCache:
     @handle_key
     def expire(self, key, seconds):
         """
-        设置过期时间(单位为秒)
+        Set expiration time (in seconds)
         """
         return self.connection.expire(key, timedelta(seconds=seconds))
 
     def clear(self, rule=None):
         """
-        清除当前命名空间下的缓存
+        Clear cache under the current namespace
         """
         if not rule:
             rule = "*"

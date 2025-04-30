@@ -3,8 +3,8 @@ import json
 
 class Conversation:
     """
-    对话管理器: 可管理多轮对话
-    注：对话数据缓存在redis中，借助redis，可以把整个诸葛神码服务的所有对话缓存起来，方便后续使用
+    Conversation Manager: Can manage multi-turn conversations
+    Note: Conversation data is cached in Redis. With Redis, all conversations across the entire shenma service can be cached for future use
     """
 
     def __init__(self, redis) -> None:
@@ -17,7 +17,7 @@ class Conversation:
         """
         self.conversations[key] = history
         self.cache.set(key, history)
-        self.cache.expire(key, 60 * 60)  # 缓存超时时间设置为1小时
+        self.cache.expire(key, 60 * 60)  # Cache timeout set to 1 hour
 
     def get_conversation(self, key: str) -> list:
         """

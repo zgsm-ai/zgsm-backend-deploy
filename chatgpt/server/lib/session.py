@@ -1,9 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-"""
-@Author  ：范立伟33139
-@Date    ：2023/3/16 9:37
-"""
 
 import logging
 import secrets
@@ -18,7 +14,7 @@ class SessionService:
     @classmethod
     def gen_state(cls, length=32):
         """
-        生成随机的state，防止csrf
+        Generate random state to prevent CSRF
         """
         return secrets.token_urlsafe(nbytes=length)[0:length]
 

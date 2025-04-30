@@ -1,9 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-@Author  : 刘鹏z10807
-@Date    : 2023/4/20 10:55
-"""
 
 from flask import Blueprint
 
@@ -18,34 +14,34 @@ configuration = Blueprint('configuration', __name__)
 @configuration.route('', methods=['GET'])
 def get():
     """
-    通用配置项
-    查询: get api/configuration
-        - 默认类型 横幅
+    General configuration items
+    Query: get api/configuration
+        - Default type: Banner
     ---
     tags:
       - system
     responses:
       200:
-        res: 结果
+        res: Result
     """
     search_kw = get_request_kwargs()
     if search_kw.get('belong_type', None) is None:
-        raise FieldValidateError('[类型] ：该输入项不允许为空')
+        raise FieldValidateError('[Type]: This input field cannot be empty')
 
     query, total = ConfigurationService.get_list(**search_kw)
-    return Result.success(message='获取成功', data=query, total=total)
+    return Result.success(message='Get Success', data=query, total=total)
 
 
 @configuration.route('/system', methods=['GET'])
 def get_system_config():
     """
-    查询系统配置项，比如ide、web一些配置
+    Query system configuration items, such as IDE and web configurations
     ---
     tags:
       - system
     responses:
       200:
-        res: 结果
+        res: Result
     """
     query = ConfigurationService.get_system_config()
-    return Result.success(message='获取成功', data=query)
+    return Result.success(message='Get Success', data=query)

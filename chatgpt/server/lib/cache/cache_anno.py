@@ -6,14 +6,14 @@ from .redis import BaseCache
 from config import get_config
 
 
-# Cacheable:用来定义缓存的
-# CacheEvict:用来清理缓存
-# CachePut:用来更新缓存
+# Cacheable: used to define cache
+# CacheEvict: used to clear cache
+# CachePut: used to update cache
 # @Caching
 
-# 如果有缓存则返回缓存的，如果没有，则执行之后进行缓存
-# 以key 传值 key=value
-# index 传需要缓存的参数下标
+# If there is a cache, return the cached value; if not, execute and then cache
+# Pass the value with key=value
+# Index passes the parameter index to be cached
 def cache_able(prefix, key=None, index=None, expire=get_config().get("default_cache_expire_seconds")):
     def wrapper(func):
         def inner(*args, **kwargs):
@@ -23,8 +23,8 @@ def cache_able(prefix, key=None, index=None, expire=get_config().get("default_ca
             if cache_value:
                 return cache_value
             cache_value = func(*args, **kwargs)
-            if cache_value:  # 防止未查到数据也保存到缓存中了
-                if isinstance(cache_value, peewee.ModelSelect):  # 数组与单个对象分开保存
+            if cache_value:  # Prevent saving to cache when no data is found
+                if isinstance(cache_value, peewee.ModelSelect):  # Store arrays and single objects separately
                     redis_cache.set(cache_key, list(cache_value))
                 else:
                     redis_cache.set(cache_key, cache_value)
@@ -36,7 +36,7 @@ def cache_able(prefix, key=None, index=None, expire=get_config().get("default_ca
     return wrapper
 
 
-# 删除缓存
+# Delete cache
 def cache_evict(prefix, key=None, index=None):
     def wrapper(func):
         def inner(*args, **kwargs):
@@ -51,7 +51,7 @@ def cache_evict(prefix, key=None, index=None):
     return wrapper
 
 
-# 删除指定前缀的所有缓存
+# Delete all cache with the specified prefix
 def cache_all_evict(prefix):
     def wrapper(func):
         def inner(*args, **kwargs):
@@ -89,7 +89,7 @@ def push_cache(prefix, key=None, index=None):
             cache_key = handle_cache_key(prefix, key, index, *args, **kwargs)
             cache_value = func(*args, **kwargs)
             if cache_value:
-                if isinstance(cache_value, peewee.Model):  # 数组与单个对象分开保存
+                if isinstance(cache_value, peewee.Model):  # Store arrays and single objects separately
                     redis_cache.push(cache_key, cache_value.id, True)
                 else:
                     redis_cache.push(cache_key, cache_value, True)

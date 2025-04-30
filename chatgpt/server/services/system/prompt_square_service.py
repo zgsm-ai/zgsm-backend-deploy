@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-@Author  : 刘鹏z10807
-@Date    : 2023/3/27 10:55
-"""
+
 import logging
 import os
 import re
@@ -23,7 +20,7 @@ class PromptSquareService(BaseService):
 
     @classmethod
     def list(cls, *args, **kwargs):
-        # search参数 模糊匹配title，不区分大小写
+        # search parameter for fuzzy matching title, case insensitive
         search = kwargs.get("search")
         if search:
             conditions = (cls.dao.model.title ** f'{cls.dao.model.like(search)}',)
@@ -35,8 +32,8 @@ class PromptSquareService(BaseService):
         title = kwargs.get('title')
         _, total = PromptSquareService.dao.list(title=title)
         if total > 0:
-            raise FieldValidateError('已存在相同标题，请修改后重试。')
-        # 换行符拼接多问题prompt
+            raise FieldValidateError('Title already exists, please modify and try again.')
+        # Join multiple question prompts with newline characters
         kwargs['prompt'] = os.linesep.join([item.get('prompt') for item in kwargs.get('prompt_completion')])
         user = ApplicationContext.get_current()
         kwargs['creator'] = user.display_name
@@ -48,7 +45,7 @@ class PromptSquareService(BaseService):
         if 'title' in kwargs:
             _, total = cls.dao.list(title=kwargs.get('title'))
             if total > 0:
-                raise FieldValidateError('已存在相同标题，请修改后重试。')
+                raise FieldValidateError('Title already exists, please modify and try again.')
 
         kwargs['update_at'] = datetime.now()
         result = PromptSquareService.update_by_id(mid, **kwargs)
@@ -58,18 +55,18 @@ class PromptSquareService(BaseService):
 
     @classmethod
     def validate_fields(cls, fields):
-        """校验创建数据参数"""
+        """Validate create data parameters"""
         rules = [
-            {'label': 'title', 'type': str, 'name': '标题'},
-            {'label': 'prompt_completion', 'type': list, 'name': '问答'}
+            {'label': 'title', 'type': str, 'name': 'Title'},
+            {'label': 'prompt_completion', 'type': list, 'name': 'Q&A'}
         ]
         return cls._validate(fields, rules)
 
     @classmethod
     def validate_update_fields(cls, mid, fields):
-        """校验更新时的参数"""
+        """Validate update parameters"""
         rules = [
-            {"label": "title", "type": str, 'name': '标题'},
+            {"label": "title", "type": str, 'name': 'Title'},
         ]
         return cls._validate(fields, rules)
 
@@ -80,7 +77,7 @@ class PromptSquareHotService(BaseService):
 
     @classmethod
     def update(cls, mid, **kwargs):
-        # 更新热度
+        # Update hotness
         if 'use' in kwargs:
             kwargs.pop('use')
             kwargs['hot'] = cls.dao.model.hot + 1
@@ -92,9 +89,9 @@ class PromptSquareHotService(BaseService):
 
     @classmethod
     def validate_update_fields(cls, mid, fields):
-        """校验更新时的参数"""
+        """Validate update parameters"""
         rules = [
-            {"label": "use", "type": bool, 'name': '热度'},
+            {"label": "use", "type": bool, 'name': 'Hotness'},
         ]
         return cls._validate(fields, rules)
 

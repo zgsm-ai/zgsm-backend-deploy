@@ -1,25 +1,22 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-"""
-@Author  ：范立伟33139
-@Date    ：2023/3/16 14:17
-"""
+
 from typing import Iterator
 from flask import jsonify, make_response, request, Response, stream_with_context
 
 
 class Result:
     @classmethod
-    def message(cls, state_str="成功"):
+    def message(cls, state_str="Success"):
         method_name = request.method
         if "GET" == method_name:
-            return f"获取{state_str}"
+            return f"Get {state_str}"
         elif "POST" == method_name:
-            return f"操作{state_str}"
+            return f"Operation {state_str}"
         elif "DELETE" == method_name:
-            return f"删除{state_str}"
+            return f"Delete {state_str}"
         elif "PUT" == method_name:
-            return f"更新{state_str}"
+            return f"Update {state_str}"
         return ""
 
     @classmethod
@@ -39,7 +36,7 @@ class Result:
     @classmethod
     def fail(cls, data=None, message=None, code=400, info_code=None, **kwargs):
         resp = {
-            "message": message if message else cls.message("失败"),
+            "message": message if message else cls.message("Failed"),
             "data": data,
             "success": False
         }
@@ -70,9 +67,9 @@ class Result:
     @classmethod
     def stream_response(cls, result: Iterator[str]):
         """
-        返回流式响应,流式输出结果sse协议封装，将数据流式输出到客户端
-        @param result: 迭代器
-        @return: http 响应
+        Return streaming response with SSE protocol encapsulation, stream data to client
+        @param result: iterator
+        @return: http response
         """
         data_chunk = cls.gen_data_chunk(result)
 
@@ -85,11 +82,11 @@ class Result:
     @staticmethod
     def gen_data_chunk(result: Iterator) -> Iterator[str]:
         """
-        生组装成sse协议的chunk
+        Generate chunks assembled into SSE protocol format
         @param result:
         @return:
         """
-        # sse协议的message格式
+        # SSE protocol message format
         message_chunk = "data: {}\n\n"
         for res in result:
             yield message_chunk.format(res)

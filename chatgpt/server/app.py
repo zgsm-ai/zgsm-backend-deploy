@@ -29,12 +29,12 @@ MODELS = [
 ]
 
 WHITE_LIST_PATHS = [
-    '/favicon.ico', # 图标访问时省掉校验逻辑
+    '/favicon.ico', # Skip validation logic when accessing the icon
     '/api/test',
     '/api/sessions/idtrust',
     '/api/sessions/idtrust_callback',
     # '/api/users/current'
-    # TODO agent 过程的 context 更新接口，给 dify 用的，后续再考虑鉴权
+    # TODO: Context update interface for agent process, used by dify, will consider authentication later
     '/api/configuration',
     '/api/v4/agent/context',
     "/api/inference/v1/chat/completions",
@@ -44,9 +44,9 @@ WHITE_LIST_PATHS = [
 
 def software_version():
     """
-    获取软件版本
-    正常情况下软件版本定义在代码中，随着软件代码变更由程序员维护，
-    特殊情况下，系统管理员可以通过环境变量CHATGPT_VERSION定义版本号
+    Get software version
+    Normally, the software version is defined in the code and maintained by programmers as the software code changes.
+    In special cases, system administrators can define the version number through the CHATGPT_VERSION environment variable.
     """
     if "CHATGPT_VERSION" in os.environ:
         return os.environ["CHATGPT_VERSION"]
@@ -56,16 +56,17 @@ def software_version():
 def print_logo():
     try:
         print("""
-    ███████╗██╗  ██╗██╗   ██╗ ██████╗ ███████╗       █████╗ ██╗
-    ╚══███╔╝██║  ██║██║   ██║██╔════╝ ██╔════╝      ██╔══██╗██║
-      ███╔╝ ███████║██║   ██║██║  ███╗█████╗  █████╗███████║██║
-     ███╔╝  ██╔══██║██║   ██║██║   ██║██╔══╝  ╚════╝██╔══██║██║
-    ███████╗██║  ██║╚██████╔╝╚██████╔╝███████╗      ██║  ██║██║
-    ╚══════╝╚═╝  ╚═╝ ╚═════╝  ╚═════╝ ╚══════╝      ╚═╝  ╚═╝╚═╝
+
+    ███████╗ ██╗  ██╗███████╗███╗   ██╗███╗   ███╗ █████╗          █████╗ ██╗
+    ██╔════╝ ██║  ██║██╔════╝████╗  ██║████╗ ████║██╔══██╗        ██╔══██╗██║
+    ██████╗  ███████║█████╗  ██╔██╗ ██║██╔████╔██║███████║ █████╗ ███████║██║
+    ╚════██╗ ██╔══██║██╔══╝  ██║╚██╗██║██║╚██╔╝██║██╔══██║ ╚════  ██╔══██║██║
+    ███████║ ██║  ██║███████╗██║ ╚████║██║ ╚═╝ ██║██║  ██║        ██║  ██║██║
+    ╚══════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝╚═╝     ╚═╝╚═╝  ╚═╝        ╚═╝  ╚═╝╚═╝
         """)
         print(f"    version:  {software_version()}")
     except UnicodeEncodeError:
-        print("ZHUGE-AI START")
+        print("SHENMA-AI START")
 
 
 def create_app():
@@ -81,7 +82,7 @@ def create_app():
     register_admin(app)
     register_exception(app)
     register_logger(app)
-    
+
     app.logger.info("create_app: starting...")
 
     def access_by_rules(current_path):
@@ -95,16 +96,16 @@ def create_app():
     @app.before_request
     def check_request():
         """
-        根据规则校验请求是否能够通过
+        Validate if the request can pass based on rules
         """
         access = True
-        # api黑名单规则
+        # API blacklist rules
         current_path = request.path
         access = access and access_by_rules(current_path)
-        # 其他禁用规则
+        # Other disabled rules
         # ·····
         if not access:
-            return Result.fail(message='禁止访问')
+            return Result.fail(message='Access denied')
         try:
             if current_path in WHITE_LIST_PATHS:
                 return
@@ -112,22 +113,22 @@ def create_app():
                 return
             if request.path.startswith("/static"):
                 return
-            # 跨域验证
+            # Cross-origin validation
             if request.method == 'OPTIONS':
                 return Result.success()
             access_info = ApplicationContext.get_current()
             if not access_info:
-                raise Exception('认证失败')
-            # 当前请求用户信息缓存到当前请求上下文，需要使用数据可用 g.current_user 获取
+                raise Exception('Authentication failed')
+            # Cache current request user information to the current request context, data can be accessed using g.current_user
             g.current_user = access_info
             g.authorization = request.headers.get("Authorization", None)
         except Exception as err:
             app.logger.error(f'Unauthorized: {str(err)}, path: {current_path}, headers: {request.headers.__dict__}')
             if not request.headers.get('api-key'):
-                # 这里针对插件历史版本提供一个更新提示，老版本无api-key
-                return make_response('检测到当前插件版本不是最新版本，请打开"扩展"页面，升级插件版本。', 401)
+                # Here's an update prompt for historical versions of the plugin, old versions don't have api-key
+                return make_response('Detected that the current plugin version is not the latest, please open the "Extensions" page and upgrade the plugin version.', 401)
             else:
-                return make_response('Unauthorized: 认证失败，请重新登陆', 401)
+                return make_response('Unauthorized: Authentication failed, please log in again', 401)
 
 
     @app.after_request
@@ -148,26 +149,26 @@ def create_app():
     @app.route("/")
     def index():
         """
-        空
+        Empty
         ---
         tags:
         - system
         responses:
         200:
-            result: 结果
+            result: Result
         """
         return "hello"
 
     @app.route("/models")
     def models():
         """
-        模型列表
+        Model list
         ---
         tags:
         - LLM
         responses:
         200:
-            result: 结果
+            result: Result
         """
         return make_response(jsonify(MODELS))
 

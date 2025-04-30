@@ -1,9 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-"""
-@Author  ：范立伟33139
-@Date    ：2024/3/29 14:58
-"""
 
 MOCK_STEP_NUM_ID_DICT = {
     0: 12,

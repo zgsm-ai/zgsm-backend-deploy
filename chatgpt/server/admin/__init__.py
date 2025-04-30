@@ -1,23 +1,33 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-@Author  : 刘鹏z10807
-@Date    : 2023/3/30 14:22
-"""
+
 import os
 
 from flask import send_from_directory
 from flask_admin import Admin
+from flask_admin.base import AdminIndexView
 
-from .auth import AdminIndexView
-from .views import Views
+from .auth import AdminIndexView as MainIndexView
+from .base import BaseView
+from .views import api_rule_admin, configuration_admin, users_admin
 
 runtime_path = os.path.dirname(os.path.realpath(__file__))
 
 
-def register_admin(app):
-    admin = Admin(app, name='诸葛神码', template_mode='bootstrap3', index_view=AdminIndexView())
-    admin.add_views(*Views)
+def init_admin(app):
+    # Initialize admin panel
+    admin = Admin(app=app, name="Qianliu Admin", index_view=MainIndexView(), template_mode='bootstrap4')
+
+    # Register system services
+    register_view(admin)
+    return admin
+
+
+def register_view(admin: Admin):
+    # Register admin views
+    admin.add_view(users_admin.UsersAdmin())
+    admin.add_view(api_rule_admin.ApiRuleAdmin())
+    admin.add_view(configuration_admin.ConfigurationAdmin())
 
     @app.route('/favicon.ico')
     def favicon():

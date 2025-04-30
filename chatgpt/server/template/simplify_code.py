@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# 精简代码模板
+# Code simplification template
 INITIAL_PROMPT = """
 ```{language}
 {selectedText}

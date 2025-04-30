@@ -1,14 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    平台服务相关的错误
-    error_code： 170 开头
-
-    :作者: 苏德利 16646
-    :时间: 2023/3/16 20:40
-    :修改者: 苏德利 16646
-    :更新时间: 2023/3/16 20:40
-"""
 
 from .custom_exception import CustomException
 

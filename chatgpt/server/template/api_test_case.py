@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# 生成测试点prompt
+# Generate Test Case Prompts
 API_TEST_CASE_PROMPT = """
 ## 角色
 您是一位经验丰富的API接口测试工程师。
@@ -64,26 +64,26 @@ API_TEST_CASE_PROMPT = """
         "异常场景-使用不存在的需求类型创建需求"
     ]
 }}
- 
+
 测试点的格式如下:
 {{Scenes}}-{{Test point description}}
- 
+
 ## 输入
 ### 待测API接口文档
 {tested_api}
- 
+
 ### 前置API接口文档
 {pre_api_content}
- 
+
 ### 后置API接口文档
 {post_api_content}
 
 ### 改动文档
-{api_diff_content}  
- 
+{api_diff_content}
+
 ### 已有测试点列表
 {exist_case}
- 
+
 ## 输出
 """
 
@@ -307,7 +307,7 @@ API_TEST_GEN_STEP_PROMPT = """
 - steps: 一个步骤的数组，每个步骤是一个对象，数组的顺序就是测试步骤的顺序，每个对象包含以下属性
     - api_id: api对应的唯一id
     - step_description: 测试步骤的描述
-    - step_type: 步骤类型，总共有几种，前置: pre, 主测试步骤: main， 后置: post 
+    - step_type: 步骤类型，总共有几种，前置: pre, 主测试步骤: main， 后置: post
 ## 输出示例
 {{
     "thought": "1. 理解测试用例标题\n- **目标**: 测试在创建商品时，指定一个不存在的管理员ID，验证系统的处理逻辑和返回结果。\n2. 分析目标API文档\n- **分析结果**: API的主要作用是创建一个商品\n3. 绘制测试步骤\n- **分析思路**:\n  1. 从语义理解，只需要构造出不存在的管理员ID，调用一次创建商品API，所以有以下测试步骤\n- **测试步骤**:\n  1. 调用创建商品API(1104)，传入不存在的管理员ID，验证返回结果。\n4. 分析测试用例标题和目标API接口依赖图并设计前置步骤\n- **目标API接口依赖图**\n创建商品 (1004)\n  ├── 创建标签 (1002)\n  │     └── 创建标签类别 (1001)\n  └── 创建用户 (1003)\n- **分析结果**:\n  1. 目标API接口直接依赖创建标签API(1002)和创建用户API(1002)。\n  2. 测试目标是测试一个不存在的管理员，所以:\n     - 创建标签API(1002): 从语义理解测试目标没有特别说明标签的条件，默认需要调用，所以要调用并且要递归找到它依赖的所有API作为前置步骤。\n	 - 创建用户API(1002): 从语义理解测试目标有提到一个管理员用户，跟用户实体有关，但是需要的是一个不存在的用户实体，所以不需要调用API创建实体，直接构造不存在的管理员ID。\n- **前置步骤**:\n  1. 调用创建标签类别API(1001)，获取标签类别ID。\n  2. 调用创建标签API(1002)，传入标签类别ID，获取标签ID。\n  3. 直接构造一个不存在的管理员ID。\n5. 设计后置步骤\n- **后置步骤**:\n  1. 删除创建的标签类别(1119)。\n  2. 删除创建的标签(1115)。",
@@ -343,7 +343,7 @@ API_TEST_GEN_STEP_PROMPT = """
 
 ## 目标API接口文档
 {tested_api}
- 
+
 ## 所有可用API接口文档
 {all_api}
 
@@ -1015,26 +1015,26 @@ param_type表示参数的类型
 |12    | 值-小于等于 [value <=] |
 |13    | 值-不包含 [ include !=]|
   - child_list: 子参数校验规则列表
-  
+
 ## 输入
- 
+
 ### 测试点
 {test_point}
- 
+
 ### API调用顺序
 {test_steps}
 
 ### 旧测试步骤
-{old_test_steps} 
-  
+{old_test_steps}
+
 ### api接口文档
 {tested_api}
- 
+
 ### api改动文档
 {api_diff_content}
- 
+
 ### api参数删除文档
 {api_del_content}
-  
+
 ## 输出
 """
