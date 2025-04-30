@@ -32,6 +32,7 @@ validate_environment() {
     local required_files=(
         "configure.sh"
         "chatgpt/custom.yml.tpl"
+        #"dex/config.yaml.tpl"
         "tpl-resolve.sh"
         "chatgpt-initdb.sh"
         "docker-compose.yml.tpl"
@@ -39,6 +40,7 @@ validate_environment() {
         "apisix-copilot.sh"
         "apisix-issue.sh"
         "apisix-keycloak.sh"
+        "apisix-oidc.sh"
         "keycloak-import.sh"
     )
 
@@ -158,6 +160,7 @@ main() {
         "apisix-issue.sh"
         "apisix-keycloak.sh"
         "apisix-oneapi.sh"
+        "apisix-oidc.sh"
         "keycloak-import.sh"
     )
     for script in "${apisix_scripts[@]}"; do
