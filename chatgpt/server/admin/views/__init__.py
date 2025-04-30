@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from .api_rule_admin import ApiRuleAdmin
-from .configuration_admin import ConfigurationAdmin
-from .users_admin import UsersAdmin
+from admin.views.api_rule_admin import ApiRuleAdminView
+from admin.views.configuration_admin import ConfigurationAdminView
+from admin.views.users_admin import UsersView
 
 Views = [
-    UsersAdmin,
-    ConfigurationAdmin,
-    ApiRuleAdmin,
+    UsersView,
+    ConfigurationAdminView,
+    ApiRuleAdminView,
 ]

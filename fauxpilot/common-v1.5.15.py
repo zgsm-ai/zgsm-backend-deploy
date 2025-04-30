@@ -5,7 +5,6 @@ import json
 import os
 import random
 import string
-import time
 
 import requests
 from cachetools import cached, TTLCache
@@ -22,13 +21,13 @@ cache = TTLCache(maxsize=1000, ttl=30 * 60)
 
 SPECIAL_MIDDLE_SIGNAL = "<special-middle>"
 
-# Define regular expression for CSS properties, supporting multi-line property values
+# Define a regular expression for CSS properties, supporting multi-line property values
 css_property_pattern = re.compile(r'^\s*[a-zA-Z-]+\s*:\s*[^;]+;\s*$', re.MULTILINE)
-# Define regular expression for CSS selectors
+# Define a regular expression for CSS selectors
 css_selector_pattern = re.compile(r'^\s*[.#]?[a-zA-Z0-9_-]+\s*\{', re.MULTILINE)
-# Define regular expression for CSS comments
+# Define a regular expression for CSS comments
 css_comment_pattern = re.compile(r'/\*.*?\*/', re.DOTALL)
-# Define regular expression for multi-line CSS properties
+# Define a regular expression for multi-line CSS properties
 multiline_css_property_pattern = re.compile(r'^\s*[a-zA-Z-]+\s*:\s*[^;]+;\s*$', re.DOTALL | re.MULTILINE)
 
 
@@ -45,7 +44,7 @@ multiline_css_property_pattern = re.compile(r'^\s*[a-zA-Z-]+\s*:\s*[^;]+;\s*$', 
 #         "id": random_completion_id(),
 #         "choices": [
 #             {
-#                 "text": 'Qianliu Copilot authentication failed, please set the Token in the plugin settings page, \nYou can get the token from the settings page of Qianliu AI web version https://chat.sangfor.com.',
+#                 "text": 'Qianliu Copilot authentication failed, please go to the plugin settings page to set the Token,\nYou can go to Qianliu AI web version https://chat.sangfor.com settings page to get the token.',
 #             }
 #         ]
 #     }
@@ -60,8 +59,8 @@ def random_completion_id():
 
 def is_python_text(text):
     """
-    Used to filter out Python code issues in non-Python language completions
-    :params text: Code segment returned by completion
+    Used to filter non-python language completion that generates python code issues
+    :params text: Completed code segment
     """
     python_text_rules = os.environ.get("PYTHON_TEXT_RULES", 'return self.name').split(',')
     for text_rule in python_text_rules:
@@ -89,8 +88,7 @@ def cut_text_by_tree_sitter(language, choices_text, prefix, suffix, time_start, 
         sitter = init_tree_sitter(language, prefix, suffix)
         if sitter is None:
             return choices_text
-        # Process the original prefix and suffix of the completion content, extract new prefix and suffix
-        # (make the concatenated context as complete as possible to improve the hit rate of syntax correction)
+        # Process the original prefix and suffix of the completion content, extract new prefix and suffix (try to make the context as complete as possible after concatenation, improving the hit rate of syntax correction)
         # prefix, suffix = extract_block_prefix_suffix(sitter, choices_text, prefix, suffix)
         new_prefix, new_suffix = extract_accurate_block_prefix_suffix(sitter, prefix, suffix)
         choices_text = sitter.intercept_syntax_error_code(choices_text, new_prefix, new_suffix,
@@ -108,7 +106,7 @@ def is_code_syntax(language, code, prefix, suffix):
         new_prefix, new_suffix = extract_accurate_block_prefix_suffix(sitter, prefix, suffix)
         return sitter.is_code_syntax(new_prefix + code + new_suffix)
     except Exception as e:
-        logger.error(f"Failed to determine {language} code syntax error:", e)
+        logger.error(f"Failed to check {language} code syntax error:", e)
     return True
 
 
@@ -133,7 +131,7 @@ def extract_block_prefix_suffix(sitter, choices_text, prefix, suffix):
 
 def extract_accurate_block_prefix_suffix(sitter, prefix, suffix):
     """
-    Process the prefix and suffix at the cursor position of the completion for more accurate prefix and suffix
+    Process the prefix and suffix at the cursor position of completion, extract more accurate prefix and suffix
     :param sitter:
     :param prefix:
     :param suffix:
@@ -143,11 +141,11 @@ def extract_accurate_block_prefix_suffix(sitter, prefix, suffix):
     source_code = code.encode("utf-8")
     line_num, _ = get_choices_text_line_number(code, SPECIAL_MIDDLE_SIGNAL)
 
-    # Locate the block node where the cursor belongs and parse the code block
+    # Locate the block node that the cursor belongs to, parse the code block
     cur_block_code = sitter.get_node_text(source_code,
                                           sitter.find_second_level_node_by_line_num(source_code, line_num))
 
-    # Locate the nearest previous and next nodes without syntax errors to the block node where the cursor belongs, and parse the code blocks respectively
+    # Locate the nearest error-free nodes before and after the cursor's block node, and parse their code blocks
     prefix_node, suffix_node = sitter.find_second_level_nearest_node_by_line_num(code.encode("utf-8"), line_num)
     prefix_block_code = sitter.get_node_text(source_code, prefix_node)
     suffix_block_code = sitter.get_node_text(source_code, suffix_node)
@@ -201,39 +199,39 @@ def count_paired_symbols(text):
         # Ignore isolated right brackets
         if char in get_right_paired_symbols() and symbols_map.get(get_right_paired_symbols()[char], 0) == 0:
             continue
-
-        # Count paired symbols
         if char in get_paired_symbols():
             symbols_map[char] = symbols_map.get(char, 0) + 1
-
     return symbols_map
 
 
 def remove_strings(code_line):
     """
-    Remove strings from code line
+    Remove string parts from a code line (parts enclosed in '' or "")
     :param code_line:
     :return:
     """
-    in_string = False
-    string_char = None
     result = []
+    in_string = False
+    quote_char = None
+    buffer = []
 
-    for i, char in enumerate(code_line):
-        if char in ['"', "'"]:
-            if not in_string:
+    for char in code_line:
+        if not in_string:
+            if char in get_quotes_symbols():
                 in_string = True
-                string_char = char
+                quote_char = char
+            else:
                 result.append(char)
-            elif string_char == char and (i == 0 or code_line[i-1] != '\\'):
+        else:
+            if char == quote_char:
                 in_string = False
-                string_char = None
-                result.append(char)
-        elif not in_string:
-            result.append(char)
-
+                quote_char = None
+                buffer = []
+            else:
+                buffer.append(char)
+    if in_string:
+        result.extend(buffer)
     return ''.join(result)
-
 
 def is_cursor_in_parentheses(prefix, suffix):
     """
@@ -242,46 +240,33 @@ def is_cursor_in_parentheses(prefix, suffix):
     :param suffix:
     :return:
     """
+
     def find_parenthesis(text, symbol, is_reverse=False):
         """
-        Find the position of a parenthesis
+         Find the index position of the non-paired symbol in the text string
         :param text:
         :param symbol:
         :param is_reverse:
         :return:
         """
-        search_text = text[::-1] if is_reverse else text
-        quote_map = {
-            '"': False,
-            "'": False
-        }
-
-        symbol_stack = []
-        paired_symbols = get_paired_symbols()
-
-        for index, char in enumerate(search_text):
-            if char in ['"', "'"]:
-                quote_map[char] = not quote_map[char]
-            if any(quote_map.values()):
-                continue
-            if char == symbol and not symbol_stack:
-                return index if not is_reverse else len(text) - index - 1
-            elif is_reverse:
-                if char in paired_symbols.values():
-                    opposite_char = get_right_paired_symbols()[char]
-                    symbol_stack.append(opposite_char)
-                elif char in paired_symbols and symbol_stack and symbol_stack[-1] == char:
-                    symbol_stack.pop()
-            else:
-                if char in paired_symbols:
-                    symbol_stack.append(char)
-                elif char in paired_symbols.values() and symbol_stack and get_left_paired_symbols()[symbol_stack[-1]] == char:
-                    symbol_stack.pop()
-
+        count = 0
+        if is_reverse:
+            text = text[::-1]
+        for i in range(0, len(text)):
+            if text[i] == get_paired_symbols()[symbol]:
+                count += 1
+            if text[i] == symbol:
+                if count <= 0:
+                    return i
+                count -= 1
         return -1
 
-    return find_parenthesis(prefix, '(', is_reverse=True) != -1 and find_parenthesis(suffix, ')') != -1
-
+    for left_symbol, right_symbol in get_left_paired_symbols().items():
+        left_parenthesis_index = find_parenthesis(prefix, left_symbol, is_reverse=True)
+        right_parenthesis_index = find_parenthesis(suffix, right_symbol, is_reverse=False)
+        if left_parenthesis_index != -1 and right_parenthesis_index != -1:
+            return True
+    return False
 
 def is_cursor_in_string(cursor_prefix):
     """
@@ -289,401 +274,425 @@ def is_cursor_in_string(cursor_prefix):
     :param cursor_prefix:
     :return:
     """
-    in_double_quotes = False
-    in_single_quotes = False
-    escape_char = False
-
-    for char in cursor_prefix:
-        if escape_char:
-            escape_char = False
+    # Count the number of quotes in the prefix, ignoring escaped quotes
+    quotes_count = {k: 0 for k in get_quotes_symbols()}
+    i = 0
+    while i < len(cursor_prefix):
+        if cursor_prefix[i] == '\\':  # Skip escape characters
+            i += 2
             continue
+        if cursor_prefix[i] in get_quotes_symbols():
+            quotes_count[cursor_prefix[i]] += 1
+        i += 1
 
-        if char == '\\':
-            escape_char = True
-        elif char == '"' and not in_single_quotes:
-            in_double_quotes = not in_double_quotes
-        elif char == "'" and not in_double_quotes:
-            in_single_quotes = not in_single_quotes
-
-    return in_double_quotes or in_single_quotes
+    # If the number of quotes is odd, the cursor is inside a string
+    for count in quotes_count.values():
+        if count % 2 == 1:
+            return True
+    return False
 
 
 def get_choices_text_line_number(code, pattern):
     """
-    Get the line numbers where the pattern appears in the code
+    Get the line number of the completion content in the code
     :param code:
-    :param pattern:
+    :param pattern
     :return:
     """
-    lines = code.split('\n')
-    pattern_indices = []
+    code_split = code.split("\n")
+    start_number = 0
+    end_number = 0
+    for i in range(len(code_split)):
+        if pattern in code_split[i] and start_number == 0:
+            start_number = i
+            continue
 
-    for i, line in enumerate(lines):
-        if pattern in line:
-            pattern_indices.append(i)
-
-    if len(pattern_indices) >= 2:
-        return pattern_indices[0], pattern_indices[1]
-    return -1, -1
-
+        if pattern in code_split[i] and start_number != 0:
+            end_number = i
+            break
+    return start_number, end_number
 
 def isolated_prefix_suffix(code, pattern):
     """
-    Extract prefix and suffix by pattern
-    :param code:
+    Separate prefix and suffix
     :param pattern:
+    :param code:
     :return:
     """
-    if pattern in code:
-        parts = code.split(pattern)
-        if len(parts) >= 3:
-            prefix = parts[0]
-            suffix = parts[2]
-            return prefix, suffix
+    if not code:
+        return None, None
+
+    spilt = code.split(pattern)
+    if spilt and len(spilt) >= 2:
+        return spilt[0], spilt[-1]
     return None, None
 
 
+# Split vue code into html and ts code
 def vue_to_html_ts(prefix, suffix):
     """
-    Convert Vue template to HTML for TreeSitter parsing
-    :param prefix:
-    :param suffix:
-    :return:
+    :params prefix: Code block before cursor
+    :params suffix: Code block after cursor
     """
-    if not prefix and not suffix:
-        return FrontLanguageEnum.HTML.value, prefix, suffix
+    language = FrontLanguageEnum.VUE
+    if (f"\n{VueTagConst.TS_START}" in prefix or prefix.startswith(VueTagConst.TS_START)) and (
+            VueTagConst.TS_END in suffix or not suffix.strip()):
+        language = FrontLanguageEnum.TS
+        # Find the position of "<script>" and truncate prefix
+        if prefix.startswith(VueTagConst.TS_START):
+            prefix_index = prefix.find(VueTagConst.TS_START)
+        else:
+            prefix_index = prefix.find(f"\n{VueTagConst.TS_START}")
+        if prefix_index != -1:
+            # logger.info(f"{prefix_index} {prefix} xxx {prefix[prefix_index:]}")
+            prefix = prefix[prefix_index:]
+            # Delete the first line using \n as the newline character
+            prefix = '\n'.join(prefix.strip().split('\n')[1:])
+        # Find the position of "</script>" and truncate suffix
+        suffix_index = suffix.find(VueTagConst.TS_END)
+        # If "</script>" is found, delete it and the code after it
+        if suffix_index != -1:
+            suffix = suffix[:suffix_index]
+    elif (f"\n{VueTagConst.HTML_START}" in prefix or prefix.startswith(VueTagConst.HTML_START)) and (
+            VueTagConst.HTML_END in suffix or not suffix.strip()):
+        language = FrontLanguageEnum.HTML
+        # Include template tag for html part
+        prefix_index = prefix.find(VueTagConst.HTML_START)
+        if prefix_index != -1:
+            prefix = prefix[prefix_index:]
+        suffix_index = suffix.find(VueTagConst.HTML_END)
+        if suffix_index != -1:
+            suffix = suffix[:suffix_index] + VueTagConst.HTML_END
+    else:
+        # If neither "<script>" nor "<template>" is found, return the original code block
+        pass
 
-    # Try to determine if it's a <script> or <template> tag
-    new_prefix = prefix
-    for tag in [VueTagConst.TEMPLATE.value, VueTagConst.SCRIPT.value, VueTagConst.STYLE.value]:
-        tag_start = f"<{tag}"
-        tag_end = f"</{tag}>"
-
-        if tag_start in prefix and tag_end in suffix:
-            if tag == VueTagConst.TEMPLATE.value:
-                return FrontLanguageEnum.HTML.value, new_prefix, suffix
-            elif tag == VueTagConst.SCRIPT.value:
-                return FrontLanguageEnum.JAVASCRIPT.value, new_prefix, suffix
-            elif tag == VueTagConst.STYLE.value:
-                return FrontLanguageEnum.CSS.value, new_prefix, suffix
-
-    # If no specific tag is found, assume it's HTML by default
-    return FrontLanguageEnum.HTML.value, prefix, suffix
+    return language, prefix, suffix
 
 
+# Clear cache
 def cache_clear():
-    """
-    Clear the cache
-    """
     cache.clear()
 
 
 def get_completion_cache_key(prompt):
-    """
-    Get cache key for completion
-    """
-    return hashlib.md5(prompt.encode('utf-8')).hexdigest()
+    hash_object = hashlib.sha256()
+    hash_object.update(prompt.encode('utf-8'))
+    return hash_object.hexdigest()
 
 
 def completion_make_cache(cache, completion_cache_time, prompt, text):
     """
-    Cache completion results
+    @param: prompt Pre-processed prompt
+    @param: choices Result returned from model request
     """
-    if completion_cache_time <= 0:
+    if not cache.enabled:
         return
-    cache_key = get_completion_cache_key(prompt)
-    logger.info("completion_make_cache key:{} val:{}".format(cache_key, text))
-    cache[cache_key] = {'val': text, 'expired_timestamp': int(time.time()) + completion_cache_time}
+    hash_key = get_completion_cache_key(prompt)
+    cache.set(hash_key, json.dumps(text))
+    cache.expire(hash_key, completion_cache_time)
 
 
 def get_completion_cache(cache, completion_cache_time, prompt):
-    """
-    Get completion results from cache
-    """
-    if completion_cache_time <= 0:
-        return None
-    cache_key = get_completion_cache_key(prompt)
-    logger.info("get_completion_cache key:{}".format(cache_key))
+    if not cache.enabled:
+        return []
+    hash_key = get_completion_cache_key(prompt)
+    text = cache.get(hash_key)
+    if text and len(text):
+        # Renew expiration
+        cache.expire(hash_key, completion_cache_time)
+        return json.loads(text)
+    else:
+        return []
 
-    if cache_key in cache:
-        # Check if the cache has expired
-        expired_timestamp = cache[cache_key].get('expired_timestamp', 0)
-        if int(time.time()) <= expired_timestamp:
-            val = cache[cache_key]['val']
-            if val:
-                logger.info("cache:{} hit".format(cache_key))
-                return val
-        else:
-            # Remove expired cache
-            logger.info("cache:{} expired".format(cache_key))
-            del cache[cache_key]
-    return None
+
+STR_PREFIX_CONFIG = [
+    {
+        "maxTokenSequenceLength": 1,
+        "lastTokensToConsider": 10,
+    },
+    {
+        "maxTokenSequenceLength": 10,
+        "lastTokensToConsider": 30,
+    },
+    {
+        "maxTokenSequenceLength": 20,
+        "lastTokensToConsider": 45,
+    },
+    {
+        "maxTokenSequenceLength": 30,
+        "lastTokensToConsider": 60,
+    },
+]
 
 
 def compute_prefix_suffix_match_length(content):
     """
-    Compute the length of the match between prefix and suffix
+    Calculate the longest prefix-suffix matching length of a string
+    :param content: String
+    :return: Array of matching lengths
     """
-    if len(content) <= 1:
-        return 0
-    for i in range(len(content) - 1, 0, -1):
-        if content[:i] == content[-i:]:
-            return i
-    return 0
+    match_lengths = [0 for _ in range(len(content))]
+    match_lengths[0] = -1
+    match_index = -1
+    for i in range(1, len(content)):
+        while match_index >= 0 and content[match_index + 1] != content[i]:
+            match_index = match_lengths[match_index]
+        if content[match_index + 1] == content[i]:
+            match_index += 1
+        match_lengths[i] = match_index
+    return match_lengths
 
 
 def is_repetitive_content(content):
-    """
-    Check if the content is repetitive
-    """
-    if not content or len(content) <= 4:
-        return False
-    lines = content.split('\n')
-    if len(lines) >= 5:
-        slice_size = len(lines) // 3
-        return lines[:slice_size] == lines[slice_size:2*slice_size] or lines[slice_size:2*slice_size] == lines[2*slice_size:]
+    match_lengths = compute_prefix_suffix_match_length(content)
+    for config in STR_PREFIX_CONFIG:
+        # Consider the number of repeated prefix-suffix characters in the string composed of the last lastTokensToConsider characters
+        max_match = max(match_lengths[:config["lastTokensToConsider"]])
+        if (
+            len(content) >= config["lastTokensToConsider"]
+            and config["lastTokensToConsider"] - 1 - max_match <= config["maxTokenSequenceLength"]
+        ):
+            return True
     return False
 
 
 def is_repetitive(content):
     """
-    Check if the content is repetitive
+    Determine if the end of a string is repetitive content
+    Calculation rule reference: https://devops.atrust.sangfor.com/demand/research_develop/3580/issues/695246
+    :param content: String content
+    :return: Whether it is repetitive content
     """
-    if not content:
-        return False
-
-    # Check for repetition of content
-    content_length = len(content)
-    half_length = content_length // 2
-
-    return content[:half_length] == content[half_length:2*half_length]
+    return is_repetitive_content(content[::-1]) or \
+        is_repetitive_content("".join(filter(lambda s: len(s.strip()) > 0, reversed(content))))
 
 
 def contains_only_non_alpha(input_string):
-    """
-    Check if the string contains only non-alphabetic characters
-    """
+    # Determine if the string contains only non-alphabetic characters
     return all(not c.isalpha() for c in input_string)
 
 
 def check_context_include_text(text, prefix, suffix):
-    """
-    Verify if text is the end part of the preceding context, and if it is the beginning part of the following context
-    or exists in the following content with twice the number of lines as text
-    """
-    text_lines = text.split('\n')
-    prefix_lines = prefix.split('\n')
-    suffix_lines = suffix.split('\n')
-
-    if len(text_lines) <= 2:
+    # Verify if text is the end part of the context, and if it is the beginning part of the following text or exists in twice the line count of text in the following content
+    if not text.strip():
+        return True
+    if len(text.strip()) <= 3 and suffix.strip().startswith(text.strip()[0]):
+        # Analyzing es data, for 1-2 characters plus a newline character scenario where it's the same as the beginning of the following text, it's considered the end part of the context, and in most cases it's completing ; ' ), etc., directly return empty
+        return True
+    if contains_only_non_alpha(text) and suffix.strip().startswith(text.strip()[0]):
+        # Analyzing es data, when text only has symbols and the following text starts with the first non-empty character of text, it's considered the end part of the context, and in most cases it's completing ; ' ), etc., directly return empty
+        # https://devops.atrust.sangfor.com/demand/research_develop/3580/issues/797264
+        return True
+    if text and len(text) <= 5:
         return False
+    trimmed_text = text.strip()
+    trimmed_prefix = prefix.strip()
 
-    # Check if text is part of prefix
-    min_length = min(len(text_lines), len(prefix_lines))
-    if min_length > 0 and text_lines[:min_length] == prefix_lines[-min_length:]:
+    line_count = len(text.split("\n"))
+    double_text = "\n".join(suffix.strip().split("\n")[:line_count * 2])
+    if trimmed_prefix.endswith(trimmed_text):
         return True
-
-    # Check if text is part of suffix
-    min_length = min(len(text_lines), len(suffix_lines))
-    if min_length > 0 and text_lines[-min_length:] == suffix_lines[:min_length]:
+    elif double_text.startswith(trimmed_text):
         return True
-
-    # Check if text is included in suffix with at least twice the lines
-    if len(suffix_lines) >= 2 * len(text_lines):
-        suffix_text = '\n'.join(suffix_lines[:2*len(text_lines)])
-        if text in suffix_text:
-            return True
-
-    return False
+    elif line_count > 2 and trimmed_text in double_text:
+        # When the returned line count is small, it's easy to misjudge, so add a line count condition here
+        # https://devops.atrust.sangfor.com/demand/research_develop/3580/issues/815665
+        return True
+    else:
+        return False
 
 
 def cut_suffix_overlap(text, prefix, suffix, cut_suffix_line=3):
     """
-    Cut off overlapping content between text and suffix
+    Remove the overlapping prefix part between "completion content" and suffix
+    :param text: Completion content
+    :param prefix: Context before
+    :param suffix: Context after
+    :param cut_suffix_line: Number of lines to cut from suffix
+    :return:
     """
-    if not suffix:
+    if not text:
         return text
 
-    text_lines = text.split('\n')
-    suffix_lines = suffix.split('\n')
+    text = text.rstrip()
+    text_len = len(text)
+    suffix = suffix.strip()
 
-    # If the number of suffix lines is less than the cut threshold, directly handle without cutting
-    if len(suffix_lines) < cut_suffix_line:
-        for i in range(len(text_lines)):
-            if i < len(text_lines) and i < len(suffix_lines) and text_lines[-(i+1):] == suffix_lines[:i+1]:
-                return '\n'.join(text_lines[:-(i+1)])
-    else:
-        # Get the first few lines of suffix to determine if they match with the end of text
-        first_suffix_lines = suffix_lines[:cut_suffix_line]
+    # Loop multiple times, each time cutting off the first line of suffix before performing content overlap cutting (the reason for multiple loops is: LLM defects may cause text to overlap with later content in suffix)
+    for _ in range(cut_suffix_line):
+        new_text = text
+        spilt_suffix = suffix.split("\n")
+        suffix_len = len(suffix)
+        if text_len == 0 or suffix_len == 0:
+            return new_text
 
-        # Check if text ends with any part of the first few lines of suffix
-        for i in range(len(first_suffix_lines), 0, -1):
-            check_suffix = '\n'.join(first_suffix_lines[:i])
-            if text.endswith(check_suffix):
-                # Remove the overlapping part
-                text = text[:-len(check_suffix)]
+        first_line_suffix_len = len(spilt_suffix[0])
+        max_overlap_length = min(text_len, suffix_len)
+        for i in range(max_overlap_length, int(max_overlap_length / 2), -1):
+            # If the length of the first line of suffix is greater than the length for duplicate checking, return directly
+            if i < first_line_suffix_len:
+                break
+            # If the length of the first line of suffix equals the length for duplicate checking and the first line has only one word, no need to check for duplicates, return directly
+            if i == first_line_suffix_len and len(suffix[:i].split(" ")) == 1:
                 break
 
+            # Once there is an overlap between text and suffix, return immediately
+            if new_text[text_len - i:] == suffix[:i]:
+                return new_text[:text_len - i]
+        suffix = "\n".join(spilt_suffix[1:])
     return text
 
 
 def cut_repetitive_text(text):
     """
-    Cut repetitive text
+    Remove repetitive content from completion content
+    :param text:
+    :return:
     """
     if not text:
         return text
 
-    lines = text.split('\n')
-    result_lines = []
-
-    i = 0
-    while i < len(lines):
-        # Add the current line
-        result_lines.append(lines[i])
-
-        # Check if this line is repeated in the next lines
-        repeated_count = 0
-        j = i + 1
-        while j < len(lines) and lines[j] == lines[i]:
-            repeated_count += 1
-            j += 1
-
-        # Skip the repeated lines (maximum of 1 repetition)
-        i += min(2, repeated_count + 1)
-
-    return '\n'.join(result_lines)
+    # Only trigger deduplication if line count exceeds 3 (the premise of this strategy is: if the model starts repeating at length, the content generated by the model usually has many lines)
+    line_count = len(text.split("\n"))
+    if line_count < 3:
+        return text
+    return do_cur_repetitive_text(text, ratio=0.15)
 
 
 def do_cur_repetitive_text(text, ratio=0.15):
     """
-    Process currently repetitive text
+    If the longest prefix-suffix matching length ratio exceeds the threshold ratio, remove repetitive content from the completion content
+    :param text:
+    :param ratio:
+    :return:
     """
-    words = re.findall(r'\w+', text.lower())
-    word_count = {}
+    if not text:
+        return text
 
-    for word in words:
-        if len(word) >= 2:  # Only count words with at least 2 characters
-            word_count[word] = word_count.get(word, 0) + 1
+    # Count how many \n are at the end of text
+    last_line_count = 0
+    for i in range(len(text) - 1, -1, -1):
+        if text[i] == '\n':
+            last_line_count += 1
+        else:
+            break
 
-    # Find the most frequently occurring word
-    most_common_word = max(word_count.items(), key=lambda x: x[1], default=('', 0))
+    # Reverse the completion text
+    text = text.rstrip()[::-1]
 
-    if most_common_word[1] > 1:
-        # Calculate the repetition ratio
-        repetition_ratio = most_common_word[1] / len(words) if words else 0
+    # Calculate the longest prefix-suffix length of the current reversed completion text
+    max_match_lengths = max(max(compute_prefix_suffix_match_length(text)), 0)
 
-        if repetition_ratio > ratio:
-            # Extract a non-repetitive part of the text
-            lines = text.split('\n')
+    # If the longest prefix-suffix length / completion content length is greater than or equal to ratio, it is considered repetitive content
+    if max_match_lengths > 0 and max_match_lengths / len(text) >= ratio:
+        text = text[max_match_lengths + 1:]
 
-            if len(lines) >= 3:
-                # Return the first 1/3 of the content if it's highly repetitive
-                return '\n'.join(lines[:len(lines)//3])
-            else:
-                # For shorter content, just return the first line
-                return lines[0] if lines else ""
+    text = text[::-1]
 
+    # Restore \n
+    for i in range(last_line_count):
+        text = text + "\n"
     return text
+
 
 
 def get_repetitive_rate(text):
     """
-    Get the repetition rate of text
+    Calculate the proportion of repetitive content in the completion content
+    :param text:
+    :return:
     """
     if not text:
         return 0
 
-    words = re.findall(r'\w+', text.lower())
-    word_count = {}
+    # Reverse the completion text
+    text = text.rstrip()[::-1]
 
-    for word in words:
-        if len(word) >= 2:  # Only count words with at least 2 characters
-            word_count[word] = word_count.get(word, 0) + 1
+    # Calculate the longest prefix-suffix length of the current reversed completion text
+    max_match_lengths = max(max(compute_prefix_suffix_match_length(text)), 0)
 
-    # Find the most frequently occurring word
-    most_common_word = max(word_count.items(), key=lambda x: x[1], default=('', 0))
-
-    # Calculate the repetition ratio
-    repetition_ratio = most_common_word[1] / len(words) if words else 0
-
-    return repetition_ratio
+    # Calculate the proportion of repetitive content
+    return max_match_lengths / len(text)
 
 
 def judge_css(language, text, ratio=0.7):
     """
-    Determine if the text is CSS
+    Determine if the text is CSS style (satisfies multi-line CSS properties or judging all single lines, assuming that more than 70% of the lines are CSS properties, the text is considered CSS)
+    :param language:
+    :param text:
+    :param ratio:
+    :return:
     """
-    if language != FrontLanguageEnum.CSS.value:
-        lines = text.split('\n')
-        css_line_count = sum(1 for line in lines if include_css(line))
-        total_lines = len(lines)
-
-        # If more than 70% of the lines match CSS patterns, consider it CSS
-        if total_lines > 0 and css_line_count / total_lines >= ratio:
-            return True
-
+    if language not in FrontLanguageEnum.get_values():
+        return False
+    if text.count('\n') == 0:
+        return False
+    # Determine if it is a multi-line CSS property
+    if re.search(multiline_css_property_pattern, text):
+        return True
+    count = 0
+    line_count = 0
+    # Determine if a single line is a CSS property (each line is checked with is_css, assuming that more than 70% of the lines are CSS properties, the text is considered CSS)
+    for line in text.split('\n'):
+        if line in ('\n', ''):
+            continue
+        if include_css(line):
+            count += 1
+        line_count += 1
+    if count / line_count > ratio:
+        return True
     return False
 
 
 def include_css(line):
     """
-    Check if a line includes CSS
+    Contains CSS style
+    :param line:
+    :return:
     """
     # Remove CSS comments
-    line = css_comment_pattern.sub('', line)
+    line = re.sub(css_comment_pattern, '', line)
 
-    # Check if it's a CSS property declaration (e.g., color: red;)
-    if css_property_pattern.match(line):
+    # Check if it contains CSS properties
+    if re.search(css_property_pattern, line):
         return True
 
-    # Check if it's a CSS selector (e.g., .class-name {)
-    if css_selector_pattern.match(line):
-        return True
-
-    # Check if it might be part of a multi-line CSS property
-    if multiline_css_property_pattern.match(line):
+    # Check if it contains CSS selectors
+    if re.search(css_selector_pattern, line):
         return True
 
     return False
 
 
 def is_valid_brackets(text):
-    """
-    Check if brackets in the text string are complete
-    """
+    # Used to determine if brackets in the text string are complete
     stack = []
-    brackets_map = {"(": ")", "[": "]", "{": "}"}
-
+    mapping = {")": "(", "}": "{", "]": "["}
     for char in text:
-        if char in brackets_map:
-            stack.append(char)
-        elif char in brackets_map.values():
-            if not stack or brackets_map[stack.pop()] != char:
+        if char in mapping:
+            if not stack or stack[-1] != mapping[char]:
                 return False
-
-    return len(stack) == 0
+            stack.pop()
+        elif char in mapping.values():
+            stack.append(char)
+    return not stack
 
 
 def is_valid_content(text):
-    """
-    Check if the content is valid
-    """
-    return is_valid_brackets(text)
+    return text.strip() != ""
 
 
 def get_tokenizer_path(model_name, default_path):
-    """
-    Get the tokenizer path
-    """
-    tokenizer_path = os.environ.get(f"TOKENIZER_{model_name}", default_path)
-    return tokenizer_path
+    model_env_var = f"{model_name.upper()}_MODEL"
+    model_dir = os.environ.get(model_env_var, 'starcoder')
+    tokenizer_path = f"/models/{model_dir}/tokenizer.json"
+    return tokenizer_path if os.path.exists(tokenizer_path) else default_path
 
 
 def load_tokenizer(tokenizer_path):
-    """
-    Load the tokenizer
-    """
-    if not os.path.exists(tokenizer_path):
+    try:
+        return Tokenizer.from_file(tokenizer_path)
+    except Exception as e:
+        print(f"Error loading tokenizer from {tokenizer_path}: {e}")
         return None
-    return Tokenizer.from_file(tokenizer_path)

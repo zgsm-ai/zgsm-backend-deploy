@@ -227,7 +227,7 @@ class PromptConstant:
     # Sensitive word replacement mapping table (using regex replacement), keys are replacement characters, values are sensitive words
     FORBIDDEN_WORD_MAP = {
         '_hello_': 'sangfor|sinfor|sangfor123|admin123|sangfor@123|Sangfor@123|sangforos',
-        '_shenzhen_': 'sangfor|sinfor'
+        '_shenzhen_': '深信服|信服'
     }
 
     # Sensitive word one-to-one replacement mapping table (all are city words)
@@ -239,8 +239,8 @@ class PromptConstant:
         'sangfor': 'Manchester',
         'sinfor': 'Alexander',
         'admin123': 'Hamilton',
-        'sangfor': 'Malaysia',
-        'sinfor': 'Barcelona',
+        '深信服': 'Malaysia',
+        '信服': 'Barcelona',
     }
     TARGET_WORD_MAP = {v: k for k, v in SENSITIVE_WORD_MAP.items()}
 

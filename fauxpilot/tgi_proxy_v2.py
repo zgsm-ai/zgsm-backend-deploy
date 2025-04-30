@@ -7,7 +7,6 @@ import re
 import time
 import traceback
 from datetime import datetime
-import random
 
 import pytz
 
@@ -48,7 +47,7 @@ def init_stop_words_dict():
 
 
 def get_context_token_limit():
-    """Get context token limit, if only one value is set, it will be used for both"""
+    """Get context token limit, if only one value is set, it will be shared"""
     context_token_limit = os.environ.get("MAX_MODEL_LEN", "1024,256").split(",")
     if len(context_token_limit) == 1:
         context_token_limit *= 2
@@ -67,8 +66,8 @@ class TGIProxyV2:
         self.completion_cache_time = int(os.environ.get("COMPLETION_CACHE_TIME", 86400))  # Default 1 day
         self.min_prefix_token = int(os.environ.get("MIN_PREFIX_TOKEN", 1000))
 
-        self.request_stop_words = []  # stop_words from request
-        self.system_stop_words = []  # default stop_words from json
+        self.request_stop_words = []  # Request transmitted stop_words
+        self.system_stop_words = []  # Default stop_words from JSON
         self.all_stop_words = []  # request+system
         self.is_windows = False
         self.model = None
@@ -76,9 +75,9 @@ class TGIProxyV2:
         self.client = None
         self.client_strategy = None
         self.tokenizer = None
-        self.FIM_PREFIX = ""
-        self.FIM_MIDDLE = " "
-        self.FIM_SUFFIX = ""
+        self.FIM_PREFIX = "<｜fim▁begin｜>"
+        self.FIM_MIDDLE = "<｜fim▁end｜>"
+        self.FIM_SUFFIX = "<｜fim▁hole｜>"
         self.FIM_STOP = ["<|endoftext|>"]
         self.main_model_type = 'default'
 
@@ -130,10 +129,10 @@ class TGIProxyV2:
             self.FIM_SUFFIX = " <SUF>"
             self.FIM_STOP = ["</s>", SPIECE_UNDERLINE_EOT, "<EOT>", "▁<MID>", " <MID>"]
         elif is_deepseek:
-            self.FIM_PREFIX = ""
-            self.FIM_MIDDLE = " "
-            self.FIM_SUFFIX = ""
-            self.FIM_STOP = ["", "<|EOT|>", "▁<MID>"]
+            self.FIM_PREFIX = "<｜fim▁begin｜>"
+            self.FIM_MIDDLE = "<｜fim▁end｜>"
+            self.FIM_SUFFIX = "<｜fim▁hole｜>"
+            self.FIM_STOP = ["<｜end▁of▁sentence｜>", "<|EOT|>", "▁<MID>"]
 
     def convert_nl_to_win(self, s):
         if self.is_windows:
@@ -154,8 +153,7 @@ class TGIProxyV2:
         self.all_stop_words.extend(self.request_stop_words)
         if os.environ.get("ADD_SYSTEM_STOP_WORDS", "true") == 'true' or not suffix or not len(suffix.strip()):
             # When suffix is empty, add stop_words list to achieve complete code block truncation effect
-            # When 2-3 consecutive newline characters appear, it's generally a new code block scenario, used as a stop sign
-            # to make the completion content as complete a code block as possible
+            # When 2~3 newline characters appear consecutively, it's usually a new code block scenario, used as stop sign, to make completion content as complete code block as possible
             self.all_stop_words.extend([LINUX_NL * 3, LINUX_NL * 2])
             language_id = data.get('languageId', data.get('language_id', None))
             if language_id and language_id.lower() in self.stop_words_dict.keys():
@@ -167,11 +165,11 @@ class TGIProxyV2:
     def generate(self, data, context_and_intention):
         prompt = data['prompt']
 
-        # Uniform processing of Windows newline characters
+        # Windows newline character unified processing
         prompt = self.convert_nl_to_linux(prompt)
         suffix = self.convert_nl_to_linux(context_and_intention.suffix)
 
-        # Prepare stop words
+        # Stop words preparation
         self.prepare_stop_words(suffix, data)
 
         model_start_time = time.time()
@@ -188,7 +186,7 @@ class TGIProxyV2:
                                                    temperature=data['temperature'])
 
             text = self.client_strategy.choices_process(response, context_and_intention, self.max_model_cost_time)
-            # Cache prompt and response results
+            # Cache prompt and response result
             completion_make_cache(self.cache, self.completion_cache_time, prompt, text)
 
         # Stop word processing
@@ -200,240 +198,317 @@ class TGIProxyV2:
         model_end_time = time.time()
         completion = self.construct_completion(model_start_time, model_end_time)
 
-        completion['choices'] = choices
-        completion['_is_cache'] = is_cache
+        completion['completion_tokens'] = self.get_token_num(text)
 
-        return completion
+        return completion, choices, is_cache
 
     @staticmethod
     def split_code_completion_by_request_stop_word(stop_word_list: list, text: str):
         """
-        Split the generated text based on stop words in the request
+        Truncate by request parameter stop_words
         """
-        # If the generated text is empty, return directly
-        if not text or not stop_word_list:
-            return text
-
         for stop_word in stop_word_list:
             if stop_word in text:
-                text = text.split(stop_word)[0]
-
+                text = text.split(stop_word, 1)[0]
+            if stop_word == SPIECE_UNDERLINE_EOT and len(text) > 1 and text[-1] == text[-2]:
+                text = text[:-1]
         return text
 
     @staticmethod
     def split_code_completion_by_system_stop_word(stop_word_list: list, generated_text: str):
         """
-        Split the generated text based on system stop words
-        Only split at the closest system stop word (to prevent excessive truncation)
+        Truncate processing based on system default stop_words
+        Consider scenarios with \n + zero or more spaces
         """
-        if not generated_text or not stop_word_list:
+        match_list = list()
+        if stop_word_list and len(stop_word_list) == 0:
             return generated_text
-
-        min_index = len(generated_text)
-        has_stop_word = False
-
         for stop_word in stop_word_list:
-            index = generated_text.find(stop_word)
-            if index != -1 and index < min_index:
-                min_index = index
-                has_stop_word = True
+            # If the end word is a single newline, directly match the newline character
+            if stop_word in ['\n', '\r']:
+                pattern = r'^.*?(?=' + stop_word + r')'
+            # With normal end words, match strings starting with \n, containing 0~n spaces in the middle, and ending with stop_word
+            else:
+                pattern = r'^.*?(?=\n\s{0,4}' + stop_word + r')'
+            match = re.search(pattern, generated_text, re.DOTALL | re.MULTILINE)
+            if match:
+                match_list.append(match.group(0))
 
-        # If no stop word is found, return the original text
-        if not has_stop_word:
-            return generated_text
-
-        # Otherwise, truncate at the closest stop word
-        return generated_text[:min_index]
+        # Return the shortest match
+        cut_generated_text = ""
+        if match_list:
+            cut_generated_text = min(match_list, key=len)
+        cut_generated_text = cut_generated_text if cut_generated_text else generated_text
+        return cut_generated_text
 
     def construct_completion(self, model_start_time=None, model_end_time=None, model_cost_time=0):
-        """
-        Construct the completion response
-        """
-        completion = {
-            "id": "cmpl-" + "".join([str(random.randint(0, 9)) for _ in range(29)]),
-            "object": "text_completion",
-            "model": self.model,
-            "created": int(time.time()),
-            'usage': {
-                'prompt_tokens': 0,
-                'completion_tokens': 0,
-                'total_tokens': 0
-            },
-            "_model_cost_time": model_cost_time or int((model_end_time - model_start_time) * 1000) if model_end_time and model_start_time else 0,
+        if model_start_time and model_end_time:
+            model_cost_time = int((model_end_time - model_start_time) * 1000)
+        if model_start_time:
+            model_start_time = self.get_time_str(model_start_time)
+        if model_end_time:
+            model_end_time = self.get_time_str(model_end_time)
+        return {
+            'id': None,  # fill in
+            'model': self.model,
+            'object': 'text_completion',
+            'created': int(time.time()),
+            'choices': None,  # fill in
+            'model_start_time': model_start_time,
+            'model_end_time': model_end_time,
+            'model_cost_time': model_cost_time
         }
-        return completion
 
     @staticmethod
     def get_time_str(st):
-        """
-        Get formatted time string
-        """
-        tz = pytz.timezone('Asia/Shanghai')
-        dt = datetime.fromtimestamp(st, tz)
-        return dt.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
+        """Get formatted time string"""
+        dt = datetime.fromtimestamp(st)
+        dt_in_shanghai = dt.astimezone(pytz.timezone('Asia/Shanghai'))
+        time_str = dt_in_shanghai.strftime('%Y-%m-%dT%H:%M:%S.%f%z')
+        return time_str
 
     def get_tokens(self, prompt: str) -> list:
-        """
-        Get tokens from prompt
-        """
-        return self.tokenizer.encode(prompt).ids if self.tokenizer else []
+        """Get tokens encoding list"""
+        tokens = self.tokenizer.encode(prompt)
+        return tokens.ids
 
     def tokens_decode(self, tokens: list) -> str:
         """
-        Decode tokens to string
+        Decode tokens encoding list to prompt
+        tokens: encoding list
         """
-        return self.tokenizer.decode(tokens) if self.tokenizer else ""
+        return self.tokenizer.decode(tokens)
 
     def get_token_num(self, prompt):
-        """
-        Get the number of tokens in prompt
-        """
+        """Get token count"""
         return len(self.get_tokens(prompt))
 
     def get_prompt_template(self, prefix, suffix, code_context=""):
         """
-        Get prompt template based on model type
+        Prompt concatenation strategy
+        :param prefix:
+        :param suffix:
+        :param code_context
+        :return:
         """
-        if FIM_INDICATOR in prefix:
-            return f"{self.FIM_PREFIX}{prefix}{self.FIM_MIDDLE}{suffix}{self.FIM_SUFFIX}{code_context}"
-        else:
-            return f"{prefix}{code_context}"
+        return f"{self.FIM_PREFIX}{code_context}\n{prefix}{self.FIM_SUFFIX}{suffix}{self.FIM_MIDDLE}"
 
     def prepare_prompt(self, prefix, suffix, code_context=""):
         """
-        Prepare prompt for model
+        Concatenate prompt after handling prefix and suffix length
+        :param prefix:
+        :param suffix:
+        :param code_context:
+        :return:
         """
-        if not self.tokenizer:
-            return prefix
-
-        # Get original prompt
+        prefix, code_context = self.handle_prompt(prompt=prefix, is_prefix=True,
+                                                  optional_prompt=code_context,
+                                                  min_prompt_token=self.min_prefix_token)
+        suffix, _ = self.handle_prompt(prompt=suffix, is_prefix=False)
         prompt = self.get_prompt_template(prefix, suffix, code_context)
-
-        # Get total token count
-        prompt_token_num = self.get_token_num(prompt)
-
-        # If the prompt is too long, truncate prefix and recalculate
-        if prompt_token_num > self.MAX_MODEL_LEN[0]:
-            prefix = self.handle_prompt(prefix, is_prefix=True, optional_prompt=suffix, min_prompt_token=self.min_prefix_token)
-            prompt = self.get_prompt_template(prefix, suffix, code_context)
-
-        return prompt
+        prompt_tokens = self.get_token_num(prompt)
+        self.is_windows = WIN_NL in prefix
+        return prompt, prompt_tokens, prefix, suffix
 
     def handle_prompt(self, prompt, is_prefix=True, optional_prompt=None, min_prompt_token=1000):
         """
-        Handle prompt length processing
+        If prompt exceeds maximum token count, truncate it
+        Prefix truncates the front part
+        Suffix truncates the back part
+        :param prompt:
+        :param is_prefix:
+        :param optional_prompt: Additional context
+        :param min_prompt_token: Minimum token to keep for prompt
+        :return: prompt, optional_prompt
         """
-        # If no tokenizer, return original prompt
-        if not self.tokenizer:
-            return prompt
-
-        # Check if prompt is within token limits
-        token_limit = self.MAX_MODEL_LEN[0]
-        prompt_token_num = self.get_token_num(prompt)
-
-        # If optional prompt exists, calculate its token count
-        optional_token_num = 0
+        optional_prompt_tokens = 0
+        requested_tokens = self.get_token_num(prompt)
         if optional_prompt:
-            optional_token_num = self.get_token_num(optional_prompt)
+            optional_prompt_tokens = self.get_token_num(optional_prompt)
+        max_model_len = self.MAX_MODEL_LEN[0] if is_prefix else self.MAX_MODEL_LEN[1]
 
-        # Check if total length exceeds limit
-        if prompt_token_num + optional_token_num > token_limit:
-            # Calculate how many tokens to keep
-            if is_prefix:
-                # When truncating prefix, keep some minimum tokens
-                if token_limit - optional_token_num < min_prompt_token and optional_token_num <= token_limit:
-                    tokens_to_keep = min_prompt_token
-                else:
-                    tokens_to_keep = token_limit - optional_token_num
+        if requested_tokens + optional_prompt_tokens > max_model_len:
+            prompt_tokens = self.get_tokens(prompt)
+            need_cut_tokens = requested_tokens + optional_prompt_tokens - max_model_len
 
-                # Get prompt tokens
-                prompt_tokens = self.get_tokens(prompt)
+            truncated_tokens = None
+            truncated_optional_tokens = None
 
-                # If prefix is too long, truncate from the beginning
-                if prompt_token_num > tokens_to_keep:
-                    truncated_tokens = prompt_tokens[-tokens_to_keep:]
-                    truncated_text = self.tokens_decode(truncated_tokens)
+            # If after truncating the prefix, the remaining tokens are more than the minimum token count, directly truncate prompt
+            if is_prefix and requested_tokens - need_cut_tokens >= min_prompt_token:
+                truncated_tokens = prompt_tokens[need_cut_tokens:]
+            # If after truncating the prefix, the remaining tokens are less than the minimum token count, truncate preserving the minimum token count, then truncate optional_prompt
+            elif is_prefix and requested_tokens - need_cut_tokens < min_prompt_token:
+                # Keep minimum token count (concerned that prefix is less than min_prompt_token, resulting in reduced related context content)
+                actual_min = min(min_prompt_token, requested_tokens)
+                truncated_tokens = prompt_tokens[-actual_min:]
+                optional_token = self.get_tokens(optional_prompt)
+                truncated_optional_tokens = optional_token[:(max_model_len - actual_min)]
+            elif not is_prefix:
+                truncated_tokens = prompt_tokens[:-need_cut_tokens]
 
-                    # Find the first newline to ensure clean split
-                    first_newline_index = truncated_text.find('\n')
-                    if first_newline_index != -1:
-                        truncated_text = truncated_text[first_newline_index + 1:]
+            # Decode truncated tokens back to string
+            if truncated_tokens:
+                prompt = self.tokens_decode(truncated_tokens)
 
-                    return truncated_text
-            else:
-                # When truncating suffix, simply truncate to fit
-                tokens_to_keep = max(0, token_limit - prompt_token_num)
+            if truncated_optional_tokens:
+                optional_prompt = self.tokens_decode(truncated_optional_tokens)
 
-                # Get suffix tokens and truncate
-                suffix_tokens = self.get_tokens(optional_prompt)
-                truncated_tokens = suffix_tokens[:tokens_to_keep]
+            # Ensure the cut point is a complete line, if not complete, remove it
+            lines = prompt.splitlines(True)
+            if len(lines) > 0:
+                if is_prefix:  # Process the first line of prefix
+                    if any([lines[0].startswith('\n'), lines[0].startswith('\r\n')]) is False:
+                        lines = lines[1:]
+                else:  # Process the last line of suffix
+                    if any([lines[-1].endswith('\n'), lines[-1].endswith('\r\n')]) is False:
+                        lines = lines[:-1]
+                prompt = ''.join(lines)
 
-                return self.tokens_decode(truncated_tokens)
-
-        # If no truncation needed, return original
-        return prompt
+        return prompt, optional_prompt
 
     def __call__(self, data: dict):
-        """
-        Main entry point for processing completion requests
-        """
-        request_data = copy.deepcopy(data)
-
-        # Initialize model info
-        self.init_completion_model_info(data)
-
+        st = time.time()
+        is_cache = False
+        is_same = True
+        model_choices = []
+        prefix, suffix = '', ''
+        if data['prompt_options']:
+            prefix = data['prompt_options']['prefix']
+            suffix = data['prompt_options']['suffix']
+            cursor_line_prefix = data['prompt_options']['cursor_line_prefix']
+            cursor_line_suffix = data['prompt_options']['cursor_line_suffix']
+            code_context = data['prompt_options']['code_context']
+        else:
+            prompt_split = data['prompt'].split(FIM_INDICATOR)
+            if prompt_split and len(prompt_split) >= 2:
+                prefix = prompt_split[-2]
+                suffix = prompt_split[-1]
+            cursor_line_prefix = prefix.split('\n')[-1]
+            split_suffix = suffix.split('\n')
+            cursor_line_suffix = split_suffix[0]
+            if len(split_suffix) > 1:
+                cursor_line_suffix += '\n'
+            code_context = data.get('code_context', '')
+        language = data.get("language_id")
         try:
-            # Default parameters
-            if not data.get('temperature'):
-                data['temperature'] = float(os.environ.get('CODE_COMPLETION_TEMPERATURE', 0.2))
+            # Completion model initialization (model strategy selection, tokenizer initialization, special token initialization, etc.)
+            self.init_completion_model_info(data)
+            logger.info(f"model={self.model}, self.FIM_PREFIX={self.FIM_PREFIX}")
 
-            # Process prefix and suffix
-            prefix_suffix = request_data.get('prefix_suffix', False)
-            prefix = request_data.get('prefix', '')
-            suffix = request_data.get('suffix', '')
-            code_context = request_data.get('code_context', '')
+            # Completion pre-processing (prompt concatenation strategy, single-line/multi-line completion strategy)
+            prompt, prompt_tokens, prefix, suffix = self.prepare_prompt(prefix, suffix, code_context)
+            data['prompt'] = prompt
+            data['prompt_tokens'] = prompt_tokens
 
-            # Check for Windows line endings
-            self.is_windows = prefix.find(WIN_NL) >= 0
+            is_single_completion = completion_line_handler.judge_single_completion(
+                cursor_line_prefix, cursor_line_suffix, language)
+            if is_single_completion:
+                if isinstance(data["stop"], list):
+                    data["stop"].append("\n")
+                elif isinstance(data["stop"], str):
+                    data["stop"] += "\n"
 
-            # Prepare context and intention object
-            context_and_intention = CompletionContextAndIntention()
-            context_and_intention.st = time.time()
-            context_and_intention.prefix = prefix
-            context_and_intention.suffix = suffix
+            logger.info(f"language={language}, is_single_completion={is_single_completion}")
 
-            # Handle FIM processing
-            if prefix_suffix:
-                data['prompt'] = self.prepare_prompt(prefix, suffix, code_context)
+            # Request completion
+            if prompt_tokens > 0:
+                context_and_intention = CompletionContextAndIntention(
+                    language=language,
+                    is_single_completion=is_single_completion,
+                    prefix=prefix,
+                    suffix=suffix,
+                    cursor_line_prefix=cursor_line_prefix,
+                    cursor_line_suffix=cursor_line_suffix,
+                    st=st,
+                )
+                completion, choices, is_cache = self.generate(data, context_and_intention)
             else:
-                data['prompt'] = prefix
+                logger.info(f"{data['x-complete-id']} no line use to completion after prepare!")
+                completion = self.construct_completion()
+                choices = []
+                prompt_tokens = 0
 
-            # Generate completion
-            completion = self.generate(data, context_and_intention)
+        except Exception:
+            logger.error(traceback.format_exc())
+            completion = self.construct_completion()
+            choices = []
+            prompt_tokens = 0
 
-            # Calculate total time
-            completion['_total_cost_time'] = int((time.time() - context_and_intention.st) * 1000)
+        # Completion post-processing - content discard
+        if choices:
+            model_choices = copy.deepcopy(choices)
 
-            # Add debug info in development
-            if os.environ.get('ENV') != 'production':
-                completion['_debug'] = {
-                    'prompt': data['prompt'],
-                    'prefix': prefix,
-                    'suffix': suffix
-                }
+        # if choices and check_context_include_text(choices[0]['text'], prefix, suffix):
+        #     logger.info(f"{data['x-complete-id']} exist context, return empty choices!")
+        #     choices = []
 
-            return completion
+        if (choices and data.get("language_id") and
+                str(data.get("language_id")).lower() != 'python' and
+                is_python_text(choices[0].get('text', ''))):
+            choices = []
 
-        except Exception as e:
-            # Handle exceptions and return error response
-            error_info = traceback.format_exc()
-            logger.error(f"Error processing completion request: {error_info}")
+        # Completion post-processing - completion content processing
+        if choices and choices[0]['text']:
+            text = choices[0].get('text', '')
 
-            return {
-                "id": "cmpl-" + "".join([str(random.randint(0, 9)) for _ in range(29)]),
-                "object": "text_completion",
-                "created": int(time.time()),
-                "model": self.model,
-                "error": str(e),
-                "choices": [{"text": ""}]
-            }
+            # Remove duplicates from completion content
+            text = cut_repetitive_text(text)
+
+            # Trim overlapping completion content
+            text = cut_suffix_overlap(text, prefix, suffix)
+
+            # The logic of syntax post-processing has been changed to streaming process
+            # See: https://ipd.atrust.sangfor.com/ipd/team/7768/board?group_by=assigner&issue_type=global
+            # # In single-line completion scenario and there are invalid brackets, then process bracket mismatches for the complete line of completion content
+            # if is_single_completion and not is_valid_brackets(cursor_line_prefix + text + cursor_line_suffix):
+            #     text = cut_text_by_tree_sitter(language, text, cursor_line_prefix, cursor_line_suffix, st,
+            #                                    self.max_cost_time)
+            #
+            # # Prefix + suffix + complete completion content for syntax validation, if not satisfied, perform cutting
+            # text = cut_text_by_tree_sitter(language, text, prefix, suffix, st,
+            #                                self.max_cost_time)
+
+            # No actual completion content, set to empty
+            if not is_valid_content(text):
+                text = ""
+            if text != choices[0]['text']:
+                logger.info(f"Completion post-processing triggered, results after processing as follows: {text}")
+            choices[0]['text'] = text
+
+        if model_choices and model_choices[0].get('text') and choices != model_choices:
+            is_same = False
+
+        ed = time.time()
+        completion['cost_time'] = int((ed - st) * 1000)
+        completion['start_time'] = self.get_time_str(st)
+        completion['end_time'] = self.get_time_str(ed)
+        completion['prompt_tokens'] = prompt_tokens
+        completion['max_token'] = self.max_tokens
+        completion['id'] = data['x-complete-id']
+        completion['prompt'] = data['prompt']
+        completion['choices'] = choices
+        completion['is_same'] = is_same
+        completion['model_choices'] = model_choices
+        completion['server_extra_kwargs'] = {
+            'is_cache': is_cache,
+            'score': data.get("score"),
+        }
+        completion['user_code_upload_delay'] = int(os.environ.get("USER_CODE_UPLOAD_DELAY", "0"))
+        completion['code_context_strategy'] = data.get('code_context_strategy')
+        # System plugin configuration, used to update default configuration on plugin side
+        completion['system_plugin_configs'] = {
+            'context_lines_limit': int(os.environ.get("CONTEXT_LINES_LIMIT", "80")),
+            'one_file_max_length': int(os.environ.get('ONE_FILE_MAX_LENGTH', '10000')),
+            'total_file_max_length': int(os.environ.get('TOTAL_FILE_MAX_LENGTH', '200000')),
+            'import_max_number': int(os.environ.get('IMPORT_MAX_NUMBER', '10')),
+            'file_max_number': int(os.environ.get('FILE_MAX_NUMBER', '20')),
+            'window_length': int(os.environ.get('WINDOWS_LENGTH', '60')),
+            'score_threshold': float(os.environ.get('SCORE_THRESHOLD', '0.15')),
+            'snippet_top_n': int(os.environ.get('SNIPPET_TOP_N', '0')),
+            'code_completion_log_upload_once': bool(int(os.environ.get('CODE_COMPLETION_LOG_UPLOAD_ONCE', '0'))),
+            'suggestion_delay': int(os.environ.get('SUGGESTION_DELAY', '75')),
+        }
+        logger.info(f"{data['x-complete-id']} Returned completion in {(ed - st) * 1000} ms")
+        # Unified response, no longer supporting client-side streaming response
+        return json.dumps(completion)

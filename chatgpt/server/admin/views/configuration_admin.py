@@ -1,102 +1,66 @@
-from wtforms import Form, StringField, SelectField, validators
-from flask_admin import expose
-from flask import request, redirect, url_for, flash
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-from models.configuration import Configuration
-from ..base import BaseView, ActionView
+import json
+import logging
 
-class ConfigurationAdmin(BaseView):
-    column_labels = dict(
-        id='ID',
-        name='Name',
-        type='Type',
-        value='Value',
-        description='Description',
-        status='Status',
-        date_created='Created At',
-        date_updated='Updated At'
-    )
-    column_list = ('id', 'name', 'type', 'value', 'description', 'status', 'date_created', 'date_updated')
-    column_filters = ('id', 'name', 'type', 'status')
-    column_searchable_list = ('name', 'value', 'description')
-    column_formatters = {}
-    column_sortable_list = ('id', 'date_created', 'date_updated')
-    form_excluded_columns = ('date_created', 'date_updated')
-    form_choices = {
-        'type': [
-            ('text', 'Text'),
-            ('json', 'JSON'),
-            ('int', 'Integer'),
-            ('float', 'Float'),
-            ('bool', 'Boolean'),
-        ],
-        'status': [
-            ('0', 'Disabled'),
-            ('1', 'Enabled'),
-        ],
-    }
+from flask import flash
+from flask_admin.actions import action
+from wtforms import ValidationError
 
+from admin.auth import AdminPermission
+from admin.base import BaseView
+from common.constant import ConfigurationConstant
+from common.utils.util import re_get_string_in_text
+from models.system.configuration import Configuration
+from services.system.configuration_service import ConfigurationService
+
+
+class ConfigurationAdmin(AdminPermission, BaseView):
+    column_list = ('belong_type', 'attribute_key', 'attribute_value', 'desc', 'deleted')
+    column_searchable_list = ('belong_type', 'attribute_key', 'desc')
+    can_export = False
+    # Display verbose_name values for fields on the list page
+    column_labels = BaseView.get_column_labels(Configuration)
+
+    # Triggered before modification
     def on_model_change(self, form, model, is_created):
-        # Validate model data before saving
-        self.validate_config(model)
-
-    def validate_config(self, model):
-        # Convert value according to type
-        if model.type == 'int':
+        if model.belong_type == ConfigurationConstant.PROMPT_TYPE \
+                and model.attribute_key == ConfigurationConstant.PROMPT_KEY_FORBID_STRING:
+            attribute_value = model.attribute_value
+            if attribute_value == '':
+                raise ValidationError('Attribute value cannot be empty')
+            elif len(attribute_value) > ConfigurationConstant.PROMPT_RE_MAX_LENGTH:
+                raise ValidationError(f'Attribute value character length limit {ConfigurationConstant.PROMPT_RE_MAX_LENGTH}')
             try:
-                int(model.value)
-            except ValueError:
-                flash('Value must be an integer', 'error')
-        elif model.type == 'float':
+                re_get_string_in_text(attribute_value, 'abc')  # Verify if the regex is valid and won't cause errors
+            except Exception as e:
+                logging.error(e)
+                raise ValidationError('Attribute value regex is invalid')
+
+            ConfigurationService.evict_cache()  # Clear cache
+        elif model.attribute_key == ConfigurationConstant.LANGUAGE_KEY_MAP:
             try:
-                float(model.value)
-            except ValueError:
-                flash('Value must be a float', 'error')
-        elif model.type == 'bool':
-            if model.value.lower() not in ('true', 'false', '0', '1'):
-                flash('Value must be a boolean (true/false/0/1)', 'error')
+                json.loads(model.attribute_value)
+            except Exception as e:
+                logging.error(e)
+                raise ValidationError('Incorrect JSON format')
+
+        super().on_model_change(form, model, is_created)
+
+    def after_model_change(self, form, model, is_created=False):
+        # Clear advertisement configuration cache after update
+        if model.attribute_key == ConfigurationConstant.LANGUAGE_KEY_MAP:
+            ConfigurationService.evict_language_map_cache()
+        else:
+            # General cache cleaning
+            ConfigurationService.clear_cache(model.belong_type, model.attribute_key)
+
+    # Button to clear advertisement cache
+    @action('clear_ad_cache', 'Clear User Advertisement Cache')
+    def clear_ad_cache(self, ids):
+        ConfigurationService.evict_user_ad_cache()
+        flash('Advertisement cache cleared successfully')
 
 
-class ConfigForm(Form):
-    name = StringField('Name', [validators.DataRequired(), validators.Length(max=255)])
-    type = SelectField('Type', choices=[
-        ('text', 'Text'),
-        ('json', 'JSON'),
-        ('int', 'Integer'),
-        ('float', 'Float'),
-        ('bool', 'Boolean'),
-    ])
-    value = StringField('Value', [validators.DataRequired()])
-    description = StringField('Description', [validators.Length(max=255)])
-    status = SelectField('Status', choices=[
-        ('1', 'Enabled'),
-        ('0', 'Disabled'),
-    ])
-
-
-class ConfigUpdateView(ActionView):
-    @expose('/', methods=('GET', 'POST'))
-    def index(self):
-        form = ConfigForm(request.form)
-        if request.method == 'POST' and form.validate():
-            # Save data to database
-            configuration = Configuration.get_or_none(Configuration.name == form.name.data)
-            if configuration:
-                configuration.type = form.type.data
-                configuration.value = form.value.data
-                configuration.description = form.description.data
-                configuration.status = int(form.status.data)
-                configuration.save()
-                flash('Configuration updated successfully', 'success')
-            else:
-                Configuration.create(
-                    name=form.name.data,
-                    type=form.type.data,
-                    value=form.value.data,
-                    description=form.description.data,
-                    status=int(form.status.data)
-                )
-                flash('Configuration created successfully', 'success')
-            return redirect(url_for('configuration.index_view'))
-
-        return self.render(self.SUCCESS_PAGE)
+ConfigurationAdminView = ConfigurationAdmin(Configuration, endpoint='_configuration', name='Configuration Items')

@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 mock_manual_case_data_no_post = {
-    "display_name": "Fan Liwei33139",
+    "display_name": "Fan Liwei",
     "case_code": "WeakPWD_Func_Default_01_001_os",
     "case_id": 2798507,
     "case_name": "Default Weak Password Setting Test",
@@ -53,7 +53,7 @@ _setup
 
 
 mock_manual_case_data_no_pre = {
-    "display_name": "Fan Liwei33139",
+    "display_name": "Fan Liwei",
     "case_code": "WeakPWD_Func_Default_01_001_os",
     "case_id": 2798507,
     "case_name": "Default Weak Password Setting Test",

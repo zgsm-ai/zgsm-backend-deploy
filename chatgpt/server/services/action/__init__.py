@@ -13,7 +13,7 @@ from services.action.optimize_code_service import OptimizeCodeStrategy
 from services.action.base_service import ChatbotOptions
 from services.action.review_service import ReviewStrategy
 from services.action.simplify_code_service import SimplifyCodeStrategy
-from services.action.shenma_normal_chat import NormalChatStrategy
+from services.action.zhuge_normal_chat import NormalChatStrategy
 
 strategy_map = {
     FindBugsStrategy.name: FindBugsStrategy,
