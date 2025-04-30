@@ -19,7 +19,7 @@ conf:
     - 0.0.0.0/0
   etcd:
     endpoints:            # supports defining multiple etcd host addresses for an etcd cluster
-      - "http://{{ZGSM_BACKEND}}:{{PORT_ETCD}}"
+      - "http://etcd:{{PORT_ETCD}}"
                           # yamllint disable rule:comments-indentation
                           # etcd basic auth info
     # username: "root"    # ignore etcd username if not enable etcd auth
@@ -68,9 +68,9 @@ oidc:
   expire_time: 3600
   client_id: dashboard
   client_secret: dashboard
-  auth_url: http://{{ZGSM_BACKEND}}:{{PORT_KEYCLOAK}}/auth/realms/master/protocol/openid-connect/auth
-  token_url: http://{{ZGSM_BACKEND}}:{{PORT_KEYCLOAK}}/auth/realms/master/protocol/openid-connect/token
-  user_info_url: http://{{ZGSM_BACKEND}}:{{PORT_KEYCLOAK}}/auth/realms/master/protocol/openid-connect/userinfo
+  auth_url: http://keycloak:{{PORT_KEYCLOAK}}/auth/realms/master/protocol/openid-connect/auth
+  token_url: http://keycloak:{{PORT_KEYCLOAK}}/auth/realms/master/protocol/openid-connect/token
+  user_info_url: http://keycloak:{{PORT_KEYCLOAK}}/auth/realms/master/protocol/openid-connect/userinfo
   redirect_url: http://127.0.0.1:9000/apisix/admin/oidc/callback
   scope: openid
 

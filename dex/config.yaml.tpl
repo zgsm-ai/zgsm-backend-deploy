@@ -1,4 +1,4 @@
-issuer: http://{{ZGSM_BACKEND}}:5556/dex
+issuer: http://dex:5556/dex
 storage:
   type: postgres
   config:
@@ -20,7 +20,7 @@ enablePasswordDB: false
 staticClients:
   - id: "1449280978"
     redirectURIs:
-      - http://{{ZGSM_BACKEND}}:{{PORT_APISIX_ENTRY}}/login/ok
+      - http://apisix:{{PORT_APISIX_ENTRY}}/login/ok
     name: 'Dex Login Application'
     secret: "49a2e85e8fbe81ce5bf768889c8e2a9b"
     grantTypes:
@@ -40,7 +40,7 @@ staticClients:
 #     config:
 #       clientID: "1449280978"
 #       clientSecret: "49a2e85e8fbe81ce5bf768889c8e2a9b"
-#       redirectURI: http://{{ZGSM_BACKEND}}:5556/dex/callback
+#       redirectURI: http://dex:5556/dex/callback
 #       tokenURL: {{redirect_url}}
 #       authorizationURL: {{authorizationURL}}
 #       userInfoURL: {{userInfoURL}}

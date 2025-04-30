@@ -74,7 +74,7 @@ curl -i http://$APISIX_ADDR/apisix/admin/routes/realms-redirect \
         "client_id": "'"$OIDC_CLIENT_ID"'",
         "client_secret": "'"$OIDC_CLIENT_SECRET"'",
         "discovery": "'"http://$OIDC_HOST:$OIDC_PORT""$OIDC_BASE_URL"'/.well-known/openid-configuration",
-        "redirect_uri": "'"http://$ZGSM_BACKEND:$PORT_APISIX_ENTRY"'/login/oidc",
+        "redirect_uri": "'"http://apisix:$PORT_APISIX_ENTRY"'/login/oidc",
         "scope": "openid email profile",
         "session": {
           "secret": "zgsm-oidc-secret"

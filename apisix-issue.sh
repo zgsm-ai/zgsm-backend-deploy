@@ -10,7 +10,7 @@
 curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT  -d '{
     "id": "portal",
     "nodes": {
-        "'"$ZGSM_BACKEND:$PORT_PORTAL"'": 1
+        "'"portal:$PORT_PORTAL"'": 1
     },
     "type": "roundrobin"
 }'

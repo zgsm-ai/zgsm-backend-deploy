@@ -41,7 +41,7 @@ services:
       TZ: "Asia/Shanghai"
       ETCD_ENABLE_V2: "true"
       ALLOW_NONE_AUTHENTICATION: "yes"
-      ETCD_ADVERTISE_CLIENT_URLS: "http://{{ZGSM_BACKEND}}:{{PORT_ETCD}}"
+      ETCD_ADVERTISE_CLIENT_URLS: "http://etcd:{{PORT_ETCD}}"
       ETCD_LISTEN_CLIENT_URLS: "http://0.0.0.0:{{PORT_ETCD}}"
     ports:
       - "{{PORT_ETCD}}:{{PORT_ETCD}}/tcp"
@@ -81,7 +81,7 @@ services:
     restart: always
     environment:
       TZ: "Asia/Shanghai"
-      DB_ADDR: "{{ZGSM_BACKEND}}"
+      DB_ADDR: "postgres"
       DB_PORT: "{{PORT_POSTGRES}}"
       DB_VENDOR: "postgres"
       KEYCLOAK_ADMIN: "admin"
@@ -167,13 +167,13 @@ services:
     environment:
       - TZ=Asia/Shanghai
       - CACHE_DB=chatgpt
-      - REDIS_URL=redis://{{ZGSM_BACKEND}}:{{PORT_REDIS}}/0
+      - REDIS_URL=redis://redis:{{PORT_REDIS}}/0
       - SERVE_THREADS=200
       - SERVE_CONNECTION_LIMIT=512
-      - PG_URL={{ZGSM_BACKEND}}:{{PORT_POSTGRES}}
+      - PG_URL=postgres:{{PORT_POSTGRES}}
       - DB_NAME=chatgpt
-      - DATABASE_URI=postgresext+pool://keycloak:{{PASSWORD_POSTGRES}}@{{ZGSM_BACKEND}}/chatgpt
-      - ES_SERVER=http://{{ZGSM_BACKEND}}:{{PORT_ES}}
+      - DATABASE_URI=postgresext+pool://keycloak:{{PASSWORD_POSTGRES}}@postgres/chatgpt
+      - ES_SERVER=http://es:{{PORT_ES}}
       - ES_PASSWORD={{PASSWORD_ELASTIC}}
       - DEVOPS_URL=
       - GEVENT_SUPPORT=True
@@ -185,40 +185,40 @@ services:
     networks:
       - shenma
 
-#  chatgpt:
-#    image: zgsm/chat-server:1.2.0
-#    command: ["/sbin/entrypoint.sh", "app:start"]
-#    restart: always
-#    volumes:
-#      - ./chatgpt/server:/server
-#      - ./chatgpt/supervisor:/var/log/supervisor
-#      - ./chatgpt/logs:/server/logs
-#      - ./chatgpt/custom.yml:/custom.yml
-#    ports:
-#      - "{{PORT_CHATGPT_API}}:5000/tcp"
-#      - "{{PORT_CHATGPT_WS}}:8765/tcp"
-#      - "5555:5555/tcp"
-#    environment:
-#      - TZ=Asia/Shanghai
-#      - CACHE_DB=chatgpt
-#      - REDIS_URL=redis://{{ZGSM_BACKEND}}:{{PORT_REDIS}}/0
-#      - SERVE_THREADS=200
-#      - SERVE_CONNECTION_LIMIT=512
-#      - PG_URL={{ZGSM_BACKEND}}:{{PORT_POSTGRES}}
-#      - DB_NAME=chatgpt
-#      - DATABASE_URI=postgresext+pool://keycloak:{{PASSWORD_POSTGRES}}@{{ZGSM_BACKEND}}/chatgpt
-#      - ES_SERVER=http://{{ZGSM_BACKEND}}:{{PORT_ES}}
-#      - ES_PASSWORD={{PASSWORD_ELASTIC}}
-#      - CUSTOM_CONFIG_FILE=/custom.yml
-#      - DEFAULT_MODEL_NAME={{CHAT_MODEL}}
-#      - GEVENT_SUPPORT=True
-#      - NO_COLOR=1
-#      - DEPLOYMENT_TYPE=all
-#    depends_on:
-#      - redis
-#      - postgres
-#    networks:
-#      - shenma
+  chatgpt:
+    image: zgsm/chat-server:1.2.0
+    command: ["/sbin/entrypoint.sh", "app:start"]
+    restart: always
+    volumes:
+      - ./chatgpt/server:/server
+      - ./chatgpt/supervisor:/var/log/supervisor
+      - ./chatgpt/logs:/server/logs
+      - ./chatgpt/custom.yml:/custom.yml
+    ports:
+      - "{{PORT_CHATGPT_API}}:5000/tcp"
+      - "{{PORT_CHATGPT_WS}}:8765/tcp"
+      - "5555:5555/tcp"
+    environment:
+      - TZ=Asia/Shanghai
+      - CACHE_DB=chatgpt
+      - REDIS_URL=redis://redis:{{PORT_REDIS}}/0
+      - SERVE_THREADS=200
+      - SERVE_CONNECTION_LIMIT=512
+      - PG_URL=postgres:{{PORT_POSTGRES}}
+      - DB_NAME=chatgpt
+      - DATABASE_URI=postgresext+pool://keycloak:{{PASSWORD_POSTGRES}}@postgres/chatgpt
+      - ES_SERVER=http://es:{{PORT_ES}}
+      - ES_PASSWORD={{PASSWORD_ELASTIC}}
+      - CUSTOM_CONFIG_FILE=/custom.yml
+      - DEFAULT_MODEL_NAME={{CHAT_MODEL}}
+      - GEVENT_SUPPORT=True
+      - NO_COLOR=1
+      - DEPLOYMENT_TYPE=all
+    depends_on:
+      - redis
+      - postgres
+    networks:
+      - shenma
 
   fauxpilot:
     image: zgsm/copilot_proxy:1.5.15
@@ -244,7 +244,7 @@ services:
       - MAX_TOKENS=500
       - MULTI_LINE_STREAM_K=6
       - ENABLE_REDIS=False
-      - REDIS_HOST={{ZGSM_BACKEND}}
+      - REDIS_HOST=redis
       - REDIS_PORT={{PORT_REDIS}}
       - REDIS_DB=0
       - REDIS_PWD="{{PASSWORD_REDIS}}"
@@ -311,7 +311,7 @@ services:
   kibana:
     image: docker.elastic.co/kibana/kibana:8.9.0
     environment:
-      - ELASTICSEARCH_HOSTS=http://{{ZGSM_BACKEND}}:{{PORT_ES}}  # Point to Elasticsearch
+      - ELASTICSEARCH_HOSTS=http://es:{{PORT_ES}}  # Point to Elasticsearch
       - ELASTICSEARCH_SERVICEACCOUNTTOKEN={{ENROLLMENT_TOKEN}}
     ports:
       - "5601:5601"  # Kibana port
