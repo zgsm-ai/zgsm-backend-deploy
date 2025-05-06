@@ -10,6 +10,11 @@ services:
       - ./apisix/config.yaml:/usr/local/apisix/conf/config.yaml:ro
     depends_on:
       - etcd
+      - portal
+      - chatgpt
+      - trampoline
+      - kaptcha
+      - keycloak
     ports:
       - "{{PORT_APISIX_API}}:9180/tcp"
       - "{{PORT_APISIX_ENTRY}}:9080/tcp"
@@ -41,7 +46,7 @@ services:
       TZ: "Asia/Shanghai"
       ETCD_ENABLE_V2: "true"
       ALLOW_NONE_AUTHENTICATION: "yes"
-      ETCD_ADVERTISE_CLIENT_URLS: "http://etcd:{{PORT_ETCD}}"
+      ETCD_ADVERTISE_CLIENT_URLS: "http://127.0.0.1:{{PORT_ETCD}}"
       ETCD_LISTEN_CLIENT_URLS: "http://0.0.0.0:{{PORT_ETCD}}"
     ports:
       - "{{PORT_ETCD}}:{{PORT_ETCD}}/tcp"
@@ -87,12 +92,13 @@ services:
       KEYCLOAK_ADMIN: "admin"
       KEYCLOAK_ADMIN_PASSWORD: "{{PASSWORD_KEYCLOAK}}"
     ports:
-      - "{{PORT_KEYCLOAK}}:8080/tcp"
+      - "{{PORT_KEYCLOAK}}:{{PORT_KEYCLOAK_INTERNAL}}/tcp"
     volumes:
       - ./keycloak/providers:/opt/keycloak/providers
       - ./keycloak/keycloak.conf:/opt/keycloak/conf/keycloak.conf:ro
     depends_on:
       - postgres
+      - redis
     networks:
       - shenma
 
@@ -120,21 +126,21 @@ services:
       - ./portal/data:/var/www
       - ./portal/nginx.conf:/etc/nginx/nginx.conf
     ports:
-      - "{{PORT_PORTAL}}:80/tcp"
+      - "{{PORT_PORTAL}}:{{PORT_PORTAL_INTERNAL}}/tcp"
     networks:
       - shenma
 
-#  trampoline:
-#    image: zgsm/trampoline:1.0.241018
-#    restart: always
-#    environment:
-#      TZ: "Asia/Shanghai"
-#    volumes:
-#      - ./trampoline/data:/opt/trampoline/resources
-#    ports:
-#      - "{{PORT_TRAMPOLINE}}:8080/tcp"
-#    networks:
-#      - shenma
+  trampoline:
+    image: zgsm/trampoline:1.0.241018
+    restart: always
+    environment:
+      TZ: "Asia/Shanghai"
+    volumes:
+      - ./trampoline/data:/opt/trampoline/resources
+    ports:
+      - "{{PORT_TRAMPOLINE}}:{{PORT_TRAMPOLINE_INTERNAL}}/tcp"
+    networks:
+      - shenma
 
   kaptcha:
     image: zgsm/kaptcha-generator:0.6.0
@@ -147,6 +153,8 @@ services:
       SPRING_CONFIG_LOCATION: "/root/kaptcha/application.yaml"
     ports:
       - "9696:9696/tcp"
+    depends_on:
+      - redis
     networks:
       - shenma
 
@@ -160,10 +168,6 @@ services:
       - ./chatgpt/server:/server
       - ./chatgpt/supervisor:/var/log/supervisor
       - ./chatgpt/logs:/server/logs
-    ports:
-      - "{{PORT_CHATGPT_API}}:5000/tcp"
-      - "{{PORT_CHATGPT_WS}}:8765/tcp"
-      - "5555:5555/tcp"
     environment:
       - TZ=Asia/Shanghai
       - CACHE_DB=chatgpt
@@ -182,6 +186,7 @@ services:
     depends_on:
       - redis
       - postgres
+      - es
     networks:
       - shenma
 
@@ -217,6 +222,7 @@ services:
     depends_on:
       - redis
       - postgres
+      - es
     networks:
       - shenma
 
@@ -231,7 +237,7 @@ services:
       - ./fauxpilot/api_manager.py:/python-docker/thrid_platform/openai_server/api_manager.py
       - ./fauxpilot/model_client_service.py:/python-docker/services/model_client_service.py
     ports:
-      - "{{PORT_FAUXPILOT}}:5000/tcp"
+      - "{{PORT_FAUXPILOT}}:{{PORT_FAUXPILOT_INTERNAL}}/tcp"
     environment:
       - TZ=Asia/Shanghai
       - THRESHOLD_SCORE=0.3
@@ -266,6 +272,8 @@ services:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "{{PORT_PROMETHEUS}}:9090"
+    depends_on:
+      - apisix
     networks:
       - shenma
 
@@ -280,6 +288,9 @@ services:
       - "./grafana/provisioning:/etc/grafana/provisioning"
       - "./grafana/dashboards:/var/lib/grafana/dashboards"
       - "./grafana/config/grafana.ini:/etc/grafana/grafana.ini"
+    depends_on:
+      - prometheus
+      - es
     networks:
       - shenma
 

@@ -5,7 +5,7 @@
 curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT  -d '{
     "id": "copilot",
     "nodes": {
-      "'"fauxpilot:$PORT_FAUXPILOT"'": 1
+      "'"fauxpilot:$PORT_FAUXPILOT_INTERNAL"'": 1
     },
     "type": "roundrobin"
   }'
