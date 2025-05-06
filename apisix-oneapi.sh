@@ -30,7 +30,7 @@ done
 curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT  -d '{
     "id": "one-api",
     "nodes": {
-      "'"$ZGSM_BACKEND:$ONE_API_PORT"'": 1
+      "'"one-api:$ONE_API_PORT"'": 1
     },
     "type": "roundrobin"
   }'
@@ -55,7 +55,7 @@ curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d
       "response-rewrite": {
           "headers": {
               "set": {
-                    "Location": "'"http://$ZGSM_BACKEND:$PORT_APISIX_ENTRY"'/login/vscode"
+                    "Location": "'"http://apisix:$PORT_APISIX_ENTRY"'/login/vscode"
                 }
             },
             "status_code": 302,

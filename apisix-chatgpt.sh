@@ -30,7 +30,7 @@ done
 #curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT  -d '{
 #    "id": "chatgpt",
 #    "nodes": {
-#      "'"$ZGSM_BACKEND:$PORT_CHATGPT_API"'": 1
+#      "'"chatgpt:$PORT_CHATGPT_API"'": 1
 #    },
 #    "type": "roundrobin"
 #  }'
@@ -39,7 +39,7 @@ done
 curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT  -d '{
     "id": "websocket",
     "nodes": {
-      "'"$ZGSM_BACKEND:$PORT_CHATGPT_WS"'": 1
+      "'"chatgpt:$PORT_CHATGPT_WS"'": 1
     },
     "type": "roundrobin"
   }'

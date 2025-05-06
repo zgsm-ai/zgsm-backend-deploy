@@ -5,7 +5,7 @@
 curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT  -d '{
     "id": "copilot",
     "nodes": {
-      "'"$ZGSM_BACKEND:$PORT_FAUXPILOT"'": 1
+      "'"fauxpilot:$PORT_FAUXPILOT_INTERNAL"'": 1
     },
     "type": "roundrobin"
   }'
@@ -29,7 +29,7 @@ curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d
       "response-rewrite": {
           "headers": {
               "set": {
-                    "Location": "'"http://$ZGSM_BACKEND:$PORT_APISIX_ENTRY"'/login/vscode"
+                    "Location": "'"http://apisix:$PORT_APISIX_ENTRY"'/login/vscode"
                 }
             },
             "status_code": 302,

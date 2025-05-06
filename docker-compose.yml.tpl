@@ -10,6 +10,11 @@ services:
       - ./apisix/config.yaml:/usr/local/apisix/conf/config.yaml:ro
     depends_on:
       - etcd
+      - portal
+      - chatgpt
+      - trampoline
+      - kaptcha
+      - keycloak
     ports:
       - "{{PORT_APISIX_API}}:9180/tcp"
       - "{{PORT_APISIX_ENTRY}}:9080/tcp"
@@ -41,7 +46,7 @@ services:
       TZ: "Asia/Shanghai"
       ETCD_ENABLE_V2: "true"
       ALLOW_NONE_AUTHENTICATION: "yes"
-      ETCD_ADVERTISE_CLIENT_URLS: "http://{{ZGSM_BACKEND}}:{{PORT_ETCD}}"
+      ETCD_ADVERTISE_CLIENT_URLS: "http://127.0.0.1:{{PORT_ETCD}}"
       ETCD_LISTEN_CLIENT_URLS: "http://0.0.0.0:{{PORT_ETCD}}"
     ports:
       - "{{PORT_ETCD}}:{{PORT_ETCD}}/tcp"
@@ -81,18 +86,19 @@ services:
     restart: always
     environment:
       TZ: "Asia/Shanghai"
-      DB_ADDR: "{{ZGSM_BACKEND}}"
+      DB_ADDR: "postgres"
       DB_PORT: "{{PORT_POSTGRES}}"
       DB_VENDOR: "postgres"
       KEYCLOAK_ADMIN: "admin"
       KEYCLOAK_ADMIN_PASSWORD: "{{PASSWORD_KEYCLOAK}}"
     ports:
-      - "{{PORT_KEYCLOAK}}:8080/tcp"
+      - "{{PORT_KEYCLOAK}}:{{PORT_KEYCLOAK_INTERNAL}}/tcp"
     volumes:
       - ./keycloak/providers:/opt/keycloak/providers
       - ./keycloak/keycloak.conf:/opt/keycloak/conf/keycloak.conf:ro
     depends_on:
       - postgres
+      - redis
     networks:
       - shenma
 
@@ -120,21 +126,21 @@ services:
       - ./portal/data:/var/www
       - ./portal/nginx.conf:/etc/nginx/nginx.conf
     ports:
-      - "{{PORT_PORTAL}}:80/tcp"
+      - "{{PORT_PORTAL}}:{{PORT_PORTAL_INTERNAL}}/tcp"
     networks:
       - shenma
 
-#  trampoline:
-#    image: zgsm/trampoline:1.0.241018
-#    restart: always
-#    environment:
-#      TZ: "Asia/Shanghai"
-#    volumes:
-#      - ./trampoline/data:/opt/trampoline/resources
-#    ports:
-#      - "{{PORT_TRAMPOLINE}}:8080/tcp"
-#    networks:
-#      - shenma
+  trampoline:
+    image: zgsm/trampoline:1.0.241018
+    restart: always
+    environment:
+      TZ: "Asia/Shanghai"
+    volumes:
+      - ./trampoline/data:/opt/trampoline/resources
+    ports:
+      - "{{PORT_TRAMPOLINE}}:{{PORT_TRAMPOLINE_INTERNAL}}/tcp"
+    networks:
+      - shenma
 
   kaptcha:
     image: zgsm/kaptcha-generator:0.6.0
@@ -147,6 +153,8 @@ services:
       SPRING_CONFIG_LOCATION: "/root/kaptcha/application.yaml"
     ports:
       - "9696:9696/tcp"
+    depends_on:
+      - redis
     networks:
       - shenma
 
@@ -160,20 +168,16 @@ services:
       - ./chatgpt/server:/server
       - ./chatgpt/supervisor:/var/log/supervisor
       - ./chatgpt/logs:/server/logs
-    ports:
-      - "{{PORT_CHATGPT_API}}:5000/tcp"
-      - "{{PORT_CHATGPT_WS}}:8765/tcp"
-      - "5555:5555/tcp"
     environment:
       - TZ=Asia/Shanghai
       - CACHE_DB=chatgpt
-      - REDIS_URL=redis://{{ZGSM_BACKEND}}:{{PORT_REDIS}}/0
+      - REDIS_URL=redis://redis:{{PORT_REDIS}}/0
       - SERVE_THREADS=200
       - SERVE_CONNECTION_LIMIT=512
-      - PG_URL={{ZGSM_BACKEND}}:{{PORT_POSTGRES}}
+      - PG_URL=postgres:{{PORT_POSTGRES}}
       - DB_NAME=chatgpt
-      - DATABASE_URI=postgresext+pool://keycloak:{{PASSWORD_POSTGRES}}@{{ZGSM_BACKEND}}/chatgpt
-      - ES_SERVER=http://{{ZGSM_BACKEND}}:{{PORT_ES}}
+      - DATABASE_URI=postgresext+pool://keycloak:{{PASSWORD_POSTGRES}}@postgres/chatgpt
+      - ES_SERVER=http://es:{{PORT_ES}}
       - ES_PASSWORD={{PASSWORD_ELASTIC}}
       - DEVOPS_URL=
       - GEVENT_SUPPORT=True
@@ -182,43 +186,45 @@ services:
     depends_on:
       - redis
       - postgres
+      - es
     networks:
       - shenma
 
-#  chatgpt:
-#    image: zgsm/chat-server:1.2.0
-#    command: ["/sbin/entrypoint.sh", "app:start"]
-#    restart: always
-#    volumes:
-#      - ./chatgpt/server:/server
-#      - ./chatgpt/supervisor:/var/log/supervisor
-#      - ./chatgpt/logs:/server/logs
-#      - ./chatgpt/custom.yml:/custom.yml
-#    ports:
-#      - "{{PORT_CHATGPT_API}}:5000/tcp"
-#      - "{{PORT_CHATGPT_WS}}:8765/tcp"
-#      - "5555:5555/tcp"
-#    environment:
-#      - TZ=Asia/Shanghai
-#      - CACHE_DB=chatgpt
-#      - REDIS_URL=redis://{{ZGSM_BACKEND}}:{{PORT_REDIS}}/0
-#      - SERVE_THREADS=200
-#      - SERVE_CONNECTION_LIMIT=512
-#      - PG_URL={{ZGSM_BACKEND}}:{{PORT_POSTGRES}}
-#      - DB_NAME=chatgpt
-#      - DATABASE_URI=postgresext+pool://keycloak:{{PASSWORD_POSTGRES}}@{{ZGSM_BACKEND}}/chatgpt
-#      - ES_SERVER=http://{{ZGSM_BACKEND}}:{{PORT_ES}}
-#      - ES_PASSWORD={{PASSWORD_ELASTIC}}
-#      - CUSTOM_CONFIG_FILE=/custom.yml
-#      - DEFAULT_MODEL_NAME={{CHAT_MODEL}}
-#      - GEVENT_SUPPORT=True
-#      - NO_COLOR=1
-#      - DEPLOYMENT_TYPE=all
-#    depends_on:
-#      - redis
-#      - postgres
-#    networks:
-#      - shenma
+  chatgpt:
+    image: zgsm/chat-server:1.2.0
+    command: ["/sbin/entrypoint.sh", "app:start"]
+    restart: always
+    volumes:
+      - ./chatgpt/server:/server
+      - ./chatgpt/supervisor:/var/log/supervisor
+      - ./chatgpt/logs:/server/logs
+      - ./chatgpt/custom.yml:/custom.yml
+    ports:
+      - "{{PORT_CHATGPT_API}}:5000/tcp"
+      - "{{PORT_CHATGPT_WS}}:8765/tcp"
+      - "5555:5555/tcp"
+    environment:
+      - TZ=Asia/Shanghai
+      - CACHE_DB=chatgpt
+      - REDIS_URL=redis://redis:{{PORT_REDIS}}/0
+      - SERVE_THREADS=200
+      - SERVE_CONNECTION_LIMIT=512
+      - PG_URL=postgres:{{PORT_POSTGRES}}
+      - DB_NAME=chatgpt
+      - DATABASE_URI=postgresext+pool://keycloak:{{PASSWORD_POSTGRES}}@postgres/chatgpt
+      - ES_SERVER=http://es:{{PORT_ES}}
+      - ES_PASSWORD={{PASSWORD_ELASTIC}}
+      - CUSTOM_CONFIG_FILE=/custom.yml
+      - DEFAULT_MODEL_NAME={{CHAT_MODEL}}
+      - GEVENT_SUPPORT=True
+      - NO_COLOR=1
+      - DEPLOYMENT_TYPE=all
+    depends_on:
+      - redis
+      - postgres
+      - es
+    networks:
+      - shenma
 
   fauxpilot:
     image: zgsm/copilot_proxy:1.5.15
@@ -231,7 +237,7 @@ services:
       - ./fauxpilot/api_manager.py:/python-docker/thrid_platform/openai_server/api_manager.py
       - ./fauxpilot/model_client_service.py:/python-docker/services/model_client_service.py
     ports:
-      - "{{PORT_FAUXPILOT}}:5000/tcp"
+      - "{{PORT_FAUXPILOT}}:{{PORT_FAUXPILOT_INTERNAL}}/tcp"
     environment:
       - TZ=Asia/Shanghai
       - THRESHOLD_SCORE=0.3
@@ -244,7 +250,7 @@ services:
       - MAX_TOKENS=500
       - MULTI_LINE_STREAM_K=6
       - ENABLE_REDIS=False
-      - REDIS_HOST={{ZGSM_BACKEND}}
+      - REDIS_HOST=redis
       - REDIS_PORT={{PORT_REDIS}}
       - REDIS_DB=0
       - REDIS_PWD="{{PASSWORD_REDIS}}"
@@ -266,6 +272,8 @@ services:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "{{PORT_PROMETHEUS}}:9090"
+    depends_on:
+      - apisix
     networks:
       - shenma
 
@@ -280,6 +288,9 @@ services:
       - "./grafana/provisioning:/etc/grafana/provisioning"
       - "./grafana/dashboards:/var/lib/grafana/dashboards"
       - "./grafana/config/grafana.ini:/etc/grafana/grafana.ini"
+    depends_on:
+      - prometheus
+      - es
     networks:
       - shenma
 
@@ -311,7 +322,7 @@ services:
   kibana:
     image: docker.elastic.co/kibana/kibana:8.9.0
     environment:
-      - ELASTICSEARCH_HOSTS=http://{{ZGSM_BACKEND}}:{{PORT_ES}}  # Point to Elasticsearch
+      - ELASTICSEARCH_HOSTS=http://es:{{PORT_ES}}  # Point to Elasticsearch
       - ELASTICSEARCH_SERVICEACCOUNTTOKEN={{ENROLLMENT_TOKEN}}
     ports:
       - "5601:5601"  # Kibana port

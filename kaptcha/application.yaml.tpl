@@ -5,7 +5,7 @@ server:
 
 spring:
   redis:
-    host: {{ZGSM_BACKEND}}
+    host: redis
     port: 6379
     password:  #Redis server connection password (default is empty)
     timeout: 360000 #Connection timeout (milliseconds)

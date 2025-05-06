@@ -14,7 +14,7 @@
 curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT  -d '{
     "id": "portal",
     "nodes": {
-        "'"$ZGSM_BACKEND:$PORT_PORTAL"'": 1
+        "'"portal:$PORT_PORTAL_INTERNAL"'": 1
     },
     "type": "roundrobin"
 }'
@@ -23,7 +23,7 @@ curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT 
 curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT  -d '{
     "id": "trampoline",
     "nodes": {
-        "'"$ZGSM_BACKEND:$PORT_TRAMPOLINE"'": 1
+        "'"trampoline:$PORT_TRAMPOLINE_INTERNAL"'": 1
     },
     "type": "roundrobin"
 }'
@@ -32,7 +32,7 @@ curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT 
 curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT  -d '{
     "id": "kaptcha",
     "nodes": {
-        "'"$ZGSM_BACKEND:9696"'": 1
+        "'"kaptcha:9696"'": 1
     },
     "type": "roundrobin"
 }'
@@ -41,7 +41,7 @@ curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT 
 curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT  -d '{
     "id": "keycloak",
     "nodes": {
-        "'"$ZGSM_BACKEND:$PORT_KEYCLOAK"'": 1
+        "'"keycloak:$PORT_KEYCLOAK_INTERNAL"'": 1
     },
     "type": "roundrobin"
 }'

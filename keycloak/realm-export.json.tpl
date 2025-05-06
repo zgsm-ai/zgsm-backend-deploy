@@ -255,18 +255,18 @@
       "clientId": "apisix",
       "name": "apisix",
       "description": "神码入口网关apisix",
-      "rootUrl": "http://{{ZGSM_BACKEND}}:{{PORT_APISIX_ENTRY}}",
+      "rootUrl": "http://apisix:{{PORT_APISIX_ENTRY}}",
       "adminUrl": "",
-      "baseUrl": "http://{{ZGSM_BACKEND}}:{{PORT_APISIX_ENTRY}}",
+      "baseUrl": "http://apisix:{{PORT_APISIX_ENTRY}}",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": true,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "http://{{ZGSM_BACKEND}}:{{PORT_APISIX_ENTRY}}/*"
+        "http://apisix:{{PORT_APISIX_ENTRY}}/*"
       ],
       "webOrigins": [
-        "http://{{ZGSM_BACKEND}}:{{PORT_APISIX_ENTRY}}"
+        "http://apisix:{{PORT_APISIX_ENTRY}}"
       ],
       "notBefore": 0,
       "bearerOnly": false,
@@ -469,10 +469,10 @@
       "clientAuthenticatorType": "client-secret",
       "secret": "{{KEYCLOAK_CLIENT_SECRET}}",
       "redirectUris": [
-        "http://{{ZGSM_BACKEND}}:{{PORT_APISIX_ENTRY}}/*"
+        "http://apisix:{{PORT_APISIX_ENTRY}}/*"
       ],
       "webOrigins": [
-        "http://{{ZGSM_BACKEND}}:{{PORT_APISIX_ENTRY}}"
+        "http://apisix:{{PORT_APISIX_ENTRY}}"
       ],
       "notBefore": 0,
       "bearerOnly": false,
@@ -2046,7 +2046,7 @@
     "actionTokenGeneratedByUserLifespan-idp-verify-account-via-email": "",
     "parRequestUriLifespan": "60",
     "clientSessionMaxLifespan": "0",
-    "frontendUrl": "http://{{ZGSM_BACKEND}}:{{PORT_APISIX_ENTRY}}",
+    "frontendUrl": "http://apisix:{{PORT_APISIX_ENTRY}}",
     "acr.loa.map": "{}"
   },
   "keycloakVersion": "20.0.5",
