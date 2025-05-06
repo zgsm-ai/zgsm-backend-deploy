@@ -1,30 +1,11 @@
 #!/bin/sh
 
 . ./configure.sh
+. ./utils.sh
 
-# Define maximum wait time (seconds, 0 means infinite wait)
-MAX_WAIT=0
 echo "Checking APISIX service status..."
-start_time=$(date +%s)
-while : ; do
-  # Check service status by detecting if the port is listening
-  if curl -sSf http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" >/dev/null; then
-    echo "APISIX has started successfully (admin interface responds normally)"
-    break
-  fi
-
-  # Timeout detection
-  if [ $MAX_WAIT -ne 0 ]; then
-    current_time=$(date +%s)
-    if (( current_time - start_time > MAX_WAIT )); then
-      echo "Error: APISIX startup not detected within ${MAX_WAIT} seconds"
-      exit 1
-    fi
-  fi
-
-  echo "Waiting for APISIX to start... (waited $(( $(date +%s) - start_time )) seconds)"
-  sleep 5
-done
+retry "curl -sSf http://$APISIX_ADDR/apisix/admin/routes -H '$AUTH' -H '$TYPE' >/dev/null" 120 5 || fatal "Waiting for APISIX start-up completion timed out"
+echo "APISIX has started successfully (Admin API response normal)"
 
 # chatgpt RESTful API port
 #curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT  -d '{

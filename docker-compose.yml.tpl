@@ -162,8 +162,6 @@ services:
     image: zgsm/chat-server:1.2.0
     command: ["/sbin/entrypoint.sh", "app:init"]
     restart: no
-    profiles:
-      - initdb
     volumes:
       - ./chatgpt/server:/server
       - ./chatgpt/supervisor:/var/log/supervisor
@@ -184,9 +182,7 @@ services:
       - NO_COLOR=1
       - DEPLOYMENT_TYPE=all
     depends_on:
-      - redis
       - postgres
-      - es
     networks:
       - shenma
 
