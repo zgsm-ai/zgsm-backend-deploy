@@ -1,15 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    简单介绍
 
-    :作者: 陈烜 42766
-    :时间: 2023/3/24 14:12
-    :修改者: 陈烜 42766
-    :更新时间: 2023/3/24 14:12
-"""
 # flake8: noqa
-
 
 first_categories = """
 006	物联网设备      Internet of Things device   a hardware device that is connected to the internet and has the ability to collect and exchange data with other devices, often through sensors and wireless communication

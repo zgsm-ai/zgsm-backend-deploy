@@ -1,13 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    简单介绍
 
-    :作者: 陈烜 42766
-    :时间: 2023/3/24 14:12
-    :修改者: 陈烜 42766
-    :更新时间: 2023/3/24 14:12
-"""
 import logging
 import os
 from datetime import date
@@ -25,7 +18,7 @@ Current date: {str(date.today())}
 
 class Prompt:
     """
-    Prompt class with methods to construct prompt
+    Prompt class, provides methods for constructing prompts
     """
 
     def __init__(self,
@@ -35,7 +28,7 @@ class Prompt:
                  systems: List[str] = None,
                  model: str = '') -> None:
         """
-        Initialize prompt with base prompt
+        Initialize with base prompts
         """
         self.username = user
         self.ainame = ai
@@ -49,22 +42,22 @@ class Prompt:
         """Returns the number of tokens used by a list of messages."""
         num_tokens = 0
         for message in messages:
-            num_tokens += 4  # every message follows <im_start>{role/name}\n{content}<im_end>\n
+            num_tokens += 4  # Every message follows <im_start>{role/name}\n{content}<im_end>\n format
             for key, value in message.items():
                 num_tokens += compute_tokens(value)
-                if key == "name":  # if there's a name, the role is omitted
-                    num_tokens += -1  # role is always required and always 1 token
-        num_tokens += 2  # every reply is primed with <im_start>assistant
+                if key == "name":  # If there's a name, the role is omitted
+                    num_tokens += -1  # Role is always required and always 1 token
+        num_tokens += 2  # Every reply is primed with <im_start>assistant
 
         return num_tokens
 
     def cut_messages(self, messages):
         """
-        对超大messages信息进行裁剪，保证发给接口的信息tokens数不能超过最大限制
-        :param messages: 问询AI的上下文信息
+        Trim oversized messages to ensure tokens sent to the API do not exceed the maximum limit
+        :param messages: Context information for querying AI
         :return messages:
         """
-        # Check if prompt tokens over max_token
+        # Check if prompt tokens exceed the maximum limit
         max_tokens = get_prompt_max_tokens(self.model)
         over_tokens = True
         max_remove = 1000
@@ -78,46 +71,46 @@ class Prompt:
                 over_tokens = False
                 break
         if messages_cut:
-            logging.warning("【删除历史提问】提问信息超长，自动删除部分最早的用户提问记录")
+            logging.warning("[Deleting Historical Questions] Question information is too long, automatically deleting some of the earliest user question records")
         if len(messages) <= 1:
-            # 用户的提问字符串数量就超上限了，直接mock数据，后续使用
+            # The user's question string exceeds the limit, directly mock data for later use
             messages = [{"role": "assistant", "content": PromptConstant.TOKENS_OVER_LENGTH}]
         elif over_tokens:
-            # 如果删除的信息数量超max_remove之后tokens还是超了,直接mock数据，后续使用
+            # If token count still exceeds after deleting more than max_remove messages, directly mock data for later use
             messages = [{"role": "assistant", "content": PromptConstant.TOKENS_OVER_LENGTH}]
         return messages
 
     def construct_messages(self, history_list: list, new_prompt: str, context_association: bool = True):
         """
-        构造发送给LLM的消息列表
+        Construct message list to send to LLM
 
-        参数:
-        - history_list (list): 聊天历史列表，包含对话历史信息。
-        - new_prompt (str): 用户输入的新提示信息。
-        - context_association (bool): 是否关联上下文信息。默认为True。
+        Parameters:
+        - history_list (list): Chat history list containing dialogue history information.
+        - new_prompt (str): New prompt information input by the user.
+        - context_association (bool): Whether to associate context information. Default is True.
 
-        返回:
-        - tuple: 包含两个元素的元组，第一个元素是构造好的消息列表，第二个元素是消息列表的token数量。
+        Returns:
+        - tuple: A tuple containing two elements, the first is the constructed message list, and the second is the token count of the message list.
 
-        功能描述:
-        1. 初始化一个空的消息列表。
-        2. 将基础提示信息（base_prompt）添加到消息列表中。
-        3. 如果context_association为True，则将聊天历史中的上下文信息添加到消息列表中。
-        4. 将用户输入的新提示信息添加到消息列表中。
-        5. 调用cut_messages方法对消息列表进行裁剪。
-        6. 调用num_tokens_from_messages方法计算消息列表的token数量。
-        7. 返回构造好的消息列表及其token数量。
+        Function description:
+        1. Initialize an empty message list.
+        2. Add base prompt information (base_prompt) to the message list.
+        3. If context_association is True, add context information from chat history to the message list.
+        4. Add the new prompt information input by the user to the message list.
+        5. Call the cut_messages method to trim the message list.
+        6. Call the num_tokens_from_messages method to calculate the token count of the message list.
+        7. Return the constructed message list and its token count.
 
-        注意:
-        - 在添加上下文信息时，仅处理了用户和助手的消息，其他角色的消息可能需要进一步处理。
+        Note:
+        - When adding context information, only user and assistant messages are processed, other role messages may need further handling.
         """
         messages = []
         for system in self.base_prompt:
             messages.append({"role": "system", "content": system})
         if context_association:
-            # 添加上下文
+            # Add context
             for message in history_list:
-                # FIXME: 可能有其他场景
+                # FIXME: There may be other scenarios
                 if message["role"] == self.username or message["role"] == 'user':
                     messages.append({"role": "user", "content": message['content']})
                 if message['role'] == self.ainame or message["role"] == 'assistant':

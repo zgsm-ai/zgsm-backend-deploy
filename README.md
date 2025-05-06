@@ -1,80 +1,80 @@
-# 诸葛神码部署工具(for docker-compose)
+# Shenma Deployment Tool (for docker-compose)
 
-## 简介
+## Introduction
 
-### 整体思路
+### Overall Architecture
 
-诸葛神码采用微服务架构。
+Shenma adopts a microservice architecture.
 
-整个后端系统大概分为三层四块，三层分别是：网关层，服务层，存储层。这三层再加上贯穿三层架构的统一的运维中心，共四大块。
+The backend system is divided into three layers and four components. The three layers are: Gateway Layer, Service Layer, and Storage Layer. These three layers, plus the unified Operation & Maintenance Center that spans all layers, form the four major components.
 
-#### 网关层
+#### Gateway Layer
 
-网关层负责应用分发、负载均衡、流量控制、API授权控制
+The Gateway Layer is responsible for application distribution, load balancing, traffic control, and API authorization control.
 
-- 流量转发，ssl卸载： 推荐使用Sangfor AD，也可以使用其它具有ssl卸载能力的负载均衡设备完成
-- 应用分发、流量控制等: apisix
-- 登录认证、授权控制：keycloak,trampoline,kaptcha
-  - 用户管理组件：keycloak
-  - 登录跳板：trampoline
-  - 登录过程使用的验证码服务：kaptcha
+- Traffic forwarding, SSL offloading: Sangfor AD is recommended, but other load balancing devices with SSL offloading capabilities can also be used
+- Application distribution, traffic control, etc.: APISIX
+- Login authentication, authorization control: Keycloak, Trampoline, Kaptcha
+  - User management component: Keycloak
+  - Login trampoline: Trampoline
+  - CAPTCHA service used in the login process: Kaptcha
 
-#### 服务层
+#### Service Layer
 
-服务层即几大核心服务，目前包括：
+The Service Layer consists of several core services, currently including:
 
-- 负责代码补全的代理后端：completion-server
-- 负责对话服务的代理后端: chat-server
+- Proxy backend responsible for code completion: completion-server
+- Proxy backend responsible for chat services: chat-server
 
-对话和补全，都使用代理后端的目的是，屏蔽不同模型API的细节，并提供额外的上下文处理等能力。
+For both chat and completion, the purpose of using proxy backends is to shield the details of different model APIs and provide additional context processing capabilities.
 
-#### 存储层
+#### Storage Layer
 
-存储层：
+Storage Layer:
 
-- 关系数据库: pgsql
-- 键值数据库: etcd
-- 缓存: redis
+- Relational database: PostgreSQL
+- Key-value database: etcd
+- Cache: Redis
 
-#### 运维中心
+#### Operation & Maintenance Center
 
-运维中心：
+Operation & Maintenance Center:
 
-- grafana(可选)
-- prometheus(可选)
-- kibana(可选)
-- elasticsearch(必选)
+- Grafana (optional)
+- Prometheus (optional)
+- Kibana (optional)
+- Elasticsearch (required)
 
-## 部署步骤
+## Deployment Steps
 
-### 0. 前提条件
+### 0. Prerequisites
 
-#### 使用自己部署的模型实例
+#### Using self-deployed model instances
 
-1. 一台最低配置16C，32G，512G存储的X64硬件设备，具有支持模型推理服务运行的显卡(至少2张RTX4090,或1张A800)
-2. 安装好centos7或wsl ubuntu,nvidia-docker,docker-compose等必要组件
+1. An X64 hardware device with a minimum configuration of 16C, 32G, 512G storage, equipped with a GPU that supports model inference services (at least 2 RTX4090 or 1 A800)
+2. CentOS 7 or WSL Ubuntu installed with necessary components such as nvidia-docker, docker-compose, etc.
 
-#### 使用第三方API服务，或自行部署模型实例
+#### Using third-party API services or self-deploying model instances
 
-1. 一台最低配置16C，32G，512G存储的X64硬件设备
-2. 安装好centos7,docker,docker-compose等必要组件
+1. An X64 hardware device with a minimum configuration of 16C, 32G, 512G storage
+2. CentOS 7 installed with docker, docker-compose, and other necessary components
 
-### 1. 根据需求，修改配置
+### 1. Modify configuration according to requirements
 
 ```sh
 vim deploy.sh
 vim configure.sh
 ```
 
-### 2. 执行部署脚本
+### 2. Execute the deployment script
 ```shell
 bash deploy.sh
 ```
 
-### 3. 在one-api后台页面配置大模型api-key
-     默认的地址 http://localhost:30000，默认账号root，密码123456.
-     点击渠道，新增渠道，选择大模型供应商，填写名字、key即可，其余可不填写。
+### 3. Configure LLM API keys in the One-API backend
+     Default address is http://localhost:30000, default account is root, password is 123456.
+     Click on "Channels", add a new channel, select the LLM provider, fill in the name and key, other fields can be left empty.
 
-### 4. 在zhuge shenma插件配置apisix地址
-    zhuge shenma baseurl: 默认 http://{本机ip}:8090/v1 （注：使用localhost可能有问题，建议ipconfig获取实际IP地址）。
+### 4. Configure APISIX address in Shenma plugin
+    Shenma baseurl: Default is http://{local machine IP}:8090/v1 (Note: Using localhost may cause issues, it's recommended to use ipconfig to get the actual IP address).
 

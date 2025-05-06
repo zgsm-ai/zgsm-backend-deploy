@@ -9,15 +9,15 @@ logger = logging.getLogger(__name__)
 
 
 class Conversation(BaseModel):
-    """会话记录表"""
+    """Conversation Records Table"""
 
     class Meta:
         table_name = 'conversation'
 
-    conversation_id = CharField(verbose_name='会话id')
-    role = CharField(verbose_name='会话数据类型')
-    content = TextField(verbose_name='会话内容')
-    model = CharField(null=True, verbose_name='会话模型')
+    conversation_id = CharField(verbose_name='Conversation ID')
+    role = CharField(verbose_name='Conversation Data Type')
+    content = TextField(verbose_name='Conversation Content')
+    model = CharField(null=True, verbose_name='Conversation Model')
 
     def dict(self, *args, **kwargs):
         data = super().dict()

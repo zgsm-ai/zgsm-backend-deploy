@@ -1,9 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-"""
-@Author  ：范立伟33139
-@Date    ：2023/3/16 14:09
-"""
 
 from flask import Blueprint, request
 
@@ -20,45 +16,45 @@ users = Blueprint('users', __name__)
 @users.route('/current', methods=['GET'])
 def current():
     """
-    当前用户
+    Current user
     ---
     tags:
-      - 用户管理
+      - User Management
     responses:
       200:
-        res: 结果
+        res: Result
     """
     user = ApplicationContext.get_current()
-    return Result.success(message='获取成功', data=user)
+    return Result.success(message='Get Success', data=user)
 
 
 @users.route("/key", methods=["GET", "POST"])
 def generate_api_key():
     """
-    用于获取或重置api key
+    Used to get or reset API key
     ---
     tags:
-      - 用户管理
+      - User Management
     responses:
       200:
-        res: 结果
+        res: Result
     """
     user = ApplicationContext.get_current()
     if request.method == "POST":
         user = users_service.update_api_key(user)
-    return Result.success(message='获取成功', data=user)
+    return Result.success(message='Get Success', data=user)
 
 
 @users.route("/code_completion_log", methods=['POST'])
 def code_completion_log():
     """
-    用于记录 用户在使用 千流ai插件中代码补全 或 生成代码的上报数据。
+    For recording user data when using code completion or generating code in Qianliu AI plugin.
     ---
     tags:
-      - 用户管理
+      - User Management
     responses:
       200:
-        res: 结果
+        res: Result
     """
     user = ApplicationContext.get_current()
     data = request.get_json()
@@ -69,7 +65,7 @@ def code_completion_log():
     data['ide_real_version'] = request.headers.get('ide-real-version', '')
     accept_key = "isAccept"
     if accept_key in data.keys():
-        # 部分场景需要统计用户接收度，如tp的用例优化和ide的划词对话产场景
+        # Some scenarios need to track user acceptance rate, such as TP's use case optimization and IDE's text selection dialog scenarios
         prompt_es_service.insert_prompt(data)
     else:
         code_completion_es_service.insert_code_completion(data)
@@ -79,13 +75,13 @@ def code_completion_log():
 @users.route("/code_copy_log", methods=['POST'])
 def code_copy_log():
     """
-    用于记录 用户在使用 千流ai插件 或者 web 端中 复制代码的上报数据。
+    For recording user data when copying code in Qianliu AI plugin or web interface.
     ---
     tags:
-      - 用户管理
+      - User Management
     responses:
       200:
-        res: 结果
+        res: Result
     """
     user = ApplicationContext.get_current()
     data = request.get_json()

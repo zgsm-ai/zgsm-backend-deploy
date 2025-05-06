@@ -1,10 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-@Author: 黄鹏龙 20036
-@Date  :  2024/07/24
-@Desc : 补全模型处理类
-"""
 
 import time
 import json
@@ -68,35 +63,35 @@ class OpenAIClientStrategy(AbstractModelClientStrategy):
         stream_handler = StreamHandlerFactory.get_stream_handler(context=context_and_intention)
         try:
             for chunk in choices.iter_lines():
-                # 模型请求内容超过最大时间，退出
+                # Exit if model request content exceeds maximum time
                 if int((time.time() - context_and_intention.st) * 1000) >= max_model_cost_time:
                     stream_handler.mark_exception_flag()
                     break
 
-                # 检查到补全内容为空，跳过当前内容
+                # Skip current content if completion content is empty
                 if not chunk:
                     continue
 
                 chunk_text = chunk.decode('utf-8')
-                # 检查到补全正常结束，取消设置异常标记，退出
+                # If completion ends normally, unmark exception flag and exit
                 if self.check_chunk_done(chunk_text):
                     stream_handler.unmark_exception_flag()
                     break
 
-                # 检查到补全内容无效，跳过当前内容
+                # Skip current content if completion content is invalid
                 if not self.check_chunk_content(chunk_text):
                     continue
 
                 shell_text = json.loads(chunk_text[len(OpenAIStreamContent.CHUNK_START_WORD):])['choices'][0]['text']
 
-                # 流式输出过程中，针对单行/多行场景满足特定逻辑下退出补全
+                # During streaming output, exit completion under specific logic for single-line/multi-line scenarios
                 if not stream_handler.handle(shell_text):
-                    logger.info(f"补全流式输出提前终止，内容为: {stream_handler.get_completed_content()}")
+                    logger.info(f"Completion stream output terminated early, content: {stream_handler.get_completed_content()}")
                     break
 
         except Exception as e:
             stream_handler.mark_exception_flag()
-            logger.exception(f"补全流式异常终止，异常信息为: {e}")
+            logger.exception(f"Completion stream abnormally terminated, exception: {e}")
         finally:
             choices.close()
         return stream_handler.get_completed_content_and_handle_ex()
@@ -115,13 +110,13 @@ class LocalClientStrategy(AbstractModelClientStrategy):
                 if int((time.time() - context_and_intention.st) * 1000) >= max_model_cost_time:
                     stream_handler.mark_exception_flag()
                     break
-                # 流式输出过程中，针对单行/多行场景满足特定逻辑下退出补全
+                # During streaming output, exit completion under specific logic for single-line/multi-line scenarios
                 if not stream_handler.handle(c.token.text):
-                    logger.info(f"补全流式输出提前终止，内容为: {stream_handler.get_completed_content()}")
+                    logger.info(f"Completion stream output terminated early, content: {stream_handler.get_completed_content()}")
                     break
         except Exception as e:
             stream_handler.mark_exception_flag()
-            logger.error(f"补全流式异常终止，异常信息为: {e}")
+            logger.error(f"Completion stream abnormally terminated, exception: {e}")
         finally:
             choices.close()
         return stream_handler.get_completed_content_and_handle_ex()

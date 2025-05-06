@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-@Author  : 黄鹏龙
-@Date    : 2024/07/15 15:54
-"""
+
 from typing import List, Optional, Union
 
 import requests

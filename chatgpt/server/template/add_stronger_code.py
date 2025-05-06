@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# 生成健壮代码模板
+# Generate Robust Code Template
 INITIAL_PROMPT = """
 ```{language}
 {selectedText}

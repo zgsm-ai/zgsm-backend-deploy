@@ -1,13 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    简单介绍
 
-    :作者: 苏德利 16646
-    :时间: 2023/3/14 11:59
-    :修改者: 苏德利 16646
-    :更新时间: 2023/3/14 11:59
-"""
 import logging
 import inspect
 import os
@@ -30,7 +23,7 @@ def sort_models(models):
     ordering = list()
 
     def dfs(model):
-        # peewee.sort_models 在 model in seen 这类相等判断时有迷之BUG，导致输出不对，这里采用 table_name 的判断
+        # peewee.sort_models has a strange BUG with model in seen equality check, causing incorrect output, so we use table_name check here
         if model._meta.table_name not in seen:
             seen.add(model._meta.table_name)
             for foreign_key, rel_model in model._meta.refs.items():
@@ -58,7 +51,7 @@ def get_tables(with_migration=False):
 
 
 def load_models(package='models'):
-    """读取所有模型"""
+    """Read all models"""
 
     if isinstance(package, str):
         package = import_module(package)
@@ -103,15 +96,15 @@ def truncate_tables(*args, **kwargs):
 
 
 def insert_init_data():
-    print('插入初始化数据')
+    print('Inserting initialization data')
     try:
         with open('runtime/init.sql', 'r') as file:
             sql_script = file.read()
         db.execute_sql(sql_script)
     except Exception as e:
-        print('插入初始化数据失败', e)
+        print('Failed to insert initialization data', e)
     else:
-        print('插入初始化数据完成')
+        print('Initialization data insertion completed')
 
 
 def initialize_db(force=True):
@@ -125,43 +118,43 @@ def initialize_db(force=True):
 def migrate(router, name):
     MigrateHistory.bind(db)
     if not MigrateHistory.table_exists():
-        logging.info("是初始化仓库，需要先创建表,正在创建表")
+        logging.info("This is repository initialization, tables need to be created first, creating tables")
         initialize_db()
     else:
-        logging.info("迁移记录已存在，执行增量迁移")
+        logging.info("Migration records already exist, performing incremental migration")
         migrator = Migrator(router.database)
-        # 待迁移文件
+        # Files to be migrated
         if not router.diff:
-            logging.info('info, 无待迁移文件')
+            logging.info('info, no files pending migration')
             return
         for diff in router.diff:
-            logging.info(f'发现迁移文件{diff}')
+            logging.info(f'Found migration file {diff}')
             migrate_, _ = router.read(diff)
             migrate_(migrator, router.database)
-            # 将更新操作分步骤执行
+            # Execute update operations step by step
             ops = migrator.ops
             for op in ops:
                 migrator.ops = [op]
                 try:
                     migrator.run()
                 except pgError as e:
-                    # 字段重复
+                    # Field duplication
                     if e.pgcode == '42701':
-                        logging.info(f'迁移文件{diff}: {e.pgerror},丢弃此次变更再执行')
-                        # pg回滚事务
+                        logging.info(f'Migration file {diff}: {e.pgerror}, discarding this change and continuing')
+                        # pg rollback transaction
                         db.rollback()
                     else:
                         raise
             try:
                 router.model.create(name=diff)
-                logging.info(f'成功执行迁移文件{diff}')
+                logging.info(f'Successfully executed migration file {diff}')
             except pgError as e:
-                # 主键重复，由于迁移表中数据与迁移文件差异导致，可以提交后再次尝试执行
+                # Primary key duplicate due to differences between migration table data and migration files, can try again after commit
                 if e.pgcode == '23505':
-                    logging.info(f'重试迁移文件{diff}')
+                    logging.info(f'Retrying migration file {diff}')
                     db.commit()
                     router.model.create(name=diff)
-                    logging.info(f'成功执行迁移文件{diff}')
+                    logging.info(f'Successfully executed migration file {diff}')
             if name and name == diff:
                 return
 
@@ -178,7 +171,7 @@ def get_router():
     return Router(db, migrate_dir=MIGRATIONS_DIR)
 
 
-# 开启事务注解
+# Transaction annotation
 def transaction(func):
     @wraps(func)
     def inner(*args, **kwargs):

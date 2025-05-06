@@ -2,11 +2,6 @@
 # -*- coding: utf-8 -*-
 """
     A simple wrapper for the official ChatGPT API
-
-    :作者: 陈烜 42766
-    :时间: 2023/3/24 14:12
-    :修改者: 陈烜 42766
-    :更新时间: 2023/3/24 14:12
 """
 import os
 import re
@@ -43,11 +38,11 @@ def get_content(completion, stream=False):
 
 def get_finish_reason(response):
     """
-    完成原因。每个回复都包含 finish_reason。 finish_reason 可能的值为：
-        stop：API 返回了完整的模型输出。
-        length：由于 max_tokens 参数或标记限制，模型输出不完整。
-        content_filter：由于内容筛选器的标志，省略了内容。
-        null：API 回复仍在进行中或未完成。
+    Completion reason. Each reply includes a finish_reason. Possible values for finish_reason are:
+        stop: The API returned the complete model output.
+        length: The model output is incomplete due to the max_tokens parameter or token limit.
+        content_filter: Content was omitted due to content filter flags.
+        null: The API response is still in progress or incomplete.
     """
     return response["choices"][0]["finish_reason"]
 
@@ -61,7 +56,7 @@ def get_max_tokens(prompt: str) -> int:
 
 class ChatPocket:
     """
-    聊天信息夹袋
+    Chat information pocket
     """
     def __init__(self,
                  model: str = '',
@@ -72,12 +67,12 @@ class ChatPocket:
                  ):
         """
         Initialize chat arguments
-        :param messages: 消息列表,包含迄今为止对话的消息列表。
-        :param temperature: 介于 0 和 2 之间。较高的值（如 0.8）将使输出更加随机，而较低的值（如 0.2）将使其更加集中和确定性。
-        :param stream: 是否流式传输
-        :param max_tokens: 最大token，聊天完成时生成的最大令牌数。输入标记和生成标记的总长度受到模型上下文长度的限制
-        :param seed: 随机种子，整数或者空值，如果指定，我们的系统将尽最大努力进行确定性采样，以便具有相同seed参数的重复请求应返回相同的结果。
-                     不保证确定性。
+        :param messages: Message list, containing the list of messages in the conversation so far.
+        :param temperature: Between 0 and 2. Higher values (e.g., 0.8) make the output more random, while lower values (e.g., 0.2) make it more focused and deterministic.
+        :param stream: Whether to stream the response
+        :param max_tokens: Maximum tokens, the maximum number of tokens to generate for chat completion. The total length of input tokens and generated tokens is limited by the model's context length
+        :param seed: Random seed, an integer or null. If specified, our system will make a best effort to sample deterministically, so that requests with the same seed should return the same result.
+                     Determinism is not guaranteed.
         """
         self.model = model
         self.messages = messages
@@ -89,12 +84,12 @@ class ChatPocket:
         self.start_time = None
         self.first_response_time = None
         self.end_time = None
-    
+
     def save_time(self, start_time: datetime = None,
                  first_response_time: datetime = None,
                  end_time: datetime = None):
         """
-        保存对话过程的三个关键时间点
+        Save the three key time points in the conversation process
         """
         if start_time:
             self.start_time = start_time
@@ -105,7 +100,7 @@ class ChatPocket:
 
     def save_tokens(self, prompt_tokens: int = 0, completion_tokens: int = 0):
         """
-        保存发送给LLM的token数以及LLM输出的token数
+        Save the number of tokens sent to LLM and the number of tokens output by LLM
         """
         if prompt_tokens > 0:
             self.prompt_tokens = prompt_tokens
@@ -114,23 +109,23 @@ class ChatPocket:
 
     def save_completion_tokens(self, completion_tokens: int):
         """
-        保存LLM返回的token数
+        Save the number of tokens returned by LLM
         """
         self.completion_tokens = completion_tokens
 
     def get_usage(self) -> dict:
         """
-        获取和chat.completion通讯消耗的token数
+        Get the number of tokens consumed in communication with chat.completion
         """
         return {
             "prompt_tokens": self.prompt_tokens,
             "completion_tokens": self.completion_tokens,
             "total_tokens": self.prompt_tokens + self.completion_tokens
         }
-    
+
     def to_request(self) -> dict:
         """
-        转换为发送给chat.completion.create接口的数据
+        Convert to data sent to the chat.completion.create interface
         """
         kwargs = {
             'model': self.model,
@@ -147,16 +142,16 @@ class ChatPocket:
         if max_tokens is not None:
             kwargs['max_tokens'] = max_tokens
         return kwargs
-    
+
     def to_record(self) -> dict:
         """
-        转换为记录到ES的数据
+        Convert to data to be recorded in ES
         """
         kwargs = self.to_request()
         req = {
             **self.request_data
         }
-        # 以下三个数据在messages中已经体现，没必要再记录，这些数据可能很大，记录下来浪费空间
+        # The following three data are already reflected in messages, no need to record again, these data may be very large, recording them wastes space
         req.pop("prompt")
         req.pop("code")
         req.pop("query")
@@ -178,10 +173,10 @@ class Chatbot:
     Official ChatGPT API
     """
 
-    def __init__(self, 
-        history: ChatHistory = None, 
+    def __init__(self,
+        history: ChatHistory = None,
         prompter: Prompt = None,
-        model: str = ENGINE, 
+        model: str = ENGINE,
         logger: logging.Logger = None,
     ) -> None:
         """
@@ -190,7 +185,7 @@ class Chatbot:
         self.model = self.get_req_model(model)
         self.history = history
         self.promper = prompter
-        self.continue_count = 0  # 当前续写次数
+        self.continue_count = 0  # Current continuation count
         self.base_url = CONFIG.app.PEDESTAL_SERVER.get('server_url', "") + '/v1'
         self.api_key = CONFIG.app.PEDESTAL_SERVER.get('api_key', "")
         self.openai_client = openai.OpenAI(base_url=self.base_url, api_key=self.api_key)
@@ -201,11 +196,10 @@ class Chatbot:
     @staticmethod
     def mock_complation(stream=False, model=None, content='回答问题', finish_reason="stop"):
         """
-        在env 环境变量配置文件里面 添加 MOCconf.get('mock_complation') K_COMPLATION=True
-        当 key 没有 某种模型权限的时候 构造会话数据，仅用于测试和开发环境，
-        @param stream 流水传输
-        @param model 模型
-        @param content mock内容
+        When the key doesn't have permission for certain models, construct session data, only for testing and development environments
+        @param stream Stream transmission
+        @param model Model
+        @param content Mock content
         """
         created_time = int(time.time())
         if stream:
@@ -246,7 +240,7 @@ class Chatbot:
 
     def _post_chat_completions(self, chat: ChatPocket):
         """
-        发送对话补全请求
+        Send chat completion request
         """
         kwargs = chat.to_request()
         try:
@@ -263,7 +257,7 @@ class Chatbot:
         chat: ChatPocket
     ) -> dict:
         request_data = chat.request_data
-        completion = completion.model_dump()  # 转成字典
+        completion = completion.model_dump()  # Convert to dictionary
         can_continue = False
         if completion.get("choices") is None:
             raise Exception("ChatGPT API returned no choices")
@@ -279,9 +273,9 @@ class Chatbot:
             raise Exception("ChatGPT API returned no text")
 
         usage = completion.get("usage", {})
-        # 本地计算和返回的prompt_tokens有点差别，这里记录本地计算的prompt_tokens与日志打印的同步
+        # There is a slight difference between locally calculated and returned prompt_tokens, here we record the locally calculated prompt_tokens to synchronize with the log output
         chat.save_tokens(completion_tokens=usage.get("completion_tokens"))
-        # 非流式
+        # Non-streaming
         if completion.get('model'):
             request_data['model'] = completion.get('model')
         prompt_es_service.insert_prompt(chat.to_record(), content, usage)
@@ -295,24 +289,24 @@ class Chatbot:
             try:
                 all_content = self.merge_completion_content(response_text, new_response_text)
             except Exception as e:
-                self.logger.info(f'续写处理异常: {str(e)}')
-            # 方法中会直接改变completion中的值
+                self.logger.info(f'Continuation processing exception: {str(e)}')
+            # The method will directly change the value in completion
             check_and_set_key_path(completion, ['choices', 0, 'message', 'content'], all_content)
         return completion
 
     @staticmethod
     def merge_completion_content(response_text, new_response_text):
         """
-        合并原始内容和续写的内容
-        :param response_text: 原始内容
-        :param new_response_text: 续写的内容
-        :return: 合并后的内容
+        Merge original content and continued content
+        :param response_text: Original content
+        :param new_response_text: Continued content
+        :return: Merged content
         """
-        # 上次生成 行列表
+        # Last generation line list
         pre_last_lines = response_text.splitlines()
 
         def get_response_text_lines(rt):
-            # 首行内容、下一行内容
+            # First line content, next line content
             if not isinstance(rt, list):
                 rt = rt.splitlines()
             if len(rt) > 2:
@@ -326,7 +320,7 @@ class Chatbot:
             return one_line, two_line, rt
 
         first_line, second_line, new_response_text_lines = get_response_text_lines(new_response_text)
-        continue_first_line = first_line  # 续写首行
+        continue_first_line = first_line  # First line of continuation
 
         while re.search(r'```(.+)\n$', continue_first_line + '\n') \
                 or continue_first_line == pre_last_lines[-2]:
@@ -349,23 +343,23 @@ class Chatbot:
         chat: ChatPocket
     ):
         """
-        处理补全请求流式返回的结果数据
+        Process the result data returned by the completion request stream
         """
         request_data = chat.request_data
         full_response = ""
-        completion_tokens = 1  # 下面生成器少算了一个，这里由1开始，保持和不开stream的效果一样
-        # 循环节记录
+        completion_tokens = 1  # The generator below underestimates by one, starting with 1 here to keep the same effect as not opening stream
+        # Loop recording
         hash_table = {}
         hash_tokens = {}
         loop_start = -1
         loop_length = -1
         loop_count = 1
-        can_continue = False  # 是否能续写
+        can_continue = False  # Whether continuation is possible
         current_model_is_set = False
         try:
             for response in completion:
-                response = response.model_dump()  # 转成字典
-                if not response.get('id'):  # 第一条为空，跳过处理
+                response = response.model_dump()  # Convert to dictionary
+                if not response.get('id'):  # The first one is empty, skip processing
                     continue
                 if response.get("choices") is None:
                     raise Exception("ChatGPT API returned no choices")
@@ -376,7 +370,7 @@ class Chatbot:
                 if response.get('model') and not current_model_is_set:
                     request_data['model'] = response.get('model')
                     current_model_is_set = True
-                # TODO: 要考虑以下其他模型的情况
+                # TODO: Consider the situation of other models
                 if get_finish_reason(response) == "stop":
                     break
                 if get_finish_reason(response) == 'length':
@@ -390,18 +384,18 @@ class Chatbot:
                 content = get_content(response, True)
                 if content is None:
                     if completion_tokens == 1:
-                        # 第一个为空说明数据全空，这里直接异常中止
+                        # If the first one is empty, it means all data is empty, abort here with an exception
                         raise Exception("ChatGPT API returned no text")
                     else:
-                        # completion token不完整场景的最后一个content为空，这里仅提示异常，直接终止会导致问题历史记录保存失败，影响关联会话
+                        # In the scenario where the completion token is incomplete, the last content is empty, here only prompts an exception, direct termination would cause the problem history record to fail to save, affecting the associated session
                         self.logger.warning('ChatGPT API returned no content.')
                         continue
-                # 判断循环节
+                # Detect loop section
                 if content in hash_table:
                     if loop_start != -1 and content == hash_tokens[completion_tokens - loop_length]:
                         if completion_tokens + 1 - loop_start == loop_length * 2:
                             loop_count += 1
-                            # loop_count循环次数限制
+                            # loop_count loop count limit
                             if loop_count > AskStreamConfig.LOOP_COUNT_LIMIT:
                                 self.logger.warning(f"ChatGPT API returned loop_count>{AskStreamConfig.LOOP_COUNT_LIMIT}")
                                 break
@@ -480,7 +474,7 @@ class Chatbot:
         """
         根据会话历史，构造消息列表messages
         """
-        prompter = self.promper 
+        prompter = self.promper
         if prompter is None:
             prompter = Prompt()
         history = self.history
@@ -563,7 +557,7 @@ class Chatbot:
 
             # 聊天场景换 gpt3.5 的 chat 模型
             messages, prompt_tokens = self.construct_messages(question, context_association)
-            chat = ChatPocket(model=self.model, 
+            chat = ChatPocket(model=self.model,
                 messages=messages,
                 temperature=temperature,
                 stream=True,

@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-@Author  : 刘鹏z10807
-@Date    : 2023/9/26 17:11
-"""
+
 import logging
 
 from bot.bot_util import compute_tokens

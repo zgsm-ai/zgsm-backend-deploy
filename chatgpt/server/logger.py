@@ -1,13 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    注册日志处理模块
 
-    :作者: 苏德利 16646
-    :时间: 2023/3/29 9:47
-    :修改者: 苏德利 16646
-    :更新时间: 2023/3/29 9:47
-"""
 import os
 import logging
 from logging import Formatter

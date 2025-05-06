@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-@Author  : 郑柏春91868
-@Date    : 2024/12/19
-"""
+
 import json
 import logging
 
@@ -26,7 +23,7 @@ feedbacks = Blueprint('feedbacks', __name__)
 
 def get_request_ide_data(data, user) -> dict:
     """
-    获取IDE插件传输的数据
+    Get data transmitted from IDE plugin
     """
     data['user_agent'] = request.headers.get("User-Agent")
     data['host'] = request.headers.get("Host")
@@ -40,22 +37,22 @@ def get_request_ide_data(data, user) -> dict:
     return data
 
 #
-#   用户反馈：
-#   1. 补全：
-#       1.1. 接受补全内容
-#       1.2. 补全结果的性能统计
-#       1.3. 客户端报错
-#   2. 对话/生成
-#       2.1. 评价
-#       2.2. 接受代码，拷贝代码
-#       2.3. 性能统计
-#       2.4. 客户端报错
+#   User Feedback:
+#   1. Completion:
+#       1.1. Accept completion content
+#       1.2. Performance statistics of completion results
+#       1.3. Client errors
+#   2. Conversation/Generation
+#       2.1. Evaluation
+#       2.2. Accept code, copy code
+#       2.3. Performance statistics
+#       2.4. Client errors
 #
 
 @feedbacks.route("/completion", methods=['POST'])
 def feedback_completion():
     """
-    插件端反馈用户在代码补全中接受的代码片段
+    Plugin-side feedback on code snippets accepted by users in code completion
     """
     user = ApplicationContext.get_current()
     data = request.get_json()
@@ -67,7 +64,7 @@ def feedback_completion():
 @feedbacks.route('/completions', methods=['POST'])
 def feedback_completions():
     """
-    插件端反馈一组补全的结果
+    Plugin-side feedback on a set of completion results
     """
 
     return Result.success()
@@ -75,7 +72,7 @@ def feedback_completions():
 @feedbacks.route("/copy_code", methods=['POST'])
 def feedback_copy_code():
     """
-    反馈用户在与AI对话过程中复制了代码
+    Feedback on users copying code during AI conversation
     """
     user = ApplicationContext.get_current()
     data = request.get_json()
@@ -89,7 +86,7 @@ def feedback_copy_code():
 @handle_validate(UserGiveFeedbacks)
 def feedback_evaluate(fields):
     """
-    反馈评价：点赞(like)或反感(dislike)  
+    Feedback evaluation: like or dislike
     """
     try:
       logging.info("feedback_evaluate: ", fields, request.headers)
@@ -114,7 +111,7 @@ def feedback_evaluate(fields):
 @feedbacks.route('/use_code', methods=['POST'])
 def feedback_use_code():
     """
-    用户反馈通过ctrlc,copy,accept,diff等操作使用代码
+    User feedback on using code through operations like Ctrl+C, copy, accept, diff, etc.
     """
     try:
         status = 200
@@ -124,7 +121,7 @@ def feedback_use_code():
             res, status = {"error": "Invalid input: JSON data is required"}, 403
         conv_id = request_data.get("conversation_id")
         accept_num = request_data.get("accept_num") or 0
-        # 新增用户交互行为，兼容旧版本，不做字段校验
+        # Add user interaction behavior, compatible with older versions, no field validation
         behavior = request_data.get("behavior", "")
         if not conv_id or not isinstance(conv_id, str):
             res, status = {"error": "Invalid input: 'conversation_id' must be a non-empty string"}, 403
@@ -150,7 +147,7 @@ def feedback_use_code():
 @feedbacks.route('/issue', methods=['POST'])
 def feedback_issue():
     """
-    反馈问题：问题描述，问题类型，截图，联系电话    
+    Report issues: problem description, issue type, screenshots, contact phone
     """
     user = ApplicationContext.get_current()
     data = request.get_json()

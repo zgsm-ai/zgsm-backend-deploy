@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# 查找代码可能存在问题的提问初始模板
+# Initial template for identifying potential issues in code
 INITIAL_PROMPT = """## Instructions
 You are now working as a code review specialist.
 Only check for obvious bugs, functional issues, performance issues, stability issues.
@@ -19,8 +19,8 @@ Only the following questions are addressed
 Give a description of the problem,
 Give solutions,
 If have fix the code example, give fix code example
-Must reply with Chinese."""
+Must reply with English."""
 
-# 查找代码可能存在问题的连续提问模板
+# Continuous query template for identifying potential issues in code
 RESPONSE_PROMPT = """
 """

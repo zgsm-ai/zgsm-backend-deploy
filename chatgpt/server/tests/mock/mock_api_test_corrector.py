@@ -1,19 +1,12 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# @Time    : 2024/5/21 16:47
-# @Author  : 苏德利16646
-# @Contact : 16646@sangfor.com
-# @File    : mock_api_test_corrector.py
-# @Software: PyCharm
-# @Project : chatgpt-server
-# @Desc    : mock test_api_test_case_corrector.py模块测试数据
+# -*- coding: UTF-8 -*-
 
-# api文档的模拟数据，包含array格式数据，
-# 参考地址http://devapi.sangfor.com/independent/home/api-studio/inside/IvrAAgq34371b47badaf040f4efcd8378d0b0a0fe99a657/
+# Mock data for API documentation, including array format data,
+# Reference address http://devapi.sangfor.com/independent/home/api-studio/inside/IvrAAgq34371b47badaf040f4efcd8378d0b0a0fe99a657/
 # api/689818/detail/2161015?spaceKey=iDsnTP3074a43c21500a0945db409e159e9c905f55c7fcd
 MOCK_API_INFO_ARRAY = {
     "baseInfo": {
-        "apiName": "创建 prompt广场数据",
+        "apiName": "Create Prompt Square Data",
         "apiURI": "/api/prompt_square",
         "apiProtocol": 0,
         "apiSuccessMock": "",
@@ -22,8 +15,8 @@ MOCK_API_INFO_ARRAY = {
         "apiStatus": 0,
         "starred": 0,
         "apiNoteType": 1,
-        "apiNoteRaw": "##### 接口用途\r\n\r\n用于把自己的prompt分享到广场中，给其他人查看",
-        "apiNote": "<h5>接口用途</h5><p>用于把自己的prompt分享到广场中，给其他人查看</p>",
+        "apiNoteRaw": "##### Interface Purpose\r\n\r\nUsed to share your prompt to the square for others to view",
+        "apiNote": "<h5>Interface Purpose</h5><p>Used to share your prompt to the square for others to view</p>",
         "apiRequestParamType": 2,
         "apiRequestRaw": "",
         "apiRequestBinary": "",
@@ -51,11 +44,11 @@ MOCK_API_INFO_ARRAY = {
         "apiRequestMetadata": [],
         "responseMetadata": [],
         "responseTrailingMetadata": [],
-        "groupName": "prompt广场",
+        "groupName": "Prompt Square",
         "apiManagerConnID": 25,
-        "creator": "范立伟",
-        "updater": "范立伟",
-        "apiManager": "工程生产力"
+        "creator": "Fan Liwei",
+        "updater": "Fan Liwei",
+        "apiManager": "Engineering Productivity"
     },
     "responseHeader": [],
     "headerInfo": [],
@@ -66,7 +59,7 @@ MOCK_API_INFO_ARRAY = {
         {
             "paramNotNone": "0",
             "paramType": "0",
-            "paramName": " 标题",
+            "paramName": " Title",
             "paramKey": "title",
             "paramValue": "a51",
             "paramLimit": "",
@@ -78,7 +71,7 @@ MOCK_API_INFO_ARRAY = {
         {
             "paramNotNone": "0",
             "paramType": "3",
-            "paramName": " 标题",
+            "paramName": " Title",
             "paramKey": "int_data",
             "paramValue": "123",
             "paramLimit": "",
@@ -90,7 +83,7 @@ MOCK_API_INFO_ARRAY = {
         {
             "paramNotNone": "0",
             "paramType": "12",
-            "paramName": " 问答数据",
+            "paramName": " Q&A Data",
             "paramKey": "prompt_completion",
             "paramValue": "",
             "paramLimit": "",
@@ -101,7 +94,7 @@ MOCK_API_INFO_ARRAY = {
                 {
                     "paramNotNone": "0",
                     "paramType": "0",
-                    "paramName": " 问题",
+                    "paramName": " Question",
                     "paramKey": "prompt",
                     "paramValue": "xx",
                     "paramLimit": "",
@@ -113,7 +106,7 @@ MOCK_API_INFO_ARRAY = {
                 {
                     "paramNotNone": "0",
                     "paramType": "0",
-                    "paramName": " 回答",
+                    "paramName": " Answer",
                     "paramKey": "completion",
                     "paramValue": "xx",
                     "paramLimit": "",
@@ -125,9 +118,9 @@ MOCK_API_INFO_ARRAY = {
                 {
                     "paramNotNone": "0",
                     "paramType": "0",
-                    "paramName": " 问题时间 ",
+                    "paramName": " Question Time ",
                     "paramKey": "prompt_time",
-                    "paramValue": "2023/3/23 下午7:35:48",
+                    "paramValue": "2023/3/23 PM 7:35:48",
                     "paramLimit": "",
                     "paramNote": "",
                     "paramValueList": [],
@@ -137,9 +130,9 @@ MOCK_API_INFO_ARRAY = {
                 {
                     "paramNotNone": "0",
                     "paramType": "0",
-                    "paramName": " 回答时间",
+                    "paramName": " Answer Time",
                     "paramKey": "completion_time",
-                    "paramValue": "2023/3/23 下午7:35:48",
+                    "paramValue": "2023/3/23 PM 7:35:48",
                     "paramLimit": "",
                     "paramNote": "",
                     "paramValueList": [],
@@ -155,7 +148,7 @@ MOCK_API_INFO_ARRAY = {
         {
             "responseID": 13035,
             "responseCode": "200",
-            "responseName": "成功",
+            "responseName": "Success",
             "responseType": 0,
             "paramJsonType": 0,
             "paramList": [
@@ -256,7 +249,7 @@ MOCK_API_INFO_ARRAY = {
                                     "paramKey": "completion_time",
                                     "paramType": "0",
                                     "paramValueList": [],
-                                    "paramValue": "2023/3/23 下午7:35:48",
+                                    "paramValue": "2023/3/23 PM 7:35:48",
                                     "paramLimit": "",
                                     "paramNote": "",
                                     "default": 0
@@ -278,7 +271,7 @@ MOCK_API_INFO_ARRAY = {
                                     "paramKey": "prompt_time",
                                     "paramType": "0",
                                     "paramValueList": [],
-                                    "paramValue": "2023/3/23 下午7:35:48",
+                                    "paramValue": "2023/3/23 PM 7:35:48",
                                     "paramLimit": "",
                                     "paramNote": "",
                                     "default": 0
@@ -323,7 +316,7 @@ MOCK_API_INFO_ARRAY = {
                     "paramKey": "message",
                     "paramType": "0",
                     "paramValueList": [],
-                    "paramValue": "获取成功",
+                    "paramValue": "Successfully retrieved",
                     "paramLimit": "",
                     "paramNote": "",
                     "default": 0
@@ -364,9 +357,9 @@ MOCK_API_INFO_ARRAY = {
     "dbFieldObj": {},
     "apiID": "2161015",
     "customizeList": [],
-    "manager": "工程生产力",
-    "creator": "范立伟",
-    "updater": "范立伟",
+    "manager": "Engineering Productivity",
+    "creator": "Fan Liwei",
+    "updater": "Fan Liwei",
     "noticeType": 0,
     "fileList": [],
     "dataStructureList": []
@@ -375,7 +368,7 @@ MOCK_API_INFO_ARRAY = {
 MOCK_TEST_STEPS_ARRAY_ERROR = [
     {
         "api_id": 2161015,
-        "api_name": "前置步骤-创建prompt广场数据",
+        "api_name": "Prerequisite Step-Create Prompt Square Data",
         "api_url": "/api/prompt_square",
         "api_protocol": 0,
         "case_data": {
@@ -389,7 +382,7 @@ MOCK_TEST_STEPS_ARRAY_ERROR = [
                 {
                     "param_type": "13",
                     "param_key": "title",
-                    "param_info": "测试标题",
+                    "param_info": "Test Title",
                     "child_list": []
                 },
                 {
@@ -401,12 +394,12 @@ MOCK_TEST_STEPS_ARRAY_ERROR = [
                 {
                     "param_type": "13",
                     "param_key": "prompt_completion",
-                    "param_info": "",
+                    "param_info": "Test Question",
                     "child_list": [
                         {
                             "param_type": "0",
                             "param_key": "prompt",
-                            "param_info": "测试问题",
+                            "param_info": "Test Question",
                             "child_list": []
                         }
                     ]
@@ -433,7 +426,7 @@ MOCK_TEST_STEPS_ARRAY_ERROR = [
 MOCK_TEST_STEPS_ARRAY_CORRECT = [
     {
         "api_id": 2161015,
-        "api_name": "前置步骤-创建prompt广场数据",
+        "api_name": "Prerequisite Step-Create Prompt Square Data",
         "api_url": "/api/prompt_square",
         "api_protocol": 0,
         "case_data": {
@@ -447,7 +440,7 @@ MOCK_TEST_STEPS_ARRAY_CORRECT = [
                 {
                     "param_type": "0",
                     "param_key": "title",
-                    "param_info": "测试标题",
+                    "param_info": "Test Title",
                     "child_list": []
                 },
                 {
@@ -459,7 +452,7 @@ MOCK_TEST_STEPS_ARRAY_CORRECT = [
                 {
                     "param_type": "12",
                     "param_key": "prompt_completion",
-                    "param_info": "",
+                    "param_info": "Test Question",
                     "child_list": [
                         {
                             "param_type": "13",
@@ -470,7 +463,7 @@ MOCK_TEST_STEPS_ARRAY_CORRECT = [
                                 {
                                     "param_type": "0",
                                     "param_key": "prompt",
-                                    "param_info": "测试问题",
+                                    "param_info": "Test Question",
                                     "child_list": []
                                 }
                             ]
@@ -499,7 +492,7 @@ MOCK_TEST_STEPS_ARRAY_CORRECT = [
 MOCK_TEST_STEPS_PARAM_KEY_ERROR = [
     {
         "api_id": 2161011,
-        "api_name": "主测试步骤-请求gpt接口并设置systems参数",
+        "api_name": "Main Test Step-Request GPT Interface and Set systems Parameters",
         "api_url": "/api/v2/completion",
         "api_protocol": 0,
         "case_data": {
@@ -590,7 +583,7 @@ MOCK_TEST_STEPS_PARAM_KEY_ERROR = [
 MOCK_TEST_STEPS_PARAM_KEY_CORRECT = [
     {
         "api_id": 2161011,
-        "api_name": "主测试步骤-请求gpt接口并设置systems参数",
+        "api_name": "Main Test Step-Request GPT Interface and Set systems Parameters",
         "api_url": "/api/v2/completion",
         "api_protocol": 0,
         "case_data": {
@@ -688,7 +681,7 @@ MOCK_TEST_STEPS_PARAM_KEY_CORRECT = [
 
 MOCK_API_INFO_ARRAY_OBJECT = {
     "baseInfo": {
-        "apiName": "Id关联应用",
+        "apiName": "Id Association Application",
         "apiURI": "/api/v3/user/assignResourceById",
         "apiProtocol": 1,
         "apiSuccessMock": "",
@@ -723,10 +716,10 @@ MOCK_API_INFO_ARRAY_OBJECT = {
         "apiRequestMetadata": [],
         "responseMetadata": [],
         "responseTrailingMetadata": [],
-        "groupName": "ID关联应用",
+        "groupName": "ID Association Application",
         "apiManagerConnID": 0,
-        "creator": "范立伟",
-        "updater": "苏德利",
+        "creator": "Fan Liwei",
+        "updater": "Su Deli",
     },
     "responseHeader": [],
     "authInfo": {
@@ -736,18 +729,18 @@ MOCK_API_INFO_ARRAY_OBJECT = {
         {
             "paramNotNull": "0",
             "paramType": "0",
-            "paramName": "用户ID",
+            "paramName": "User ID",
             "paramKey": "id",
             "paramValue": "",
             "paramLimit": "",
-            "paramNote": "id与name只传一个即可，都传时以id为准",
+            "paramNote": "Only one of id and name needs to be passed, when both are passed, id takes precedence",
             "paramValueList": [],
             "default": ""
         },
         {
             "paramNotNull": "0",
             "paramType": "0",
-            "paramName": "所属用户目录的唯一标识，本地用户目录的唯一标识为 local。 外部用户目录示例：custom01339（唯一标识无需携带@）",
+            "paramName": "The unique identifier of the user directory to which it belongs, the unique identifier of the local user directory is local. External user directory example: custom01339 (the unique identifier does not need to carry @)",
             "paramLimit": "",
             "paramNote": "",
             "paramValueList": [],
@@ -759,7 +752,7 @@ MOCK_API_INFO_ARRAY_OBJECT = {
             "structureID": "69736",
             "updateData": {
                 "ABuN6cF9e91b9d76c2611ee088c6188944c2929cec03dc2": {
-                    "paramName": "填写了resource参数时，此参数必填"
+                    "paramName": "This parameter is required when the resource parameter is filled"
                 }
             },
             "childList": []
@@ -771,7 +764,7 @@ MOCK_API_INFO_ARRAY_OBJECT = {
         {
             "responseID": 13054,
             "responseCode": "200",
-            "responseName": "成功",
+            "responseName": "Success",
             "responseType": 0,
             "paramJsonType": 0,
             "paramList": [
@@ -796,7 +789,7 @@ MOCK_API_INFO_ARRAY_OBJECT = {
         {
             "responseID": 13055,
             "responseCode": "200",
-            "responseName": "失败",
+            "responseName": "Failed",
             "responseType": 0,
             "paramJsonType": 0,
             "paramList": [
@@ -804,7 +797,7 @@ MOCK_API_INFO_ARRAY_OBJECT = {
                     "structureID": "68244",
                     "updateData": {
                         "y9zkLGPbd6658f73861fe3274ce825d422e4fbdc93c5be2": {
-                            "paramName": "错误码信息",
+                            "paramName": "Error code information",
                             "paramValue": "NotExist.Resource"
                         },
                         "YfsfgJv09dbc5faf7f28ed7164d35bc67eeaa1eb2c158d0": {
@@ -838,21 +831,21 @@ MOCK_API_INFO_ARRAY_OBJECT = {
     "dbFieldObj": {},
     "apiID": "2161250",
     "customizeList": [],
-    "creator": "范立伟",
-    "updater": "苏德利",
+    "creator": "Fan Liwei",
+    "updater": "Su Deli",
     "noticeType": 0,
     "fileList": [],
     "dataStructureList": {
         "68244": {
             "structureID": 68244,
-            "structureName": "SDP-TEST-POST通用返回数据",
+            "structureName": "SDP-TEST-POST Common Return Data",
             "structureDesc": "",
             "updateTime": "2024-05-21 14:23:26",
             "structureData": [
                 {
                     "paramNotNull": "0",
                     "paramType": "0",
-                    "paramName": "OK 表示成功，其他表示出错。具体含义请参考错误码定义",
+                    "paramName": "OK means success, others mean error. Please refer to error code definition for specific meaning",
                     "paramKey": "code",
                     "paramValue": "",
                     "paramLimit": "",
@@ -865,7 +858,7 @@ MOCK_API_INFO_ARRAY_OBJECT = {
                 {
                     "paramNotNull": "0",
                     "paramType": "13",
-                    "paramName": "报文数据主体",
+                    "paramName": "Message data body",
                     "paramKey": "data",
                     "paramValue": "",
                     "paramLimit": "",
@@ -878,7 +871,7 @@ MOCK_API_INFO_ARRAY_OBJECT = {
                 {
                     "paramNotNull": "0",
                     "paramType": "0",
-                    "paramName": "返回提示信息，与返回码对应",
+                    "paramName": "Return prompt information, corresponding to the return code",
                     "paramKey": "msg",
                     "paramValue": "",
                     "paramLimit": "",

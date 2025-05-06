@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-@Author  : 刘鹏z10807
-@Date    : 2023/4/21 10:53
-"""
+
 import os
 
 from flask_limiter import Limiter

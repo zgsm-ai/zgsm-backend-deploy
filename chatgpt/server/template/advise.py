@@ -1,31 +1,30 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# 生成下一步操作建议
+# Generate next-step suggestions
 ADVISE_PROMPT = """
 ```
 {query}
 ```
-相关代码:
+Related code:
 ```{language}
 {code}
 ```
 
-以上信息是用户上一步请求的操作，请根据以上信息，生成下一步操作建议:
-1. 这些建议和上述信息密切相关
-2. 这些建议是大多数用户下一步最可能需要执行的操作
+The above information shows the user's previous operation. Please generate next-step suggestions based on this context:
+Suggestions must be highly relevant to the provided content
+Suggestions should represent the most likely subsequent operations needed by most users
 
-需求:
-1. 参考输出范例以JSON格式输出结果
-2. 输出格式为JSON数组，数组元素为JSON对象，每个对象包含title和prompt字段
-3. 输出结果中除了JSON数组，不能包含任何其他内容，包括但不限于注释、解释、说明等
-4. title字段需简洁，尽量在7个字以内，以中文方式表示
-5. prompt字段需包含完整准确的中文提示信息，方便大语言模型输出更高质量的输出内容
-6. 输出数组不超过7个元素
+Requirements:
+Output must strictly follow the example format using JSON
+Output format must be a JSON array containing objects with "title" and "prompt" fields
+Output must ONLY contain the JSON array - no comments, explanations, or other content
+"title" field should be concise English phrases (≤7 characters)
+"prompt" field must contain complete English instructions for better LLM output quality
+Maximum 7 array elements
 
-输出范例：
+Example output:
+[{{"title": "Add Comments", "prompt": "Generate comments for the following code"}}, {{"title": "Validate Parameters", "prompt": "Add parameter validation code to the following"}}]
 
-[{{"title": "注释", "prompt": "给以下代码生成注释"}}, {{"title": "检查参数", "prompt": "给以下代码生成检查参数有效性代码"}}]
-
-输出:
+Output:
 """

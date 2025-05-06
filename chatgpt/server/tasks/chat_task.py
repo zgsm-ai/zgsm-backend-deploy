@@ -10,10 +10,10 @@ from logger import get_task_chat_logger
                  soft_time_limit=AgentConstant.CELERY_TASK_TIMEOUT)
 @handle_db
 def execute_chat_async(sid: str, request_data: dict):
-    # get_task_chat_logger日志封装了sid，必须前置
+    # get_task_chat_logger wraps the sid in the logs, must be placed first
     logger = get_task_chat_logger()
     with SocketWrapper.with_sid(logger, sid):
-        # 取出uuid从redis中获取上下文缓存数据
+        # Extract UUID to get context cache data from Redis
         logger.info(f"execute_chat_async() start: request: {request_data}")
         req = make_cls_with_dict(ChatRequestData, request_data)
         agent_chat_with_redis(req)

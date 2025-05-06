@@ -2,38 +2,38 @@
 
 . ./configure.sh
 
-# 定义最大等待时间（秒，0 表示无限等待）
+# Define maximum waiting time (seconds, 0 means infinite wait)
 MAX_WAIT=0
-echo "正在检查 APISIX 服务状态..."
+echo "Checking APISIX service status..."
 start_time=$(date +%s)
 while : ; do
-  # 通过检测端口是否监听判断服务状态
+  # Check service status by detecting if the port is listening
   if curl -sSf http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" >/dev/null; then
-    echo "APISIX 已成功启动（管理接口响应正常）"
+    echo "APISIX has been successfully started (admin interface responds normally)"
     break
   fi
 
-  # 超时检测
+  # Timeout detection
   if [ $MAX_WAIT -ne 0 ]; then
     current_time=$(date +%s)
     if (( current_time - start_time > MAX_WAIT )); then
-      echo "错误：在 ${MAX_WAIT} 秒内未检测到 APISIX 启动"
+      echo "Error: APISIX startup not detected within ${MAX_WAIT} seconds"
       exit 1
     fi
   fi
 
-  echo "等待 APISIX 启动...（已等待 $(( $(date +%s) - start_time )) 秒）"
+  echo "Waiting for APISIX to start...(waited $(( $(date +%s) - start_time )) seconds)"
   sleep 5
 done
 
 
-# 需要登录的接口，添加以下两个插件：
-# openid-connect 和
+# For interfaces requiring login, add the following two plugins:
+# openid-connect and
 # "openid-connect": {
 #        "bearer_only": true,
 #        "client_id": "$client_id",
 #        "client_secret": "$client_secret",
-#        "discovery": "http://第三方认证地址/dex/.well-known/openid-configuration",
+#        "discovery": "http://third-party-auth-address/dex/.well-known/openid-configuration",
 #        "scope": "openid email profile",
 #        "realm": "'"$KEYCLOAK_REALM"'",
 #        "set_userinfo_header": true,
@@ -42,7 +42,7 @@ done
 #       "response-rewrite": {
 #         "headers": {
 #             "set": {
-#                   "Location": "http://apisix地址/login/vscode"
+#                   "Location": "http://apisix-address/login/vscode"
 #               }
 #           },
 #           "status_code": 302,
@@ -52,9 +52,9 @@ done
 #       }
 
 
-# 登录接口，这里 "bearer_only": false，允许重定向到登录页面；其余为true，不允许重定向，只做校验。
-# 其余接口如果登录失败，401，重定向到接口。
-# 这里核心插件为两个： openid-connect 和 redirect。openid-connect 用于认证拿到token，redirect用于将token传递到ide。
+# Login interface, here "bearer_only": false, allowing redirection to the login page; others are true, not allowing redirection, only for validation.
+# Other interfaces will redirect to the interface if login fails with 401.
+# The core plugins here are two: openid-connect and redirect. openid-connect is used for authentication to get the token, redirect is used to pass the token to the IDE.
 curl -i http://$APISIX_ADDR/apisix/admin/routes/realms-redirect \
   -H "$AUTH" \
   -H "$TYPE" \

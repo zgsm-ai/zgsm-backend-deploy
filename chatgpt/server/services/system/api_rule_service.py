@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-@Author  : 刘鹏z10807
-@Date    : 2023/5/9 11:59
-"""
+
 from peewee import fn
 
 from common.constant import ApiRuleConstant

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# 生成注释模板
+# Comment generation template
 INITIAL_PROMPT = """
 ```{language}
 {selectedText}

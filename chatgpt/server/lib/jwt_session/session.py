@@ -4,7 +4,7 @@ import datetime
 
 from .local import Local
 
-# 创建一个全局对象,用来存储session,或者其他的全局变量
+# Create a global object to store session or other global variables
 session = Local()
 
 
@@ -22,12 +22,12 @@ class JwtTokenHandler:
 
     def __init__(self, headers, cookies, name, secret, expire, **kwargs):
         """
-        :param headers: 请求头
-        :param cookies: cookies
-        :param name: cookies的key名称
-        :param secret: jwt密钥
-        :param expire: 过期时间, 天
-        :param kwargs: 其他参数
+        :param headers: Request headers
+        :param cookies: Cookies
+        :param name: Cookie key name
+        :param secret: JWT secret
+        :param expire: Expiration time in days
+        :param kwargs: Other parameters
         """
         self.headers = headers
         self.cookies = cookies
@@ -41,20 +41,20 @@ class JwtTokenHandler:
             self.domain = kwargs.get('domain')
         if 'algorithm' in kwargs:
             self.algorithm = kwargs.get('algorithm')
-        # 先不做校验，容易误杀产品线的脚本
+        # Not doing verification, easily mistakenly blocks product line scripts
         self.access_ip = headers.get('X-Real-IP') if headers.get('X-Real-IP') else ''
 
     def parse(self, verify_expire=True, exp_key='exp'):
         """
-        :param verify_expire: 是否验证过期
-        :param exp_key: 验证过期的key
-        :return: 解析的jwt_token结果
+        :param verify_expire: Whether to verify expiration
+        :param exp_key: Key for expiration verification
+        :return: Parsed JWT token result
         """
         value = self._parse_key()
         if value:
             res = self.decode(value)
             if res and verify_expire:
-                """验证过期时间"""
+                """Verify expiration time"""
                 is_expire = self._is_expire(res, exp_key)
                 if not is_expire:
                     return JwtSession(res)
@@ -68,9 +68,9 @@ class JwtTokenHandler:
     @staticmethod
     def _is_expire(res: dict, exp_key: str):
         """
-        验证结果是否过期
-        :param res: 解析后的数据
-        :param exp_key: 判断过期时间的key
+        Verify if the result is expired
+        :param res: Parsed data
+        :param exp_key: Key to determine expiration time
         :return:
         """
         if exp_key not in res:
@@ -83,8 +83,8 @@ class JwtTokenHandler:
         return False
 
     def _parse_key(self):
-        """解析jwt_token的key"""
-        # 适配tp平台token为ep_jwt_token_current，多了“_current”
+        """Parse JWT token key"""
+        # Adapt tp platform token as ep_jwt_token_current, with extra "_current"
         cookie_value = self.cookies.get(self.name) if self.cookies and self.cookies.get(
             self.name) else self.cookies.get(f'{self.name}_current', '')
         if cookie_value and cookie_value != 'None' and cookie_value != 'undefined':
@@ -96,20 +96,20 @@ class JwtTokenHandler:
         return None
 
     def encode(self, payload):
-        # 加密
+        # Encrypt
         return jwt.encode(payload, self.secret,
                           algorithm=self.algorithm).decode('ascii') if payload else None
 
     def decode(self, token):
-        """解码"""
+        """Decode"""
         try:
             return jwt.decode(
                 token, self.secret, verify_expiration=False, algorithms=self.algorithm) if token else None
         except Exception as err:
-            self.logger.warning(f"解析token：{token}出现异常:{str(err)}")
+            self.logger.warning(f"Error parsing token: {token}, exception: {str(err)}")
             return None
 
     @classmethod
     def create_token(cls, payload, secret, algorithm):
-        # 临时生成token
+        # Temporarily generate token
         return jwt.encode(payload, secret, algorithm).decode('ascii') if payload else None

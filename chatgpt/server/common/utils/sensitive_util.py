@@ -1,10 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
- 敏感词处理工具
-@Author  : 黄伟伦w82676
-@Date    : 2024/5/31 15:45
-"""
+
 import re
 
 from common.constant import PromptConstant

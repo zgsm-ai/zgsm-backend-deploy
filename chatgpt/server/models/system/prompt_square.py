@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-@Author  : 刘鹏z10807
-@Date    : 2023/3/27 09:21
-"""
+
 from peewee import CharField, TextField, IntegerField
 
 from db.custom_field import JSONField
@@ -11,13 +8,13 @@ from models.base_model import BaseModel
 
 
 class PromptSquare(BaseModel):
-    """prompt广场"""
+    """Prompt Square"""
 
-    title = CharField(default='', index=True, verbose_name='标题')
-    prompt = TextField(default='', verbose_name='问题')
-    prompt_completion = JSONField(default=[], verbose_name='问答')
-    hot = IntegerField(default=0, verbose_name='热度/引用量')
-    creator = CharField(default='', index=True, verbose_name='创建人')
+    title = CharField(default='', index=True, verbose_name='Title')
+    prompt = TextField(default='', verbose_name='Question')
+    prompt_completion = JSONField(default=[], verbose_name='Q&A')
+    hot = IntegerField(default=0, verbose_name='Popularity/Citation Count')
+    creator = CharField(default='', index=True, verbose_name='Creator')
 
     class Meta:
         table_name = 'prompt_square'

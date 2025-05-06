@@ -1,13 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    简单介绍
-
-    :作者: 苏德利 16646
-    :时间: 2023/3/14 14:16
-    :修改者: 苏德利 16646
-    :更新时间: 2023/3/14 14:16
-"""
 
 from playhouse.shortcuts import _clone_set, Field, Alias
 from peewee import Model, ForeignKeyField, callable_, SqliteDatabase, BooleanField, DateTimeField
@@ -21,9 +13,9 @@ class BaseModel(Model):
     class Meta:
         database = db
 
-    deleted = BooleanField(default=False, verbose_name='软删除')
-    created_at = DateTimeField(default=datetime.now, null=True, verbose_name='创建时间')
-    update_at = DateTimeField(default=datetime.now, null=True, verbose_name='更新时间')
+    deleted = BooleanField(default=False, verbose_name='Soft Delete')
+    created_at = DateTimeField(default=datetime.now, null=True, verbose_name='Creation Time')
+    update_at = DateTimeField(default=datetime.now, null=True, verbose_name='Update Time')
 
     def set_key(self):
         if hasattr(self, "key"):
@@ -34,23 +26,23 @@ class BaseModel(Model):
 
     def gen_field_name(self, field_key):
         if field_key == "description":
-            return "描述"
+            return "Description"
         elif field_key == "key":
             return "key"
         elif field_key == "name":
-            return "名称"
+            return "Name"
         elif field_key == "updated_at":
-            return "更新时间"
+            return "Update Time"
         elif field_key == "updater_username":
-            return "更新人"
+            return "Updated By"
         elif field_key == "creator_username":
-            return "创建人"
+            return "Created By"
         elif field_key == "created_at":
-            return "创建时间"
+            return "Creation Time"
         elif field_key == "status":
-            return "状态"
+            return "Status"
         else:
-            return "未知字段"
+            return "Unknown Field"
 
     @classmethod
     def like(cls, kw):

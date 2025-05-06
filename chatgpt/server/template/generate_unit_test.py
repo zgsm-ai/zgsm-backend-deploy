@@ -1,15 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-    简单介绍
 
-    :作者: 苏德利 16646
-    :时间: 2023/3/3 17:35
-    :修改者: 苏德利 16646
-    :更新时间: 2023/3/3 17:35
-"""
-
-# 生成单元测试初始提问模板
+# Initial template for unit test generation query
 INITIAL_PROMPT = """
 ## Instructions
 Write a unit test for the code below.
@@ -23,12 +15,12 @@ Write a unit test for the code below.
 ## Task
 Write a unit test that contains test cases for the happy path and for all edge cases.
 The programming language is {language}.
-Must reply with Chinese.
+Must reply with English.
 
 ## Unit Test
 """
 
-# 生成单元测试连续提问模板
+# Continuous query template for unit test generation
 RESPONSE_PROMPT = """
 ## Instructions
 Rewrite the code below as follows: "{{lastMessage}}"
@@ -40,7 +32,7 @@ Rewrite the code below as follows: "{{lastMessage}}"
 
 ## Task
 Rewrite the code below as follows: "{{lastMessage}}"
-Must reply with Chinese.
+Must reply with English.
 
 ## Answer
 """

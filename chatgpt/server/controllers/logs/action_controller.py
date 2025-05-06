@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-@Author  : 郑柏春91868
-@Date    : 2024/12/19
-"""
+
 import json
 import logging
 
@@ -26,7 +23,7 @@ logs = Blueprint('logs', __name__)
 
 def get_request_ide_data(data, user) -> dict:
     """
-    获取IDE插件传输的数据
+    Get data transmitted from IDE plugin
     """
     data['user_agent'] = request.headers.get("User-Agent")
     data['host'] = request.headers.get("Host")
@@ -40,15 +37,15 @@ def get_request_ide_data(data, user) -> dict:
     return data
 
 #
-#   服务关键数据记录
-#   1. 补全：
-#       1.1. API结果
+#   Service key data recording
+#   1. Completion:
+#       1.1. API results
 #
 
 @logs.route("/completion", methods=['POST'])
 def logs_completion():
     """
-    插件端反馈用户在代码补全中接受的代码片段
+    Plugin-side feedback on code snippets accepted by users in code completion
     """
     user = ApplicationContext.get_current()
     data = request.get_json()

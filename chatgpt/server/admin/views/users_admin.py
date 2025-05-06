@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-@Author  : 刘鹏z10807
-@Date    : 2023/3/30 14:36
-"""
+
 from flask import flash
 from flask_admin.actions import action
 
@@ -18,7 +15,7 @@ class UsersAdmin(AdminPermission, BaseView):
     column_searchable_list = ('display_name',)
     can_create = False
     can_export = False
-    # 列表页 字段显示verbose_name值
+    # Display verbose_name values for fields in the list page
     column_labels = BaseView.get_column_labels(Users)
     form_widget_args = {
         'username': {'readonly': True},
@@ -28,15 +25,15 @@ class UsersAdmin(AdminPermission, BaseView):
         'update_at': {'readonly': True},
     }
 
-    # 定义自定义按钮
-    @action('clear_all_user_cache', '清除所有用户缓存')
+    # Define custom buttons
+    @action('clear_all_user_cache', 'Clear All User Cache')
     def clear_all_user_cache(self, ids):
         UsersService.clear_all_user_cache()
-        flash('用户缓存清除成功')
+        flash('User cache cleared successfully')
 
     def after_model_change(self, form, model, is_created=False):
-        # 更新后清除用户缓存
+        # Clear user cache after update
         UsersService.evict_user_cache(model.id, model.username, model.api_key)
 
 
-UsersView = UsersAdmin(Users, endpoint='_users', name='用户')
+UsersView = UsersAdmin(Users, endpoint='_users', name='Users')
