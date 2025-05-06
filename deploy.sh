@@ -150,7 +150,7 @@ main() {
         exit 1
     fi
 
-    sleep 20
+    sleep 5
 
     # Configure APISIX
     local apisix_scripts=(

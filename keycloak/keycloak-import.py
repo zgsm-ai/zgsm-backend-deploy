@@ -12,7 +12,7 @@ CLIENT_NAME = "zgsm"
 CLIENT_PASSWORD = "123"
 
 def get_args():
-    global KEYCLOAK_URL, ADMIN_USERNAME, ADMIN_PASSWORD, IMPORT_FNAME
+    global KEYCLOAK_URL, ADMIN_USERNAME, ADMIN_PASSWORD, IMPORT_FNAME, CLIENT_NAME, CLIENT_PASSWORD
     parser = argparse.ArgumentParser(description="Import JSON data into Keycloak to create a realm")
     parser.add_argument('--url', type=str, help='Keycloak server address (e.g., http://localhost:8080/auth)', required=True)
     parser.add_argument('--username', type=str, help='Keycloak administrator username', required=False)
@@ -31,9 +31,9 @@ def get_args():
         ADMIN_PASSWORD = args.password
     if args.fname:
         IMPORT_FNAME = args.fname
-    if args.fname:
+    if args.client_name:
         CLIENT_NAME = args.client_name
-    if args.fname:
+    if args.client_password:
         CLIENT_PASSWORD = args.client_password
 
     print(f"KEYCLOAK_URL: {KEYCLOAK_URL}")
