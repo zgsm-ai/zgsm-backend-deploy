@@ -8,13 +8,13 @@ retry "curl -sSf http://$APISIX_ADDR/apisix/admin/routes -H '$AUTH' -H '$TYPE' >
 echo "APISIX has started successfully (Admin API response normal)"
 
 # chatgpt RESTful API port
-#curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT  -d '{
-#    "id": "chatgpt",
-#    "nodes": {
-#      "'"chatgpt:$PORT_CHATGPT_API"'": 1
-#    },
-#    "type": "roundrobin"
-#  }'
+curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT  -d '{
+   "id": "chatgpt",
+   "nodes": {
+     "'"chatgpt:$PORT_CHATGPT_API"'": 1
+   },
+   "type": "roundrobin"
+ }'
 
 # chatgpt WebSocket port
 curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT  -d '{
