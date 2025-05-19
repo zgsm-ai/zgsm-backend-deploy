@@ -1,0 +1,103 @@
+Thank you for installing {{ .Chart.Name }} version {{ .Chart.Version }}
+
+The application has been successfully deployed to namespace {{ .Values.global.namespace }}.
+
+## Accessing Services
+
+You can use the following commands to get the access addresses for services:
+
+# Get APISIX gateway address
+kubectl --namespace {{ .Values.global.namespace }} get svc {{ .Release.Name }}-apisix -o jsonpath="{.status.loadBalancer.ingress[0].ip}"
+
+# Get Keycloak address
+kubectl --namespace {{ .Values.global.namespace }} get svc {{ .Release.Name }}-keycloak -o jsonpath="{.status.loadBalancer.ingress[0].ip}"
+
+## Checking Deployment Status
+
+Check if all Pods are running normally:
+kubectl --namespace {{ .Values.global.namespace }} get pods
+
+## Troubleshooting Common Issues
+
+If any Pods are in Pending state, it might be due to insufficient resources:
+kubectl --namespace {{ .Values.global.namespace }} describe pod <pod-name>
+
+If any Pods are in CrashLoopBackOff state, check the container logs:
+kubectl --namespace {{ .Values.global.namespace }} logs <pod-name> -c <container-name>
+
+## Initialization Jobs Status
+
+Check the status of initialization jobs:
+kubectl --namespace {{ .Values.global.namespace }} get jobs
+
+## Uninstalling the Chart
+
+To uninstall this Helm Chart, run the following command:
+helm delete {{ .Release.Name }} -n {{ .Values.global.namespace }}
+
+## Accessing Management Consoles
+
+Keycloak: http://<keycloak-ip>:8080/admin
+APISIX Dashboard: http://<apisix-dashboard-ip>:9000
+OneAPI: http://<oneapi-ip>:{{ .Values.oneapi.service.port }}
+
+## Documentation Resources
+
+Quick Start Guide: kubectl --namespace {{ .Values.global.namespace }} get cm {{ .Release.Name }}-docs -o jsonpath="{.data.QUICKSTART\.md}" > quickstart.md && cat quickstart.md
+
+Operations Guide: kubectl --namespace {{ .Values.global.namespace }} get cm {{ .Release.Name }}-docs -o jsonpath="{.data.OPERATIONS\.md}" > operations.md && cat operations.md
+
+Complete Usage Guide: kubectl --namespace {{ .Values.global.namespace }} get cm {{ .Release.Name }}-readme -o jsonpath="{.data.README\.md}" > readme.md && cat readme.md
+
+---
+
+感谢您安装 {{ .Chart.Name }} 版本 {{ .Chart.Version }}
+
+应用已成功部署到 {{ .Values.global.namespace }} 命名空间。
+
+## 访问服务
+
+您可以使用以下命令来获取服务的访问地址：
+
+# 获取 APISIX 网关地址
+kubectl --namespace {{ .Values.global.namespace }} get svc {{ .Release.Name }}-apisix -o jsonpath="{.status.loadBalancer.ingress[0].ip}"
+
+# 获取 Keycloak 地址
+kubectl --namespace {{ .Values.global.namespace }} get svc {{ .Release.Name }}-keycloak -o jsonpath="{.status.loadBalancer.ingress[0].ip}"
+
+## 查看部署状态
+
+检查所有 Pod 是否正常运行：
+kubectl --namespace {{ .Values.global.namespace }} get pods
+
+## 常见问题排查
+
+如果有 Pod 处于 Pending 状态，可能是资源不足：
+kubectl --namespace {{ .Values.global.namespace }} describe pod <pod名称>
+
+如果有 Pod 处于 CrashLoopBackOff 状态，查看容器日志：
+kubectl --namespace {{ .Values.global.namespace }} logs <pod名称> -c <容器名称>
+
+## 初始化作业状态
+
+查看初始化作业的状态：
+kubectl --namespace {{ .Values.global.namespace }} get jobs
+
+## 卸载 Chart
+
+如需卸载此 Helm Chart，请运行以下命令：
+helm delete {{ .Release.Name }} -n {{ .Values.global.namespace }}
+
+## 访问管理控制台
+
+Keycloak: http://<keycloak-ip>:8080/admin
+APISIX Dashboard: http://<apisix-dashboard-ip>:9000
+OneAPI: http://<oneapi-ip>:{{ .Values.oneapi.service.port }} 
+
+## Documentation Resources
+
+Quick Start Guide: kubectl --namespace {{ .Values.global.namespace }} get cm {{ .Release.Name }}-docs -o jsonpath="{.data.QUICKSTART\.md}" > quickstart.md && cat quickstart.md
+
+Operations Guide: kubectl --namespace {{ .Values.global.namespace }} get cm {{ .Release.Name }}-docs -o jsonpath="{.data.OPERATIONS\.md}" > operations.md && cat operations.md
+
+Complete Usage Guide: kubectl --namespace {{ .Values.global.namespace }} get cm {{ .Release.Name }}-readme -o jsonpath="{.data.README\.md}" > readme.md && cat readme.md 

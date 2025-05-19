@@ -78,3 +78,13 @@ bash deploy.sh
 ### 4. Configure APISIX address in Shenma plugin
     Shenma baseurl: Default is http://{local machine IP}:8090/v1 (Note: Using localhost may cause issues, it's recommended to use ipconfig to get the actual IP address).
 
+---
+
+## Kubernetes Helm Deployment
+
+For production or large-scale environments, you can deploy using Kubernetes Helm charts.
+
+**See detailed instructions here:**
+
+[Helm Chart Deployment Guide](kubernetes/helm/README.md)
+

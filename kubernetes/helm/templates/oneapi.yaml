@@ -1,0 +1,174 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Release.Name }}-postgres-auth
+  namespace: {{ .Release.Namespace | quote }}
+type: Opaque
+data:
+  password: {{ .Values.auth.postgresql.password | b64enc }}
+  username: {{ .Values.auth.postgresql.username | b64enc }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Release.Name }}-oneapi-secrets
+  namespace: {{ .Release.Namespace | quote }}
+type: Opaque
+data:
+  session-secret: {{ .Values.oneapi.auth.sessionSecret | b64enc }}
+  initial-root-token: {{ .Values.oneapi.auth.rootToken | b64enc }}
+  initial-root-access-token: {{ .Values.oneapi.auth.accessToken | b64enc }}
+
+---
+{{- if .Values.oneapi.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-oneapi-env
+  namespace: {{ .Release.Namespace | quote }}
+data:
+  SQL_MAX_OPEN_CONNS: "{{ .Values.oneapi.config.sql_max_open_conns | default 100 }}"
+  SQL_CONN_MAX_LIFETIME: "{{ .Values.oneapi.config.sql_conn_max_lifetime | default 30 }}"
+  INITIAL_ROOT_TOKEN: "true"
+  TIKTOKEN_CACHE_DIR: "/usr/local/lib/tiktoken/"
+  GLOBAL_API_RATE_LIMIT: "{{ .Values.oneapi.config.global_api_rate_limit | default 180 }}"
+  GLOBAL_WEB_RATE_LIMIT: "{{ .Values.oneapi.config.global_web_rate_limit | default 180 }}"
+  RELAY_TIMEOUT: "{{ .Values.oneapi.config.relay_timeout | default 180 }}"
+  SYNC_FREQUENCY: "{{ .Values.oneapi.config.sync_frequency | default 60 }}"
+  MEMORY_CACHE_ENABLED: "{{ .Values.oneapi.config.memory_cache_enabled | default false }}"
+  CHANNEL_UPDATE_FREQUENCY: "{{ .Values.oneapi.config.channel_update_frequency | default 1440 }}"
+  CHANNEL_TEST_FREQUENCY: "{{ .Values.oneapi.config.channel_test_frequency | default 1440 }}"
+  POLLING_INTERVAL: "{{ .Values.oneapi.config.polling_interval | default 30 }}"
+  BATCH_UPDATE_ENABLED: "{{ .Values.oneapi.config.batch_update_enabled | default false }}"
+  BATCH_UPDATE_INTERVAL: "{{ .Values.oneapi.config.batch_update_interval | default 5 }}"
+  GEMINI_VERSION: "{{ .Values.oneapi.config.gemini_version | default "v1" }}"
+  THEME: "{{ .Values.oneapi.config.theme | default "default" }}"
+  ENABLE_METRIC: "{{ .Values.oneapi.config.enable_metric | default false }}"
+  METRIC_QUEUE_SIZE: "{{ .Values.oneapi.config.metric_queue_size | default 10 }}"
+  METRIC_SUCCESS_RATE_THRESHOLD: "{{ .Values.oneapi.config.metric_success_rate_threshold | default 0.8 }}"
+  TZ: "{{ .Values.global.timezone }}"
+  REDIS_CONN_STRING: "{{ .Values.oneapi.config.redis_conn_string | default (print "redis://" .Release.Name "-redis:6379/0") }}"
+  SQL_MAX_IDLE_CONNS: "{{ .Values.oneapi.config.sql_max_idle_conns | default 10 }}"
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-oneapi
+  namespace: {{ .Release.Namespace | quote }}
+spec:
+  replicas: {{ .Values.oneapi.replicas | default 1 }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-oneapi
+  serviceName: {{ .Release.Name }}-oneapi
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-oneapi
+    spec:
+      containers:
+        - image: {{ .Values.oneapi.image.repository}}:{{ .Values.oneapi.image.tag}}
+          imagePullPolicy: IfNotPresent
+          name: {{ .Release.Name }}-oneapi
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              export SQL_DSN=postgres://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@{{ .Values.oneapi.config.db_host }}:{{ .Values.oneapi.config.db_port }}/oneapi
+              if [ $(echo $POD_NAME | awk -F'-' '{print $NF}') -eq 0 ]; then export NODE_TYPE=master; fi
+              /one-api
+          ports:
+            - containerPort: 3000
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: {{ .Release.Name }}-oneapi-env     
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NODE_TYPE
+              value: "slave"
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-postgres-auth
+                  key: password
+            - name: POSTGRES_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-postgres-auth
+                  key: username
+            - name: SESSION_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-oneapi-secrets
+                  key: session-secret
+            - name: INITIAL_ROOT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-oneapi-secrets
+                  key:  initial-root-token
+            - name: INITIAL_ROOT_ACCESS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-oneapi-secrets
+                  key: initial-root-access-token 				
+          resources:
+            limits:
+              cpu: "2"
+              memory: "4Gi"
+            requests:
+              cpu: "1"
+              memory: "2Gi"
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          readinessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - "wget -q -O - http://localhost:3000/api/status | grep -o '\"success\":\\s*true' | awk -F: '{print $2}'"
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          livenessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - "wget -q -O - http://localhost:3000/api/status | grep -o '\"success\":\\s*true' | awk -F: '{print $2}'"
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-oneapi
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app: {{ .Release.Name }}-oneapi
+spec:
+  type: {{ .Values.oneapi.service.type }}
+  ports:
+  - port: 3000
+    targetPort: 3000
+    name: http
+    {{- if and (eq .Values.oneapi.service.type "NodePort") (not (empty (.Values.oneapi.service.nodePort))) }}
+    nodePort: {{.Values.oneapi.service.nodePort}}
+    {{- end }}
+  selector:
+    app: {{ .Release.Name }}-oneapi
+
+{{- end }} 
