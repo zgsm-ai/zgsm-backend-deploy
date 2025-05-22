@@ -1,0 +1,156 @@
+{{- if .Values.dex.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-dex-config
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app: {{ .Release.Name }}-dex
+data:
+  config.yaml: | 
+    issuer: {{ .Values.dex.config.issuer }}
+    storage:
+      type: postgres
+      config:
+        host: {{ .Values.dex.database.host }}
+        port: {{ .Values.dex.database.port }}
+        database: {{ .Values.dex.database.name }}
+        user: {{ .Values.auth.postgresql.username }}
+        password: {{ .Values.auth.postgresql.password }}
+        ssl:
+          mode: disable
+    web:
+      http: 0.0.0.0:5556
+    logger:
+      level: "debug"
+      format: text
+    expiry:
+      idTokens: "{{ .Values.dex.config.expiry.idTokens }}"
+    oauth2:
+      skipApprovalScreen: true
+    enablePasswordDB: false
+    staticClients:
+    - id: "{{ .Values.dex.config.staticClient.id }}"
+      redirectURIs:
+        - "{{ .Values.dex.config.staticClient.redirectURI }}"
+      name: 'Dex Login Application'
+      secret: "{{ .Values.dex.config.staticClient.secret }}"
+      grantTypes:
+        - "authorization_code"
+        - "refresh_token"
+      responseTypes:
+        - "code"
+      scopes:
+        - "openid"
+        - "profile"
+        - "email"
+        - "federated:id"      
+    connectors:
+    - type: oauth
+      id: idtrust
+      name: IDTrust
+      config:
+        clientID: "{{ .Values.dex.connectors.clientID }}"
+        clientSecret: "{{ .Values.dex.connectors.clientSecret }}"
+        redirectURI: "{{ .Values.dex.connectors.redirectURI }}"
+        tokenURL: "{{ .Values.dex.connectors.tokenURL }}"
+        authorizationURL: "{{ .Values.dex.connectors.authorizationURL }}"
+        userInfoURL: "{{ .Values.dex.connectors.userInfoURL }}"
+        logoutURL: "{{ .Values.dex.connectors.logoutURL }}"
+        userIDKey: employee_number
+        claimMapping:
+          userNameKey: username
+    routes:
+      - path: /dex/auth/idtrust
+        connectorID: idtrust
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name }}-dex
+  name: {{ .Release.Name }}-dex
+  namespace: {{ .Release.Namespace | quote }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-dex
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-dex
+    spec:
+      containers:
+      - command:
+        - dex
+        - serve
+        - /etc/dex/cfg/config.yaml
+        env:
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-postgres-auth
+              key: password
+        - name: POSTGRES_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-postgres-auth
+              key: username
+        - name: KUBERNETES_POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+        image: {{ .Values.dex.image.repository }}:{{ .Values.dex.image.tag }}
+        imagePullPolicy: IfNotPresent
+        name: dex
+        ports:
+        - containerPort: {{ .Values.dex.service.port }}
+          name: http
+          protocol: TCP
+        resources:
+          {{- toYaml .Values.dex.resources | nindent 10 }}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /etc/dex/cfg
+          name: config
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 420
+          items:
+          - key: config.yaml
+            path: config.yaml
+          name: {{ .Release.Name }}-dex-config
+        name: config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-dex
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app: {{ .Release.Name }}-dex
+spec:
+  type: {{ .Values.dex.service.type }}
+  ports:
+  - port: {{ .Values.dex.service.port }}
+    targetPort: {{ .Values.dex.service.port }}
+    name: http
+    {{- if and (eq .Values.dex.service.type "NodePort")  (not (empty (.Values.dex.service.nodePort))) }}
+    nodePort: {{.Values.dex.service.nodePort}}
+    {{- end }}
+  selector:
+    app: {{ .Release.Name }}-dex
+{{- end }}
