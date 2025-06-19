@@ -30,7 +30,7 @@ done
 curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT  -d '{
     "id": "one-api",
     "nodes": {
-      "'"one-api:$ONE_API_PORT"'": 1
+      "'"one-api:$AI_GATEWAY_PORT"'": 1
     },
     "type": "roundrobin"
   }'
