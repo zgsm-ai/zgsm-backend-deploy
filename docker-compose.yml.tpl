@@ -102,21 +102,6 @@ services:
 #    networks:
 #      - shenma
 
-#  dex:
-#    image: dexidp/dex:latest
-#    command:
-#      - dex
-#      - serve
-#      - /etc/dex/cfg/config.yaml
-#    ports:
-#      - "5556:5556"
-#    volumes:
-#      - ./dex/config.yaml:/etc/dex/cfg/config.yaml
-#    networks:
-#      - shenma
-#    depends_on:
-#      - postgres
-
   portal:
     image: nginx:1.27.1
     restart: always

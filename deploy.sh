@@ -21,7 +21,11 @@ declare -r AIGATEWAY_PORT=8002
 declare -r QUOTA_MANAGER_HOST="http://localhost"
 declare -r QUOTA_MANAGER_PORT=8099
 
+declare -r CASDOOR_HOST="http://localhost"
+declare -r CASDOOR_PORT=8000
 
+declare -r OIDC_AUTH_HOST="http://localhost"
+declare -r OIDC_AUTH_PORT=8080
 
 # Get the machine's IP
 SERVER_IP=$(hostname -I | awk '{ print $1 }')
@@ -142,6 +146,13 @@ main() {
 
     safe_sed "s/QUOTA_MANAGER_HOST=\".*\"/QUOTA_MANAGER_HOST=$QUOTA_MANAGER_HOST/g" configure.sh
     safe_sed "s/QUOTA_MANAGER_PORT=\".*\"/QUOTA_MANAGER_PORT=$QUOTA_MANAGER_PORT/g" configure.sh
+
+    safe_sed "s/CASDOOR_HOST=\".*\"/CASDOOR_HOST=$CASDOOR_HOST/g" configure.sh
+    safe_sed "s/CASDOOR_PORT=\".*\"/CASDOOR_PORT=$CASDOOR_PORT/g" configure.sh
+
+    safe_sed "s/OIDC_AUTH_HOST=\".*\"/OIDC_AUTH_HOST=$OIDC_AUTH_HOST/g" configure.sh
+    safe_sed "s/OIDC_AUTH_PORT=\".*\"/OIDC_AUTH_PORT=$OIDC_AUTH_PORT/g" configure.sh
+
 
 
     # Modify directory permissions

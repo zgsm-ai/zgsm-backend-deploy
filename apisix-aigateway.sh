@@ -26,11 +26,11 @@ while : ; do
   sleep 5
 done
 
-# one-api RESTful API port
+# aigateway RESTful API port
 curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT  -d '{
-    "id": "one-api",
+    "id": "aigateway",
     "nodes": {
-      "'"one-api:$AI_GATEWAY_PORT"'": 1
+      "'"$AIGATEWAY_HOST:$AI_GATEWAY_PORT"'": 1
     },
     "type": "roundrobin"
   }'
@@ -38,20 +38,18 @@ curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT 
 
 curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
     "uris": ["/v1/chat/*", "/v1/models","/v1/embeddings"],
-    "id": "one-api",
-    "name": "one-api",
-    "upstream_id": "one-api",
+    "id": "aigateway",
+    "name": "aigateway",
+    "upstream_id": "aigateway",
     "plugins": {
-       "openid-connect": {
-         "client_id": "'"$OIDC_CLIENT_ID"'",
-         "client_secret": "'"$OIDC_CLIENT_SECRET"'",
-         "discovery": "'"http://$OIDC_HOST:$OIDC_PORT""$OIDC_BASE_URL"'/.well-known/openid-configuration",
-         "introspection_endpoint_auth_method": "client_secret_basic",
-         "realm": "'"$KEYCLOAK_REALM"'",
-         "bearer_only": true,
-         "set_userinfo_header": true,
-         "ssl_verify": false
-       },
+      "openid-connect": {
+        "client_id": '"$CASDOOR_CLIENT_ID"',
+        "client_secret": '"$CASDOOR_CLIENT_SECRET"',
+        "discovery": '"http://$CASDOOR_HOST:$CASDOOR_PORT/.well-known/openid-configuration"',
+        "introspection_endpoint": '"http://$CASDOOR_HOST:$CASDOOR_PORT/api/login/oauth/introspect"',
+        "bearer_only": true,
+        "introspection_endpoint_auth_method": "client_secret_basic"
+      },
       "response-rewrite": {
           "headers": {
               "set": {
@@ -60,7 +58,7 @@ curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d
             },
             "status_code": 302,
             "vars":[ [ "status","==",401] ]
-        },
+      },
       "limit-req": {
         "rate": 1,
         "burst": 1,
@@ -78,11 +76,6 @@ curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d
         "path": "logs/access.log",
         "include_req_body": true,
         "include_resp_body": true
-      },
-      "proxy-rewrite": {
-         "headers": {
-          "Authorization": "'"Bearer ${ONE_API_INITIAL_ROOT_KEY}"'"
-          }
       }
     }
   }'
