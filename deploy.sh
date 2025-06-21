@@ -27,6 +27,10 @@ declare -r CASDOOR_PORT=8000
 declare -r OIDC_AUTH_HOST="http://localhost"
 declare -r OIDC_AUTH_PORT=8080
 
+declare -r CASDOOR_CLIENT_ID="vscode"
+declare -r CASDOOR_CLIENT_SECRET="jFWyVy9wUKKSkX55TDBt2SuQWl7fDM1l"
+
+
 # Get the machine's IP
 SERVER_IP=$(hostname -I | awk '{ print $1 }')
 declare -r SERVER_IP
@@ -44,17 +48,15 @@ validate_environment() {
     local required_files=(
         "configure.sh"
         "chatgpt/custom.yml.tpl"
-        #"dex/config.yaml.tpl"
         "tpl-resolve.sh"
         "chatgpt-initdb.sh"
         "docker-compose.yml.tpl"
         "apisix-chatgpt.sh"
         "apisix-copilot.sh"
         "apisix-issue.sh"
-        "apisix-keycloak.sh"
         "apisix-oidc.sh"
         "apisix-aigateway.sh"
-        "keycloak-import.sh"
+        "apisix-quota.sh"
 
     )
 
@@ -153,6 +155,8 @@ main() {
     safe_sed "s/OIDC_AUTH_HOST=\".*\"/OIDC_AUTH_HOST=$OIDC_AUTH_HOST/g" configure.sh
     safe_sed "s/OIDC_AUTH_PORT=\".*\"/OIDC_AUTH_PORT=$OIDC_AUTH_PORT/g" configure.sh
 
+    safe_sed "s/CASDOOR_CLIENT_ID=\".*\"/CASDOOR_CLIENT_ID=$CASDOOR_CLIENT_ID/g" configure.sh
+    safe_sed "s/CASDOOR_CLIENT_SECRET=\".*\"/CASDOOR_CLIENT_SECRET=$CASDOOR_CLIENT_SECRET/g" configure.sh
 
 
     # Modify directory permissions
@@ -185,9 +189,9 @@ main() {
         "apisix-chatgpt.sh"
         "apisix-copilot.sh"
         "apisix-issue.sh"
-        "apisix-keycloak.sh"
         "apisix-aigateway.sh"
         "apisix-oidc.sh"
+        "apisix-quota.sh"
     )
     for script in "${apisix_scripts[@]}"; do
         log "INFO" "Executing APISIX configuration: $script"
