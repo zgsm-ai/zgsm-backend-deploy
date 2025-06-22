@@ -6,16 +6,16 @@ LOG_FILE="${SCRIPT_NAME%.*}.log"
 exec > >(tee -a "$LOG_FILE") 2>&1
 # -------------------------- Constants Definition --------------------------
 
-declare -r AIGATEWAY_HOST="http://localhost"
+declare -r AIGATEWAY_HOST="172.31.86.242"
 declare -r AIGATEWAY_PORT=8002
 
-declare -r QUOTA_MANAGER_HOST="http://localhost"
+declare -r QUOTA_MANAGER_HOST="172.31.86.242"
 declare -r QUOTA_MANAGER_PORT=8099
 
-declare -r CASDOOR_HOST="http://localhost"
+declare -r CASDOOR_HOST="172.31.86.242"
 declare -r CASDOOR_PORT=8000
 
-declare -r OIDC_AUTH_HOST="http://localhost"
+declare -r OIDC_AUTH_HOST="172.31.86.242"
 declare -r OIDC_AUTH_PORT=8080
 
 declare -r CASDOOR_CLIENT_ID="vscode"

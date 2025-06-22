@@ -53,3 +53,11 @@ curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d
       }
     }
   }'
+
+
+# curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
+#     "uris": ["/api/v1/quota*"],
+#     "id": "quota-manager",
+#     "name": "quota-manager",
+#     "upstream_id": "quota-manager"
+#   }'
