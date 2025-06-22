@@ -30,7 +30,7 @@ done
 curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT  -d '{
     "id": "aigateway",
     "nodes": {
-      "'"$AIGATEWAY_HOST:$AI_GATEWAY_PORT"'": 1
+      "'"$AIGATEWAY_HOST:$AIGATEWAY_PORT"'": 1
     },
     "type": "roundrobin"
   }'

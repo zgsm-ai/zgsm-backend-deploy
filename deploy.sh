@@ -205,7 +205,8 @@ main() {
     sleep 10
 
     log "INFO" "All operations completed"
-    log "INFO" "Please login to the one-api backend [http://${SERVER_IP}:${ONE_API_PORT}] (default account: root, password: 123456), and add your LLM api-key in the Channels section! (If the page is blank, please wait as containers may take some time to start)"
+    # Note: ONE_API_PORT is currently commented out in the configuration
+    # log "INFO" "Please login to the one-api backend [http://${SERVER_IP}:${ONE_API_PORT}] (default account: root, password: 123456), and add your LLM api-key in the Channels section! (If the page is blank, please wait as containers may take some time to start)"
 }
 
 main "$@"
