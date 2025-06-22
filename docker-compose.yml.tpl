@@ -12,9 +12,7 @@ services:
       - etcd
       - portal
       - chatgpt
-      - trampoline
       - kaptcha
-      - keycloak
     ports:
       - "{{PORT_APISIX_API}}:9180/tcp"
       - "{{PORT_APISIX_ENTRY}}:9080/tcp"

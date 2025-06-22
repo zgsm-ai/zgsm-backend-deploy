@@ -1,30 +1,32 @@
 #!/bin/sh
 
+set -x
+
 . ./configure.sh
 
 # Define maximum waiting time (seconds, 0 means infinite wait)
-MAX_WAIT=0
-echo "Checking APISIX service status..."
-start_time=$(date +%s)
-while : ; do
-  # Check service status by detecting if the port is listening
-  if curl -sSf http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" >/dev/null; then
-    echo "APISIX has been successfully started (admin interface responds normally)"
-    break
-  fi
+# MAX_WAIT=0
+# echo "Checking APISIX service status..."
+# start_time=$(date +%s)
+# while : ; do
+#   # Check service status by detecting if the port is listening
+#   if curl -sSf http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" >/dev/null; then
+#     echo "APISIX has been successfully started (admin interface responds normally)"
+#     break
+#   fi
 
-  # Timeout detection
-  if [ $MAX_WAIT -ne 0 ]; then
-    current_time=$(date +%s)
-    if (( current_time - start_time > MAX_WAIT )); then
-      echo "Error: APISIX startup not detected within ${MAX_WAIT} seconds"
-      exit 1
-    fi
-  fi
+#   # Timeout detection
+#   if [ $MAX_WAIT -ne 0 ]; then
+#     current_time=$(date +%s)
+#     if (( current_time - start_time > MAX_WAIT )); then
+#       echo "Error: APISIX startup not detected within ${MAX_WAIT} seconds"
+#       exit 1
+#     fi
+#   fi
 
-  echo "Waiting for APISIX to start...(waited $(( $(date +%s) - start_time )) seconds)"
-  sleep 5
-done
+#   echo "Waiting for APISIX to start...(waited $(( $(date +%s) - start_time )) seconds)"
+#   sleep 5
+# done
 
 
 # For interfaces requiring login, add the following two plugins:
@@ -71,9 +73,9 @@ curl -i http://$APISIX_ADDR/apisix/admin/routes/realms-redirect \
     "plugins": {
       "openid-connect": {
         "bearer_only": false,
-        "client_id": "'"$OIDC_CLIENT_ID"'",
-        "client_secret": "'"$OIDC_CLIENT_SECRET"'",
-        "discovery": "'"http://$OIDC_HOST:$OIDC_PORT""$OIDC_BASE_URL"'/.well-known/openid-configuration",
+        "client_id": "'"$CASDOOR_CLIENT_ID"'",
+        "client_secret": "'"$CASDOOR_CLIENT_SECRET"'",
+        "discovery": "'"http://$CASDOOR_HOST:$CASDOOR_PORT/.well-known/openid-configuration"',
         "redirect_uri": "'"http://apisix:$PORT_APISIX_ENTRY"'/login/oidc",
         "scope": "openid email profile",
         "session": {

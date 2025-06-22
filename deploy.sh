@@ -5,15 +5,6 @@ SCRIPT_NAME=$(basename "$0")
 LOG_FILE="${SCRIPT_NAME%.*}.log"
 exec > >(tee -a "$LOG_FILE") 2>&1
 # -------------------------- Constants Definition --------------------------
-# one-api root key, custom, can be generated using 'uuidgen | tr -d '-'' command, will be configured in apisix gateway proxy-rewrite plugin. The real LLM api-keys should be configured in the one-api backend page.
-# declare -r ONE_API_INITIAL_ROOT_KEY="966c3157fe65461dbc731cd540b6cd5d"
-# declare -r ONE_API_PORT=30000
-declare -r CHAT_MODEL_IP="http://172.31.86.242:8002"  # Unified access through one-api, model configuration is done in one-api
-declare -r CHAT_MODEL_TYPE='deepseek-chat'    # Chat model
-# declare -r CHAT_API_KEY=${ONE_API_INITIAL_ROOT_KEY}
-declare -r COMPLETION_MODEL_IP="http://one-api:${ONE_API_PORT}/v1/completions" # Unified access through one-api, model configuration is done in one-api
-declare -r COMPLETION_MODEL_TYPE='deepseek-code'  # Completion model
-# declare -r COMPLETION_API_KEY=${ONE_API_INITIAL_ROOT_KEY}
 
 declare -r AIGATEWAY_HOST="http://localhost"
 declare -r AIGATEWAY_PORT=8002
@@ -29,6 +20,16 @@ declare -r OIDC_AUTH_PORT=8080
 
 declare -r CASDOOR_CLIENT_ID="vscode"
 declare -r CASDOOR_CLIENT_SECRET="jFWyVy9wUKKSkX55TDBt2SuQWl7fDM1l"
+
+# one-api root key, custom, can be generated using 'uuidgen | tr -d '-'' command, will be configured in apisix gateway proxy-rewrite plugin. The real LLM api-keys should be configured in the one-api backend page.
+# declare -r ONE_API_INITIAL_ROOT_KEY="966c3157fe65461dbc731cd540b6cd5d"
+# declare -r ONE_API_PORT=30000
+declare -r CHAT_MODEL_IP="http://172.31.86.242:8002"  # Unified access through one-api, model configuration is done in one-api
+declare -r CHAT_MODEL_TYPE='deepseek-chat'    # Chat model
+# declare -r CHAT_API_KEY=${ONE_API_INITIAL_ROOT_KEY}
+declare -r COMPLETION_MODEL_IP="http://${AIGATEWAY_HOST}:${AIGATEWAY_PORT}/v1/completions" # Unified access through one-api, model configuration is done in one-api
+declare -r COMPLETION_MODEL_TYPE='deepseek-code'  # Completion model
+# declare -r COMPLETION_API_KEY=${ONE_API_INITIAL_ROOT_KEY}
 
 
 # Get the machine's IP
@@ -143,16 +144,16 @@ main() {
     safe_sed "s/CHAT_MODEL=\".*\"/CHAT_MODEL=\"$CHAT_MODEL_TYPE\"/g" configure.sh
     # safe_sed "s/ONE_API_INITIAL_ROOT_KEY=\".*\"/ONE_API_INITIAL_ROOT_KEY=\"$ONE_API_INITIAL_ROOT_KEY\"/g" configure.sh
     # safe_sed "s/ONE_API_PORT=\".*\"/ONE_API_PORT=$ONE_API_PORT/g" configure.sh
-    safe_sed "s/AIGATEWAY_HOST=\".*\"/AIGATEWAY_HOST=$AIGATEWAY_HOST/g" configure.sh
+    safe_sed "s#AIGATEWAY_HOST=\".*\"#AIGATEWAY_HOST=$AIGATEWAY_HOST#g" configure.sh
     safe_sed "s/AIGATEWAY_PORT=\".*\"/AIGATEWAY_PORT=$AIGATEWAY_PORT/g" configure.sh
 
-    safe_sed "s/QUOTA_MANAGER_HOST=\".*\"/QUOTA_MANAGER_HOST=$QUOTA_MANAGER_HOST/g" configure.sh
+    safe_sed "s#QUOTA_MANAGER_HOST=\".*\"#QUOTA_MANAGER_HOST=$QUOTA_MANAGER_HOST#g" configure.sh
     safe_sed "s/QUOTA_MANAGER_PORT=\".*\"/QUOTA_MANAGER_PORT=$QUOTA_MANAGER_PORT/g" configure.sh
 
-    safe_sed "s/CASDOOR_HOST=\".*\"/CASDOOR_HOST=$CASDOOR_HOST/g" configure.sh
+    safe_sed "s#CASDOOR_HOST=\".*\"#CASDOOR_HOST=$CASDOOR_HOST#g" configure.sh
     safe_sed "s/CASDOOR_PORT=\".*\"/CASDOOR_PORT=$CASDOOR_PORT/g" configure.sh
 
-    safe_sed "s/OIDC_AUTH_HOST=\".*\"/OIDC_AUTH_HOST=$OIDC_AUTH_HOST/g" configure.sh
+    safe_sed "s#OIDC_AUTH_HOST=\".*\"#OIDC_AUTH_HOST=$OIDC_AUTH_HOST#g" configure.sh
     safe_sed "s/OIDC_AUTH_PORT=\".*\"/OIDC_AUTH_PORT=$OIDC_AUTH_PORT/g" configure.sh
 
     safe_sed "s/CASDOOR_CLIENT_ID=\".*\"/CASDOOR_CLIENT_ID=$CASDOOR_CLIENT_ID/g" configure.sh

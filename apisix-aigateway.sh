@@ -43,10 +43,10 @@ curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d
     "upstream_id": "aigateway",
     "plugins": {
       "openid-connect": {
-        "client_id": '"$CASDOOR_CLIENT_ID"',
-        "client_secret": '"$CASDOOR_CLIENT_SECRET"',
-        "discovery": '"http://$CASDOOR_HOST:$CASDOOR_PORT/.well-known/openid-configuration"',
-        "introspection_endpoint": '"http://$CASDOOR_HOST:$CASDOOR_PORT/api/login/oauth/introspect"',
+        "client_id": "'"$CASDOOR_CLIENT_ID"'",
+        "client_secret": "'"$CASDOOR_CLIENT_SECRET"'",
+        "discovery": "'"http://$CASDOOR_HOST:$CASDOOR_PORT/.well-known/openid-configuration"'",
+        "introspection_endpoint": "'"http://$CASDOOR_HOST:$CASDOOR_PORT/api/login/oauth/introspect"'",
         "bearer_only": true,
         "introspection_endpoint_auth_method": "client_secret_basic"
       },
