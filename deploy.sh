@@ -21,6 +21,10 @@ declare -r OIDC_AUTH_PORT=8080
 declare -r CASDOOR_CLIENT_ID="9e2fc5d4fbcd52ef4f6f"
 declare -r CASDOOR_CLIENT_SECRET="ab5d8ba28b0e6c0d6e971247cdc1deb269c9eea3"
 
+declare -r CREDIT_MANAGER_HOST="10.48.19.6"
+declare -r CREDIT_MANAGER_PORT=5173
+
+
 # one-api root key, custom, can be generated using 'uuidgen | tr -d '-'' command, will be configured in apisix gateway proxy-rewrite plugin. The real LLM api-keys should be configured in the one-api backend page.
 # declare -r ONE_API_INITIAL_ROOT_KEY="966c3157fe65461dbc731cd540b6cd5d"
 # declare -r ONE_API_PORT=30000
@@ -158,6 +162,9 @@ main() {
 
     safe_sed "s/CASDOOR_CLIENT_ID=\".*\"/CASDOOR_CLIENT_ID=\"$CASDOOR_CLIENT_ID\"/g" configure.sh
     safe_sed "s/CASDOOR_CLIENT_SECRET=\".*\"/CASDOOR_CLIENT_SECRET=\"$CASDOOR_CLIENT_SECRET\"/g" configure.sh
+
+    safe_sed "s#CREDIT_MANAGER_HOST=\".*\"#CREDIT_MANAGER_HOST=\"$CREDIT_MANAGER_HOST\"#g" configure.sh
+    safe_sed "s/CREDIT_MANAGER_PORT=\".*\"/CREDIT_MANAGER_PORT=\"$CREDIT_MANAGER_PORT\"/g" configure.sh
 
 
     # Modify directory permissions
