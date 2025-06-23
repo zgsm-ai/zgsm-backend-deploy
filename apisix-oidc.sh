@@ -42,7 +42,7 @@
 #       "response-rewrite": {
 #         "headers": {
 #             "set": {
-#                   "Location": "http://apisix-address/login/vscode"
+#                   "Location": "http://apisix-address/oidc_auth/plugin/login"
 #               }
 #           },
 #           "status_code": 302,

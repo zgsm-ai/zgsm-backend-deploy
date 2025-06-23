@@ -55,7 +55,7 @@ curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d
       "response-rewrite": {
           "headers": {
               "set": {
-                    "Location": "'"http://apisix:$PORT_APISIX_ENTRY"'/login/vscode"
+                    "Location": "'"http://apisix:$PORT_APISIX_ENTRY"'/oidc_auth/plugin/login"
                 }
             },
             "status_code": 302,

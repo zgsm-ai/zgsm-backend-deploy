@@ -62,6 +62,7 @@ validate_environment() {
         "apisix-oidc.sh"
         "apisix-aigateway.sh"
         "apisix-quota.sh"
+        "apisix-frontend.sh"
 
     )
 
@@ -200,6 +201,7 @@ main() {
         "apisix-aigateway.sh"
         "apisix-oidc.sh"
         "apisix-quota.sh"
+        "apisix-frontend.sh"
     )
     for script in "${apisix_scripts[@]}"; do
         log "INFO" "Executing APISIX configuration: $script"
