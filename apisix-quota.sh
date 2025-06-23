@@ -45,11 +45,6 @@ curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d
         "time_window": 86400,
         "rejected_code": 429,
         "key": "remote_addr"
-      },
-      "file-logger": {
-        "path": "logs/access.log",
-        "include_req_body": true,
-        "include_resp_body": true
       }
     }
   }'
