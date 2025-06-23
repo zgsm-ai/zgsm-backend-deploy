@@ -1,5 +1,7 @@
 #!/bin/sh
 
+
+
 . ./configure.sh
 
 # Define maximum wait time (seconds, 0 means infinite wait)
@@ -79,3 +81,11 @@ curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d
       }
     }
   }'
+
+
+# curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
+#     "uris": ["/v1/chat/*", "/v1/models","/v1/embeddings"],
+#     "id": "aigateway",
+#     "name": "aigateway",
+#     "upstream_id": "aigateway"
+#   }'

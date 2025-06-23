@@ -12,14 +12,14 @@ declare -r AIGATEWAY_PORT=8002
 declare -r QUOTA_MANAGER_HOST="172.31.86.242"
 declare -r QUOTA_MANAGER_PORT=8099
 
-declare -r CASDOOR_HOST="172.31.86.242"
+declare -r CASDOOR_HOST="10.48.19.11"
 declare -r CASDOOR_PORT=8000
 
-declare -r OIDC_AUTH_HOST="172.31.86.242"
+declare -r OIDC_AUTH_HOST="10.48.19.11"
 declare -r OIDC_AUTH_PORT=8080
 
-declare -r CASDOOR_CLIENT_ID="vscode"
-declare -r CASDOOR_CLIENT_SECRET="jFWyVy9wUKKSkX55TDBt2SuQWl7fDM1l"
+declare -r CASDOOR_CLIENT_ID="9e2fc5d4fbcd52ef4f6f"
+declare -r CASDOOR_CLIENT_SECRET="ab5d8ba28b0e6c0d6e971247cdc1deb269c9eea3"
 
 # one-api root key, custom, can be generated using 'uuidgen | tr -d '-'' command, will be configured in apisix gateway proxy-rewrite plugin. The real LLM api-keys should be configured in the one-api backend page.
 # declare -r ONE_API_INITIAL_ROOT_KEY="966c3157fe65461dbc731cd540b6cd5d"
@@ -144,20 +144,20 @@ main() {
     safe_sed "s/CHAT_MODEL=\".*\"/CHAT_MODEL=\"$CHAT_MODEL_TYPE\"/g" configure.sh
     # safe_sed "s/ONE_API_INITIAL_ROOT_KEY=\".*\"/ONE_API_INITIAL_ROOT_KEY=\"$ONE_API_INITIAL_ROOT_KEY\"/g" configure.sh
     # safe_sed "s/ONE_API_PORT=\".*\"/ONE_API_PORT=$ONE_API_PORT/g" configure.sh
-    safe_sed "s#AIGATEWAY_HOST=\".*\"#AIGATEWAY_HOST=$AIGATEWAY_HOST#g" configure.sh
-    safe_sed "s/AIGATEWAY_PORT=\".*\"/AIGATEWAY_PORT=$AIGATEWAY_PORT/g" configure.sh
+    safe_sed "s#AIGATEWAY_HOST=\".*\"#AIGATEWAY_HOST=\"$AIGATEWAY_HOST\"#g" configure.sh
+    safe_sed "s/AIGATEWAY_PORT=\".*\"/AIGATEWAY_PORT=\"$AIGATEWAY_PORT\"/g" configure.sh
 
-    safe_sed "s#QUOTA_MANAGER_HOST=\".*\"#QUOTA_MANAGER_HOST=$QUOTA_MANAGER_HOST#g" configure.sh
-    safe_sed "s/QUOTA_MANAGER_PORT=\".*\"/QUOTA_MANAGER_PORT=$QUOTA_MANAGER_PORT/g" configure.sh
+    safe_sed "s#QUOTA_MANAGER_HOST=\".*\"#QUOTA_MANAGER_HOST=\"$QUOTA_MANAGER_HOST\"#g" configure.sh
+    safe_sed "s/QUOTA_MANAGER_PORT=\".*\"/QUOTA_MANAGER_PORT=\"$QUOTA_MANAGER_PORT\"/g" configure.sh
 
-    safe_sed "s#CASDOOR_HOST=\".*\"#CASDOOR_HOST=$CASDOOR_HOST#g" configure.sh
-    safe_sed "s/CASDOOR_PORT=\".*\"/CASDOOR_PORT=$CASDOOR_PORT/g" configure.sh
+    safe_sed "s#CASDOOR_HOST=\".*\"#CASDOOR_HOST=\"$CASDOOR_HOST\"#g" configure.sh
+    safe_sed "s/CASDOOR_PORT=\".*\"/CASDOOR_PORT=\"$CASDOOR_PORT\"/g" configure.sh
 
-    safe_sed "s#OIDC_AUTH_HOST=\".*\"#OIDC_AUTH_HOST=$OIDC_AUTH_HOST#g" configure.sh
-    safe_sed "s/OIDC_AUTH_PORT=\".*\"/OIDC_AUTH_PORT=$OIDC_AUTH_PORT/g" configure.sh
+    safe_sed "s#OIDC_AUTH_HOST=\".*\"#OIDC_AUTH_HOST=\"$OIDC_AUTH_HOST\"#g" configure.sh
+    safe_sed "s/OIDC_AUTH_PORT=\".*\"/OIDC_AUTH_PORT=\"$OIDC_AUTH_PORT\"/g" configure.sh
 
-    safe_sed "s/CASDOOR_CLIENT_ID=\".*\"/CASDOOR_CLIENT_ID=$CASDOOR_CLIENT_ID/g" configure.sh
-    safe_sed "s/CASDOOR_CLIENT_SECRET=\".*\"/CASDOOR_CLIENT_SECRET=$CASDOOR_CLIENT_SECRET/g" configure.sh
+    safe_sed "s/CASDOOR_CLIENT_ID=\".*\"/CASDOOR_CLIENT_ID=\"$CASDOOR_CLIENT_ID\"/g" configure.sh
+    safe_sed "s/CASDOOR_CLIENT_SECRET=\".*\"/CASDOOR_CLIENT_SECRET=\"$CASDOOR_CLIENT_SECRET\"/g" configure.sh
 
 
     # Modify directory permissions

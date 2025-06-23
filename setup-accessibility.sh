@@ -2,7 +2,6 @@
 
 chmod +x apisix-chatgpt.sh
 chmod +x apisix-copilot.sh
-chmod +x apisix-keycloak.sh
 chmod +x configure.sh
 chmod +x tpl-resolve.sh
 
