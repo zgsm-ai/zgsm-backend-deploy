@@ -39,7 +39,7 @@ curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT 
 
 
 curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
-    "uris": ["/v1/chat/*", "/v1/models","/v1/embeddings"],
+    "uris": ["/v1/chat/*", "/ai-gateway/v1/models","/v1/embeddings"],
     "id": "aigateway",
     "name": "aigateway",
     "upstream_id": "aigateway",

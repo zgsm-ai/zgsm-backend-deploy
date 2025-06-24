@@ -11,7 +11,7 @@ curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT 
   }'
 
 curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
-    "uris": ["/api/v1/quota*"],
+    "uris": ["/quota-manager/api/v1/quota*"],
     "id": "quota-manager",
     "name": "quota-manager",
     "upstream_id": "quota-manager",
