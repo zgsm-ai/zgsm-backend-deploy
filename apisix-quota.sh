@@ -3,18 +3,18 @@
 . ./configure.sh
 
 curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT  -d '{
-    "id": "copilot",
+    "id": "quota-manager",
     "nodes": {
-      "'"fauxpilot:$PORT_FAUXPILOT_INTERNAL"'": 1
+      "'"$QUOTA_MANAGER_HOST:$QUOTA_MANAGER_PORT"'": 1
     },
     "type": "roundrobin"
   }'
 
 curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
-    "uris": ["/v1/completions", "/v2/completions", "/copilot_internal/*", "/v2/engines/*", "/v1/engines/*"],
-    "id": "copilot",
-    "name": "copilot",
-    "upstream_id": "copilot",
+    "uris": ["/quota-manager/api/v1/quota*"],
+    "id": "quota-manager",
+    "name": "quota-manager",
+    "upstream_id": "quota-manager",
     "plugins": {
       "openid-connect": {
         "client_id": "'"$CASDOOR_CLIENT_ID"'",
@@ -45,11 +45,14 @@ curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d
         "time_window": 86400,
         "rejected_code": 429,
         "key": "remote_addr"
-      },
-      "file-logger": {
-        "path": "logs/access.log",
-        "include_req_body": true,
-        "include_resp_body": true
       }
     }
   }'
+
+
+# curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
+#     "uris": ["/api/v1/quota*"],
+#     "id": "quota-manager",
+#     "name": "quota-manager",
+#     "upstream_id": "quota-manager"
+#   }'

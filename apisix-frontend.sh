@@ -19,55 +19,29 @@ curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT 
     "type": "roundrobin"
 }'
 
-# trampoline: login success redirection (URL: /login/ok), responsible for launching vscode
-curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT  -d '{
-    "id": "trampoline",
-    "nodes": {
-        "'"trampoline:$PORT_TRAMPOLINE_INTERNAL"'": 1
-    },
-    "type": "roundrobin"
-}'
-
 # Service for generating verification code images
 curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT  -d '{
     "id": "kaptcha",
     "nodes": {
-        "'"kaptcha:9696"'": 1
+        "'"$CASDOOR_HOST:$CASDOOR_PORT"'": 1
     },
     "type": "roundrobin"
 }'
 
-# Define keycloak endpoint
+# Define upstream for credit managermant page resource
 curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT  -d '{
-    "id": "keycloak",
+    "id": "credit-manager",
     "nodes": {
-        "'"keycloak:$PORT_KEYCLOAK_INTERNAL"'": 1
+        "'"$CREDIT_MANAGER_HOST:$CREDIT_MANAGER_PORT"'": 1
     },
     "type": "roundrobin"
 }'
-
-# Direct requests to keycloak to the keycloak endpoint
-curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
-    "uris": ["/realms/'"$KEYCLOAK_REALM"'/*"],
-    "id": "keycloak",
-    "upstream_id": "keycloak"
-  }'
 
 # Resources used by login pages
 curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
     "uris": ["/login/css/*", "/login/cdn/*", "/login/img/*", "/login/resources/*"],
     "id": "keycloak-portal-resources",
     "upstream_id": "portal"
-  }'
-
-# Direct requests to keycloak to the keycloak endpoint
-curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
-    "uris": ["/resources/*"],
-    "vars": [
-      [ "uri", "!", "~*", "^/resources/.*/login/phone/.*$" ]
-    ],
-    "id": "keycloak-common-resource",
-    "upstream_id": "keycloak"
   }'
 
 # Images needed for login page: img/keycloak-bg.png, img/favicon.ico, css/login.css
@@ -85,13 +59,6 @@ curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d
     }
   }'
 
-# Forward successful login redirection requests to trampoline service, "uris": ["/login/ok", "/login/resources/*"]
-curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
-    "uris": ["/login/ok"],
-    "id": "keycloak-trampoline",
-    "upstream_id": "trampoline"
-  }'
-
 # Generate verification code
 curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
     "uris": ["/realms/'"$KEYCLOAK_REALM"'/captcha/code"],
@@ -103,3 +70,54 @@ curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d
       }
     }
   }'
+
+# credit managerment page
+curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
+    "uris": ["/credit/manager*"],
+    "id": "credit-manager",
+    "upstream_id": "credit-manager"
+  }'
+
+
+
+# Define keycloak endpoint
+# curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT  -d '{
+#     "id": "keycloak",
+#     "nodes": {
+#         "'"keycloak:$PORT_KEYCLOAK_INTERNAL"'": 1
+#     },
+#     "type": "roundrobin"
+# }'
+
+# trampoline: login success redirection (URL: /login/ok), responsible for launching vscode
+# curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT  -d '{
+#     "id": "trampoline",
+#     "nodes": {
+#         "'"trampoline:$PORT_TRAMPOLINE_INTERNAL"'": 1
+#     },
+#     "type": "roundrobin"
+# }'
+
+# Direct requests to keycloak to the keycloak endpoint
+# curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
+#     "uris": ["/realms/'"$KEYCLOAK_REALM"'/*"],
+#     "id": "keycloak",
+#     "upstream_id": "keycloak"
+#   }'
+
+# Direct requests to keycloak to the keycloak endpoint
+# curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
+#     "uris": ["/resources/*"],
+#     "vars": [
+#       [ "uri", "!", "~*", "^/resources/.*/login/phone/.*$" ]
+#     ],
+#     "id": "keycloak-common-resource",
+#     "upstream_id": "keycloak"
+#   }'
+
+# Forward successful login redirection requests to trampoline service, "uris": ["/login/ok", "/login/resources/*"]
+# curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
+#     "uris": ["/login/ok"],
+#     "id": "keycloak-trampoline",
+#     "upstream_id": "trampoline"
+#   }'
