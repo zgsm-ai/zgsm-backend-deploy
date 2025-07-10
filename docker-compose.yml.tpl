@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   apisix:
-    image: apache/apisix:3.9.1-debian
+    image: {{DH_ADDR}}/apisix:3.9.1-debian
     restart: always
     environment:
       TZ: "Asia/Shanghai"
@@ -10,11 +10,6 @@ services:
       - ./apisix/config.yaml:/usr/local/apisix/conf/config.yaml:ro
     depends_on:
       - etcd
-      - portal
-      - chatgpt
-      - trampoline
-      - kaptcha
-      - keycloak
     ports:
       - "{{PORT_APISIX_API}}:9180/tcp"
       - "{{PORT_APISIX_ENTRY}}:9080/tcp"
@@ -23,7 +18,7 @@ services:
       - shenma
 
   apisix-dashboard:
-    image: apache/apisix-dashboard:3.0.0-alpine
+    image: {{DH_ADDR}}/apisix-dashboard:3.0.0-alpine
     restart: always
     environment:
       TZ: "Asia/Shanghai"
@@ -37,7 +32,7 @@ services:
       - shenma
 
   etcd:
-    image: bitnami/etcd:3.5.14
+    image: {{DH_ADDR}}/etcd:3.5.14
     restart: always
     volumes:
       - ./etcd/data:/bitnami/etcd/data
@@ -54,7 +49,7 @@ services:
       - shenma
 
   redis:
-    image: docker.io/redis:7.2.4
+    image: {{DH_ADDR}}/redis:7.2.4
     restart: always
     environment:
       TZ: "Asia/Shanghai"
@@ -66,12 +61,12 @@ services:
       - shenma
 
   postgres:
-    image: postgres:15-alpine
+    image: {{DH_ADDR}}/postgres:15-alpine
     restart: always
     environment:
       TZ: "Asia/Shanghai"
-      POSTGRES_DB: "keycloak"
-      POSTGRES_USER: "keycloak"
+      POSTGRES_DB: "{{POSTGRES_DB}}"
+      POSTGRES_USER: "{{POSTGRES_USER}}"
       POSTGRES_PASSWORD: "{{PASSWORD_POSTGRES}}"
     volumes:
       - ./postgres/data:/var/lib/postgresql/data
@@ -80,45 +75,8 @@ services:
     networks:
       - shenma
 
-  keycloak:
-    image: quay.io/keycloak/keycloak:20.0.5
-    command: ["start-dev"]
-    restart: always
-    environment:
-      TZ: "Asia/Shanghai"
-      DB_ADDR: "postgres"
-      DB_PORT: "{{PORT_POSTGRES}}"
-      DB_VENDOR: "postgres"
-      KEYCLOAK_ADMIN: "admin"
-      KEYCLOAK_ADMIN_PASSWORD: "{{PASSWORD_KEYCLOAK}}"
-    ports:
-      - "{{PORT_KEYCLOAK}}:{{PORT_KEYCLOAK_INTERNAL}}/tcp"
-    volumes:
-      - ./keycloak/providers:/opt/keycloak/providers
-      - ./keycloak/keycloak.conf:/opt/keycloak/conf/keycloak.conf:ro
-    depends_on:
-      - postgres
-      - redis
-    networks:
-      - shenma
-
-#  dex:
-#    image: dexidp/dex:latest
-#    command:
-#      - dex
-#      - serve
-#      - /etc/dex/cfg/config.yaml
-#    ports:
-#      - "5556:5556"
-#    volumes:
-#      - ./dex/config.yaml:/etc/dex/cfg/config.yaml
-#    networks:
-#      - shenma
-#    depends_on:
-#      - postgres
-
   portal:
-    image: nginx:1.27.1
+    image: {{DH_ADDR}}/nginx:1.27.1
     restart: always
     environment:
       TZ: "Asia/Shanghai"
@@ -126,68 +84,188 @@ services:
       - ./portal/data:/var/www
       - ./portal/nginx.conf:/etc/nginx/nginx.conf
     ports:
-      - "{{PORT_PORTAL}}:{{PORT_PORTAL_INTERNAL}}/tcp"
+      - "{{PORT_PORTAL}}:80/tcp"
     networks:
       - shenma
 
-  trampoline:
-    image: zgsm/trampoline:1.0.241018
+  codebase-indexer:
+    image: {{DH_ADDR}}/codebase-indexer:latest
+    command: ["/app/server", "-f", "/app/conf/conf.yaml"]
     restart: always
-    environment:
-      TZ: "Asia/Shanghai"
-    volumes:
-      - ./trampoline/data:/opt/trampoline/resources
     ports:
-      - "{{PORT_TRAMPOLINE}}:{{PORT_TRAMPOLINE_INTERNAL}}/tcp"
-    networks:
-      - shenma
-
-  kaptcha:
-    image: zgsm/kaptcha-generator:0.6.0
-    restart: always
-    working_dir: /root/kaptcha
-    volumes:
-      - ./kaptcha/application.yaml:/root/kaptcha/application.yaml
-    environment:
-      TZ: "Asia/Shanghai"
-      SPRING_CONFIG_LOCATION: "/root/kaptcha/application.yaml"
-    ports:
-      - "9696:9696/tcp"
-    depends_on:
-      - redis
-    networks:
-      - shenma
-
-  chatgpt-initdb:
-    image: zgsm/chat-server:1.2.0
-    command: ["/sbin/entrypoint.sh", "app:init"]
-    restart: no
-    volumes:
-      - ./chatgpt/server:/server
-      - ./chatgpt/supervisor:/var/log/supervisor
-      - ./chatgpt/logs:/server/logs
+      - "{{PORT_CODEBASE_INDEXER}}:8888"
+      - "6060:6060"
     environment:
       - TZ=Asia/Shanghai
-      - CACHE_DB=chatgpt
-      - REDIS_URL=redis://redis:{{PORT_REDIS}}/0
-      - SERVE_THREADS=200
-      - SERVE_CONNECTION_LIMIT=512
-      - PG_URL=postgres:{{PORT_POSTGRES}}
-      - DB_NAME=chatgpt
-      - DATABASE_URI=postgresext+pool://keycloak:{{PASSWORD_POSTGRES}}@postgres/chatgpt
-      - ES_SERVER=http://es:{{PORT_ES}}
-      - ES_PASSWORD={{PASSWORD_ELASTIC}}
-      - DEVOPS_URL=
-      - GEVENT_SUPPORT=True
-      - NO_COLOR=1
-      - DEPLOYMENT_TYPE=all
+      - INDEX_NODE=1
+      - DB_PASSWORD={{PASSWORD_POSTGRES}}
+    volumes:
+      - ./codebase-indexer/conf.yaml:/app/conf/conf.yaml
+      - ./codebase-indexer/codegraph.yaml:/app/conf/codegraph.yaml
+      - ./codebase-indexer/logs:/app/logs
+      - ./codebase-indexer/store:/mnt/codebase-store
+    networks:
+      - shenma
+
+  chat-rag:
+    image: {{DH_ADDR}}/chat-rag:latest
+    command: ["/app/chat-rag", "-f", "/app/etc/chat-api.yaml"]
+    restart: always
+    ports:
+      - "{{PORT_CHAT_RAG}}:8888"
+    volumes:
+      - ./chat-rag/logs:/data/logs
+      - ./chat-rag/chat-api.yaml:/app/etc/chat-api.yaml:ro
+    depends_on:
+      - codebase-indexer
+    networks:
+      - shenma
+
+  review-manager:
+    image: {{DH_ADDR}}/review-manager:latest
+    restart: always
+    ports:
+      - "{{PORT_REVIEW_MANAGER}}:8080"
     depends_on:
       - postgres
+      - redis
+    environment:
+      DATABASE_HOST: postgres
+      DATABASE_PORT: {{PORT_POSTGRES}}
+      DATABASE_USER: {{POSTGRES_USER}}
+      DATABASE_PASSWORD: {{PASSWORD_POSTGRES}}
+      DATABASE_NAME: codereview
+      REDIS_HOST: redis
+      REDIS_PORT: {{PORT_REDIS}}
+    volumes:
+      - ./codereview/logs/review-manager:/app/logs
+      - ./codereview/config/review-manager:/app/config
+    networks:
+      - shenma
+
+  review-worker:
+    image: {{DH_ADDR}}/review-manager:latest
+    command: ./review-manager worker
+    restart: always
+    depends_on:
+      - postgres
+      - redis
+      - review-manager
+    environment:
+      DATABASE_HOST: postgres
+      DATABASE_PORT: {{PORT_POSTGRES}}
+      DATABASE_USER: {{POSTGRES_USER}}
+      DATABASE_PASSWORD: {{PASSWORD_POSTGRES}}
+      DATABASE_NAME: codereview
+      REDIS_HOST: redis
+      REDIS_PORT: {{PORT_REDIS}}
+    volumes:
+      - ./codereview/logs/review-worker:/app/logs
+      - ./codereview/config/review-manager:/app/config
+    networks:
+      - shenma
+
+  issue-manager:
+    image: {{DH_ADDR}}/issue-manager:latest
+    restart: always
+    ports:
+      - "{{PORT_ISSUE_MANAGER}}:8080"
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_HOST: postgres
+      DATABASE_PORT: {{PORT_POSTGRES}}
+      DATABASE_USER: {{POSTGRES_USER}}
+      DATABASE_PASSWORD: {{PASSWORD_POSTGRES}}
+      DATABASE_NAME: codereview
+    volumes:
+      - ./codereview/logs/issue-manager:/app/logs
+      - ./codereview/config/issue-manager:/app/config
+    networks:
+      - shenma
+
+  review-checker:
+    image: {{DH_ADDR}}/review-checker:latest
+    restart: always
+    ports:
+      - "{{PORT_REVIEW_CHECKER}}:8080"
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      DATABASE_HOST: postgres
+      DATABASE_PORT: {{PORT_POSTGRES}}
+      DATABASE_USER: {{POSTGRES_USER}}
+      DATABASE_PASSWORD: {{PASSWORD_POSTGRES}}
+      DATABASE_NAME: codereview
+      REDIS_HOST: redis
+      REDIS_PORT: {{PORT_REDIS}}
+      REDIS_DB: 2
+    volumes:
+      - ./codereview/logs/review-checker:/app/logs
+      - ./codereview/config/review-checker:/app/config
+    networks:
+      - shenma
+
+  credit-manager:
+    image: {{DH_ADDR}}/credit-manager:latest
+    command: ["nginx", "-g", "daemon off;"]
+    restart: always
+    ports:
+      - "{{PORT_CREDIT_MANAGER}}:80"
+    volumes:
+      - ./credit-manager/config:/config
+    networks:
+      - shenma
+
+  oidc-auth:
+    image: {{DH_ADDR}}/oidc-auth:latest
+    restart: always
+    ports:
+      - "{{PORT_OIDC_AUTH}}:8080"
+    environment:
+      SERVER_BASEURL: "{{ZGSM_ADDR}}"
+      PROVIDERS_CASDOOR_CLIENTID: {{OIDC_AUTH_CLIENT_ID}}
+      PROVIDERS_CASDOOR_CLIENTSECRET: "{{OIDC_AUTH_CLIENT_SECRET}}"
+      PROVIDERS_CASDOOR_BASEURL: "{{ZGSM_ADDR}}"
+      PROVIDERS_CASDOOR_INTERNALURL: "{{OIDC_CASDOOR_ADDR}}"
+      SMS_ENABLEDTEST: true
+      SMS_CLIENTID: 
+      SMS_CLIENTSECRET: 
+      SMS_TOKENURL: 
+      SMS_SENDURL: 
+      SYNCSTAR_ENABLED: false
+      SYNCSTAR_PERSONALTOKEN: 
+      SYNCSTAR_OWNER: zgsm-ai
+      SYNCSTAR_REPO: zgsm
+      DATABASE_HOST: postgres
+      DATABASE_DBNAME: auth
+      DATABASE_PASSWORD: {{PASSWORD_POSTGRES}}
+      DATABASE_PORT: {{PORT_POSTGRES}}
+      DATABASE_USERNAME: {{POSTGRES_USER}}
+      ENCRYPT_AESKEY: pUD8mylndVVK7hTNt56VZMkNrppinbNg
+    volumes:
+      - ./oidc-auth/logs:/app/logs
+    networks:
+      - shenma
+
+  quota-manager:
+    image: {{DH_ADDR}}/quota-manager:latest
+    command: ["/app/quota-manager", "-c", "/app/app-conf.yml"]
+    restart: always
+    ports:
+      - "{{PORT_QUOTA_MANAGER}}:8080"
+    environment:
+      TZ: Asia/Shanghai
+      INDEX_NODE: "0"
+    volumes:
+      - ./quota-manager/app-conf.yml:/app/app-conf.yml
+      - ./quota-manager/logs:/app/logs
     networks:
       - shenma
 
   chatgpt:
-    image: zgsm/chat-server:1.2.0
+    image: {{DH_ADDR}}/chat-server:latest
     command: ["/sbin/entrypoint.sh", "app:start"]
     restart: always
     volumes:
@@ -207,7 +285,7 @@ services:
       - SERVE_CONNECTION_LIMIT=512
       - PG_URL=postgres:{{PORT_POSTGRES}}
       - DB_NAME=chatgpt
-      - DATABASE_URI=postgresext+pool://keycloak:{{PASSWORD_POSTGRES}}@postgres/chatgpt
+      - DATABASE_URI=postgresext+pool://{{POSTGRES_USER}}:{{PASSWORD_POSTGRES}}@postgres/chatgpt
       - ES_SERVER=http://es:{{PORT_ES}}
       - ES_PASSWORD={{PASSWORD_ELASTIC}}
       - CUSTOM_CONFIG_FILE=/custom.yml
@@ -222,45 +300,75 @@ services:
     networks:
       - shenma
 
-  fauxpilot:
-    image: zgsm/copilot_proxy:1.5.15
-    command: ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "5000"]
+  code-completion:
+    image: {{DH_ADDR}}/code-completion:latest
     restart: always
-    volumes:
-      - ./fauxpilot/logs:/python-docker/logs
-      - ./fauxpilot/common-v1.5.15.py:/python-docker/utils/common.py
-      - ./fauxpilot/tgi_proxy_v2.py:/python-docker/instances/tgi_proxy_v2.py
-      - ./fauxpilot/api_manager.py:/python-docker/thrid_platform/openai_server/api_manager.py
-      - ./fauxpilot/model_client_service.py:/python-docker/services/model_client_service.py
     ports:
-      - "{{PORT_FAUXPILOT}}:{{PORT_FAUXPILOT_INTERNAL}}/tcp"
+      - "{{PORT_COMPLETION}}:{{PORT_COMPLETION_INTERNAL}}/tcp"
     environment:
       - TZ=Asia/Shanghai
       - THRESHOLD_SCORE=0.3
       - STR_PATTERN=import +.*|from +.*|from +.* import *.*
       - USER_CODE_UPLOAD_DELAY=30
-      - MAX_MODEL_COST_TIME=3000
       - CONTEXT_LINES_LIMIT=1000
       - SNIPPET_TOP_N=0
-      - MAX_MODEL_LEN=4000,2000
       - MAX_TOKENS=500
-      - MULTI_LINE_STREAM_K=6
+      - MAX_MODEL_LEN=5000,1000
+      - CODEBASE_INDEXER_API_BASE_URL=http://codebase-indexer:{{PORT_CODEBASE_INDEXER}}
+      - CONTEXT_COST_TIME=1500
+      - MAX_MODEL_COST_TIME=2800
+      - MAX_COST_TIME=3000
+      - MULTI_LINE_STREAM_K=8
+      - MIN_PREFIX_TOKEN=2000
+      - COMPLETION_CACHE_TIME=86400
+      - CONTINUE_COMPLETION_CACHE_EXPIRED=30
+      - DISABLED_REJECT_AUTHORIZATION=True
       - ENABLE_REDIS=False
       - REDIS_HOST=redis
       - REDIS_PORT={{PORT_REDIS}}
       - REDIS_DB=0
       - REDIS_PWD="{{PASSWORD_REDIS}}"
       - MAIN_MODEL_TYPE=openai
-      - OPENAI_MODEL_HOST={{OPENAI_MODEL_HOST}}
-      - OPENAI_MODEL={{OPENAI_MODEL}}
-      - OPENAI_MODEL_API_KEY={{OPENAI_MODEL_API_KEY}}
+      - OPENAI_MODEL_HOST={{CODE_COMPLETION_MODEL_HOST}}
+      - OPENAI_MODEL={{CODE_COMPLETION_MODEL}}
+      - OPENAI_MODEL_API_KEY={{CODE_COMPLETION_MODEL_API_KEY}}
+      - OPENAI_MODEL_AUTHORIZATION=sk-CsPvPQwVPGVcPEBm6485D534F690407aA3113f7c13D633Cd
     depends_on:
       - redis
     networks:
       - shenma
 
+  casdoor:
+    image: {{DH_ADDR}}/casdoor:v1.1.1
+    restart: always
+    ports:
+      - "{{PORT_CASDOOR}}:8000"
+    environment:
+      driverName: postgres
+      dataSourceName: "host=postgres port={{PORT_POSTGRES}} user={{POSTGRES_USER}} password={{PASSWORD_POSTGRES}} dbname=casdoor sslmode=disable"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - shenma
+
+  higress:
+    image: higress-registry.cn-hangzhou.cr.aliyuncs.com/higress/all-in-one:latest
+    restart: always
+    ports:
+      - "{{PORT_AI_GATEWAY}}:8080"
+    environment:
+      - "MODE=full"
+      - "O11Y=on"
+      - "CONFIG_TEMPLATE=ai-gateway"
+      - "GATEWAY_HTTP_PORT=8080"
+      - "GATEWAY_HTTPS_PORT=8443"
+      - "CONSOLE_PORT={{PORT_HIGRESS_CONTROL}}"
+    networks:
+      - shenma
+
   prometheus:
-    image: quay.io/prometheus/prometheus:v2.54.0
+    image: {{DH_ADDR}}/prometheus:v2.54.0
     restart: always
     environment:
       TZ: "Asia/Shanghai"
@@ -274,7 +382,7 @@ services:
       - shenma
 
   grafana:
-    image: docker.io/grafana/grafana:11.2.0
+    image: {{DH_ADDR}}/grafana:11.2.0
     restart: always
     environment:
       TZ: "Asia/Shanghai"
@@ -291,7 +399,7 @@ services:
       - shenma
 
   es:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.9.0
+    image: {{DH_ADDR}}/elasticsearch:8.9.0
     environment:
       - TZ=Asia/Shanghai
       - discovery.type=single-node
@@ -300,7 +408,6 @@ services:
       - xpack.security.http.ssl.enabled=false  # Disable HTTPS
       - xpack.ml.enabled=false
       - "ELASTIC_PASSWORD={{PASSWORD_ELASTIC}}"
-      #- "ENROLLMENT_TOKEN={{ENROLLMENT_TOKEN}}"
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     user: "1000:1000"
     ulimits:
@@ -314,54 +421,6 @@ services:
       - ./es/data:/usr/share/elasticsearch/data
     networks:
       - shenma
-
-  kibana:
-    image: docker.elastic.co/kibana/kibana:8.9.0
-    environment:
-      - ELASTICSEARCH_HOSTS=http://es:{{PORT_ES}}  # Point to Elasticsearch
-      - ELASTICSEARCH_SERVICEACCOUNTTOKEN={{ENROLLMENT_TOKEN}}
-    ports:
-      - "5601:5601"  # Kibana port
-    depends_on:
-      - es
-    networks:
-      - shenma
-
-  one-api:
-    image: "${REGISTRY:-docker.io}/justsong/one-api:latest"
-    container_name: one-api
-    restart: always
-    command: "--log-dir /app/logs --port {{ONE_API_PORT}}"
-    ports:
-      - "{{ONE_API_PORT}}:{{ONE_API_PORT}}"
-    volumes:
-      - ./logs:/app/logs
-    environment:
-      - SQL_DSN=postgres://keycloak:{{PASSWORD_POSTGRES}}@postgres:{{PORT_POSTGRES}}/oneapi
-      - SQL_MAX_IDLE_CONNS=10
-      - SQL_MAX_OPEN_CONNS=100
-      - SQL_CONN_MAX_LIFETIME=30
-      - REDIS_CONN_STRING=redis://default:{{PASSWORD_REDIS}}@redis:{{PORT_REDIS}}
-      - REDIS_PASSWORD={{PASSWORD_REDIS}}
-      - SESSION_SECRET=zgsm-one-api-fxjwgs
-      - GLOBAL_API_RATE_LIMIT=180
-      - GLOBAL_WEB_RATE_LIMIT=180
-      - RELAY_TIMEOUT=180
-      - TZ=Asia/Shanghai
-      - INITIAL_ROOT_TOKEN={{ONE_API_INITIAL_ROOT_KEY}}
-      - INITIAL_ROOT_ACCESS_TOKEN={{ONE_API_INITIAL_ROOT_ACCESS_TOKEN}}
-      - SYNC_FREQUENCY=60
-    depends_on:
-      - redis
-      - postgres
-    healthcheck:
-      test: [ "CMD-SHELL", "wget -q -O - http://localhost:{{ONE_API_PORT}}/api/status | grep -o '\"success\":\\s*true' | awk -F: '{print $2}'" ]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    networks:
-      - shenma
-
 
 networks:
   shenma:
