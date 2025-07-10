@@ -13,7 +13,7 @@ function usage() {
     echo "options:"
     echo "  [-l <LOAD_DIR>] - 从该目录加载镜像"
     echo "examples:"
-    echo "  load-images.sh -l ./v1-images"
+    echo "  load-images.sh -l ./images"
 }
 
 while getopts "l:h" opt

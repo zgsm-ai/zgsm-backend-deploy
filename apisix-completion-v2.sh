@@ -11,8 +11,9 @@ curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT 
   }'
 
 curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
-    "uris": ["/code-completion/api/v1/completions"],
     "id": "code-completion",
+    "name": "code-completion",
+    "uris": ["/code-completion/api/v1/completions"],
     "upstream_id": "code-completion",
     "plugins": {
       "openid-connect": {

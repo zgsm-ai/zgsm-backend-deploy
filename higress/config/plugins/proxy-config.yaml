@@ -1,0 +1,5 @@
+provider:
+  modelMapping:
+    '*': ""
+    deepseek-v3: "deepseek-v3"
+  type: "openai"

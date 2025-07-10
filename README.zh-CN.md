@@ -62,11 +62,13 @@ chat和completion都使用代理后端的原因是为了屏蔽不同模型API的
 ### 1. 按要求修改配置
 
 ```sh
-vim deploy.sh
 vim configure.sh
 ```
 
+根据脚本中的说明修改配置。最重要的配置是ZGSM_BACKEND_BASEURL, ZGSM_BACKEND这两个。
+
 ### 2. 执行部署脚本
+
 ```shell
 bash deploy.sh
 ```
@@ -76,8 +78,7 @@ bash deploy.sh
 神码后端部署完毕后，可以通过地址http://{{ZGSM_BACKEND}}:{{PORT_AI_GATEWAY}}，访问higress页面配置AI网关。
 其中:
 
-`{{ZGSM_BACKEND}}`是用户在configure.sh中的设定的ZGSM_BACKEND的值。
-`{{PORT_AI_GATEWAY}}`是configure.sh中的PORT_AI_GATEWAY值。
+`{{ZGSM_BACKEND}}`, `{{PORT_AI_GATEWAY}}`的值配置在configure.sh文件中。
 
 具体请参考:
 
@@ -87,9 +88,13 @@ bash deploy.sh
 
 神码后端部署完毕后，可以通过地址http://{{ZGSM_BACKEND}}:{{PORT_CASDOOR}}，访问神码认证系统casdoor页面，配置对接第三方认证系统。
 
-`{{ZGSM_BACKEND}}`, `{{PORT_AI_GATEWAY}}`的值配置在configure.sh文件中。
+`{{ZGSM_BACKEND}}`, `{{PORT_CASDOOR}}`的值配置在configure.sh文件中。
+
+具体请参考：
+
+* [casdoor](./docs/casdoor.zh-CN.md)
 
 ### 5. 在神码插件配置APISIX地址
 
-在vscode中打开神码设置的‘提供商’页面，选择API提供商为‘诸葛神码’，在‘诸葛神码Base Url’配置部署好的后端地址， 即http://{{ZGSM_BACKEND}}:{{PORT_APISIX_ENTRY}}映射得到的vscode可访问的外部地址。
+在vscode中打开神码设置的‘提供商’页面，选择API提供商为‘诸葛神码’，在‘诸葛神码Base Url’配置部署好的后端入口URL地址，即configure.sh中配置的ZGSM_BACKEND_BASEURL变量的值。
 

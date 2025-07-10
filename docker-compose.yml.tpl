@@ -17,20 +17,6 @@ services:
     networks:
       - shenma
 
-  apisix-dashboard:
-    image: {{DH_ADDR}}/apisix-dashboard:3.0.0-alpine
-    restart: always
-    environment:
-      TZ: "Asia/Shanghai"
-    volumes:
-      - ./apisix_dashboard/conf.yaml:/usr/local/apisix-dashboard/conf/conf.yaml
-    depends_on:
-      - etcd
-    ports:
-      - "{{PORT_APISIX_DASHBOARD}}:9000/tcp"
-    networks:
-      - shenma
-
   etcd:
     image: {{DH_ADDR}}/etcd:3.5.14
     restart: always
@@ -224,10 +210,10 @@ services:
     ports:
       - "{{PORT_OIDC_AUTH}}:8080"
     environment:
-      SERVER_BASEURL: "{{ZGSM_ADDR}}"
+      SERVER_BASEURL: "{{ZGSM_BACKEND_BASEURL}}"
       PROVIDERS_CASDOOR_CLIENTID: {{OIDC_AUTH_CLIENT_ID}}
       PROVIDERS_CASDOOR_CLIENTSECRET: "{{OIDC_AUTH_CLIENT_SECRET}}"
-      PROVIDERS_CASDOOR_BASEURL: "{{ZGSM_ADDR}}"
+      PROVIDERS_CASDOOR_BASEURL: "{{ZGSM_BACKEND_BASEURL}}"
       PROVIDERS_CASDOOR_INTERNALURL: "{{OIDC_CASDOOR_ADDR}}"
       SMS_ENABLEDTEST: true
       SMS_CLIENTID: 
@@ -289,7 +275,7 @@ services:
       - ES_SERVER=http://es:{{PORT_ES}}
       - ES_PASSWORD={{PASSWORD_ELASTIC}}
       - CUSTOM_CONFIG_FILE=/custom.yml
-      - DEFAULT_MODEL_NAME={{CHAT_MODEL}}
+      - DEFAULT_MODEL_NAME={{CHAT_DEFAULT_MODEL}}
       - GEVENT_SUPPORT=True
       - NO_COLOR=1
       - DEPLOYMENT_TYPE=all

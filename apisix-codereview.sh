@@ -19,9 +19,9 @@ curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT 
   }'
 
 curl -i http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
-    "uris": ["/review-manager/*"],
     "id": "review-manager",
     "name": "review-manager-api",
+    "uris": ["/review-manager/*"],
     "upstream_id": "review-manager",
     "plugins": {
       "openid-connect": {

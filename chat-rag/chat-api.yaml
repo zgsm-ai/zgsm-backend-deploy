@@ -1,0 +1,30 @@
+Name: chat-rag
+Host: 0.0.0.0
+Port: 8888
+
+# Model endpoints configuration
+LLMEndpoint: "http://higress-gateway:80/v1/chat/completions"
+
+# Token processing configuration
+TokenThreshold: 32_000
+
+# Semantic API configuration
+SemanticApiEndpoint: "http://codebase-indexer:8888/codebase-indexer/api/v1/search/semantic"
+TopK: 5
+SemanticSocreThreshold: 0.75
+
+# Logging configuration
+LogFilePath: "/data/logs/"
+LokiEndpoint: "http://loki:3100/loki/api/v1/push"
+LogScanIntervalSec: 10
+
+# Model configuration
+SummaryModel: "deepseek-v3"
+SummaryModelTokenThreshold: 64_000
+ClassifyModel: "deepseek-v3"
+
+# Split system prompt, used to compress system prompt
+SystemPromptSplitter: "====\n\nRULES"
+
+# used recent user prompt messages nums
+RecentUserMsgUsedNums: 20

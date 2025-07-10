@@ -11,9 +11,9 @@ curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT 
 }'
 
 curl -i http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
-    "uris": ["/credit/manager*"],
     "id": "credit-manager",
     "name": "credit-manager-routes",
+    "uris": ["/credit/manager*"],
     "upstream_id": "credit-manager",
     "plugins": {
       "limit-req": {

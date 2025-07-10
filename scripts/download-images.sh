@@ -5,7 +5,7 @@ TEMP=$(getopt -o b:o: --long base-url:,output: -n "$0" -- "$@")
 eval set -- "$TEMP"
 
 # 默认值
-base_url="https://zgsm.sangfor.com/images/"
+base_url="https://zgsm.sangfor.com/shenma-images/"
 output_dir="./images"
 
 # 解析参数
@@ -32,15 +32,15 @@ fi
 
 # 确保base_url以/结尾
 [[ "$base_url" != */ ]] && base_url="$base_url/"
-list_url="https://zgsm.sangfor.com/images/image-files.list"
+list_url="https://zgsm.sangfor.com/shenma-images/image-files.list"
 temp_list="$output_dir/image-files.list"
 
 # 检测下载工具
 download_cmd=""
-if command -v wget >/dev/null 2>&1; then
-    download_cmd="wget -q"
-elif command -v curl >/dev/null 2>&1; then
-    download_cmd="curl -s -O"
+if command -v curl >/dev/null 2>&1; then
+    download_cmd="curl"
+elif command -v wget >/dev/null 2>&1; then
+    download_cmd="wget"
 else
     echo "错误：未找到wget或curl命令" >&2
     exit 1
@@ -51,7 +51,7 @@ mkdir -p "$output_dir"
 
 # 下载文件列表
 echo "正在下载文件列表..."
-if [ "$download_cmd" = "wget -q" ]; then
+if [ "$download_cmd" = "wget" ]; then
     if ! wget -q "$list_url" -O "$temp_list"; then
         echo "无法下载文件列表"
         exit 1

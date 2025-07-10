@@ -32,8 +32,8 @@ curl -i http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d 
         "key_type": "var_combination"
       },
       "limit-req": {
-        "rate": 300,
-        "burst": 300,
+        "rate": 3,
+        "burst": 3,
         "rejected_code": 429,
         "key_type": "var_combination",
         "key": "$remote_addr $http_x_forwarded_for"

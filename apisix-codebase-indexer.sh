@@ -2,8 +2,6 @@
 
 . ./configure.sh
 
-CODEBASE_INDEXER_SERVICE=codebase-indexer-svc
-
 curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT -d '{
     "id": "codebase-indexer",
     "nodes": {
@@ -13,9 +11,9 @@ curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT 
   }'
 
 curl -i http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
-    "uris": ["/codebase-indexer/*"],
     "id": "codebase-indexer",
     "name": "codebase-indexer",
+    "uris": ["/codebase-indexer/*"],
     "upstream_id": "codebase-indexer",
     "plugins": {
        "openid-connect": {
@@ -31,13 +29,14 @@ curl -i http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d 
         "rate": 300,
         "burst": 300,
         "rejected_code": 429,
-        "key_type": "var",
+        "key_type": "var_combination",
         "key": "$remote_addr $http_x_forwarded_for"
       },
       "limit-count": {
         "count": 10000,
         "time_window": 86400,
         "rejected_code": 429,
+        "key_type": "var_combination",
         "key": "$remote_addr $http_x_forwarded_for"
       },
       "file-logger": {

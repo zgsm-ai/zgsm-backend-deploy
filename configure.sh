@@ -3,35 +3,55 @@
 #-------------------------------------------------------------------------------
 #   以下设置请根据部署环境信息进行修改
 #-------------------------------------------------------------------------------
-# 诸葛神码后端的URL地址，一般会采用应用发布设备映射到 http://${ZGSM_BACKEND}:${PORT_APISIX_ENTRY}
-ZGSM_ADDR="https://zgsm.sangfor.com"
+# VSCODE扩展连接诸葛神码后端时使用的入口URL地址
+# 一般会利用DNS及应用发布设备将该地址映射到 http://${ZGSM_BACKEND}:${PORT_APISIX_ENTRY}
+ZGSM_BACKEND_BASEURL="https://zgsm.sangfor.com"
 # 诸葛神码后端的IP地址
 ZGSM_BACKEND="172.16.0.4"
 
-DH_HOST="harbor.sangfor.com"
-DH_ADDR="harbor.sangfor.com/zgsm"
+#---------------------------------------------------------
+# 私有镜像仓库设置
+# 用户可以私有化部署镜像仓库，用于存放诸葛神码所使用的所有镜像
+# 这些镜像默认存储在docker.io/zgsm下
+#---------------------------------------------------------
+# 私有镜像仓库的主机名
+DH_HOST="docker.io"
+# 私有镜像仓库中存储诸葛神码镜像的项目地址
+DH_ADDR="docker.io/zgsm"
 
+#---------------------------------------------------------
+# 登录神码内部应用所使用的账号密码
+# 建议修改，以提高系统安全性
+#---------------------------------------------------------
 # apisix中admin用户的APIKEY
 APIKEY_APISIX_ADMIN="edd1c9f034335f136f87ad84b625c8f1"
-#
+# apisix中viewer用户的APIKEY
 APIKEY_APISIX_VIEWER="4054f730f8e344346cd3f287985e76a2"
+# apisix-dashboard的登录密码
 PASSWORD_APISIX_DASHBOARD="sf2025~SHENMA"
+# etcd的访问密码
 PASSWORD_ETCD="sf2025~SHENMA"
+# redis的访问密码
 PASSWORD_REDIS="sf2025~SHENMA"
+# postgres的访问密码
 PASSWORD_POSTGRES="sf2025~SHENMA"
-PASSWORD_ES="sf2025~SHENMA"
+# elasticsearch的访问密码
 PASSWORD_ELASTIC="4c6y4g6Z09T2w33pYRNKE3LG"
 
-# ES
-ENROLLMENT_TOKEN="4c6y4g6Z09T2w33pYRNKE3LG"
+#---------------------------------------------------------
+# 大模型相关设置，请根据实际部署情况设置
+#---------------------------------------------------------
+# 对话默认使用的模型名称
+CHAT_DEFAULT_MODEL="deepseek-chat"
+CHAT_API_KEY="966c3157fe65461dbc731cd540b6cd5d"
+CHAT_AIGW_ADDR="http://higress:${PORT_AI_GATEWAY}/v1/chat/completions"
 
-# 对话模型
-CHAT_MODEL="deepseek-chat"
-# 补全模型
+# 代码补全模型的URL
 CODE_COMPLETION_MODEL_HOST="http://172.16.254.5:32081/v1/completions"
+# 代码补全采用的模型名称
 CODE_COMPLETION_MODEL="DeepSeek-Coder-V2-Lite-Base"
+# 代码补全模型的API-KEY
 CODE_COMPLETION_MODEL_API_KEY="966c3157fe65461dbc731cd540b6cd5d"
-
 #-------------------------------------------------------------------------------
 # 以下设置如非必要，请勿修改
 #-------------------------------------------------------------------------------
@@ -73,7 +93,6 @@ POSTGRES_DB="zgsm"
 
 PGSQL_ADDR="postgres:${PORT_POSTGRES}"
 REDIS_ADDR="redis:${PORT_REDIS}"
-AIGW_CHAT_ADDR="http://higress:${PORT_AI_GATEWAY}/v1/chat/completions"
 
 # oidc-auth模块在casdoor中注册用的clientid
 OIDC_AUTH_CLIENT_ID="9e2fc5d4fbcd52ef4f6f"

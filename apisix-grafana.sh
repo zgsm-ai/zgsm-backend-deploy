@@ -13,9 +13,9 @@ curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT 
   }'
 
 curl -i http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
-    "uris": ["/grafana/*"],
     "id": "grafana",
     "name": "grafana-api",
+    "uris": ["/grafana/*"],
     "upstream_id": "grafana",
     "plugins": {
       "limit-req": {

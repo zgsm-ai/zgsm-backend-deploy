@@ -23,7 +23,8 @@ validate_environment() {
         "configure.sh"
         "chatgpt/custom.yml.tpl"
         "tpl-resolve.sh"
-        "chatgpt-initdb.sh"
+        "docker-download-images.sh"
+        "db-initdb.sh"
         "docker-compose.yml.tpl"
         "apisix-chatgpt.sh"
         "apisix-issue.sh"
@@ -114,7 +115,6 @@ main() {
 
     # Parameter replacement
     safe_sed "s/ZGSM_BACKEND=\".*\"/ZGSM_BACKEND=\"$SERVER_IP\"/g" configure.sh
-    safe_sed "s/api_key: \".*\"/api_key: \"$CHAT_API_KEY\"/g" chatgpt/custom.yml.tpl
 
     # Modify directory permissions
     safe_chown
@@ -122,7 +122,8 @@ main() {
     # Execute subscripts
     local sub_scripts=(
         "tpl-resolve.sh"
-        "chatgpt-initdb.sh"
+        "docker-download-images.sh"
+        "db-initdb.sh"
     )
     for script in "${sub_scripts[@]}"; do
         log "INFO" "Executing subscript: $script"
