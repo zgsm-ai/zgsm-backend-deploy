@@ -17,12 +17,12 @@ fi
 LOAD_DIR="./images"
 
 function usage() {
-    echo "Usage: upload-image.sh [options]"
-    echo "Upload Docker image file to Harbor registry"
+    echo "Usage: push-images.sh [options]"
+    echo "Push docker images to Harbor registry"
     echo ""
     echo "Options:"
     echo "  -l <LOAD_DIR>    Load all images from directory (default: ./images)"
-    echo "  -f <IMAGE_FILE>  Upload specific image file"
+    echo "  -f <IMAGE_FILE>  Push specific image file"
     echo "  -s <HOST>        Harbor host (default: harbor.sangfor.com)"
     echo "  -r <REPO>        Harbor repository (default: zgsm)"
     echo "  -u <USER>        Harbor username (default: admin)"
@@ -30,14 +30,14 @@ function usage() {
     echo "  -h               Show this help message"
     echo ""
     echo "Examples:"
-    echo "  # Upload all images from directory"
-    echo "  upload-image.sh -l ./v1-images"
+    echo "  # Push all images from directory"
+    echo "  push-images.sh -l ./images"
     echo ""
-    echo "  # Upload single image file"
-    echo "  upload-image.sh -f ./images/nginx.tar"
+    echo "  # Push single image file"
+    echo "  push-images.sh -f ./images/nginx.tar"
     echo ""
     echo "  # Customize Harbor parameters"
-    echo "  upload-image.sh -l ./images -s myharbor.com -u myuser"
+    echo "  push-images.sh -l ./images -s myharbor.com -u myuser"
 }
 
 while getopts "l:f:s:r:u:p:h" opt
@@ -69,24 +69,24 @@ done
 
 echo LOAD_DIR = ${LOAD_DIR}
 
-function load_images() {
+function push_images() {
     docker login "$DH_HOST" --username "$DH_USER" --password "$DH_PASS"
 
     if [ -n "$SPECIFIC_FILE" ]; then
         # 上传单个指定文件
-        upload_single_image "$SPECIFIC_FILE"
+        push_single_image "$SPECIFIC_FILE"
     else
         # 上传目录下所有文件
         for image in `ls "${LOAD_DIR}"/*.tar`; do
             if [ ! -f ${image} ]; then
                 continue
             fi
-            upload_single_image "$image"
+            push_single_image "$image"
         done
     fi
 }
 
-function upload_single_image() {
+function push_single_image() {
     local image=$1
     
     # 执行 docker load 命令并捕获输出
@@ -102,7 +102,7 @@ function upload_single_image() {
         echo "docker tag $IMAGE $DH_HOST/$DH_REPO/$IMAGE_NAME:$IMAGE_TAG ..."
         docker tag "$IMAGE" "$DH_HOST/$DH_REPO/$IMAGE_NAME:$IMAGE_TAG"
 
-        echo "Upload image to $DH_HOST/$DH_REPO/$IMAGE_NAME:$IMAGE_TAG ..."
+        echo "Push image to $DH_HOST/$DH_REPO/$IMAGE_NAME:$IMAGE_TAG ..."
         docker push "$DH_HOST/$DH_REPO/$IMAGE_NAME:$IMAGE_TAG"
     else
         # 输出错误信息
@@ -111,4 +111,4 @@ function upload_single_image() {
     fi
 }
 
-load_images
+push_images
