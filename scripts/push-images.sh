@@ -104,6 +104,10 @@ function push_single_image() {
 
         echo "Push image to $DH_HOST/$DH_REPO/$IMAGE_NAME:$IMAGE_TAG ..."
         docker push "$DH_HOST/$DH_REPO/$IMAGE_NAME:$IMAGE_TAG"
+
+        echo "Push image to $DH_HOST/$DH_REPO/$IMAGE_NAME:latest"
+        docker tag "$IMAGE" "$DH_HOST/$DH_REPO/$IMAGE_NAME:latest"
+        docker push "$DH_HOST/$DH_REPO/$IMAGE_NAME:latest"
     else
         # 输出错误信息
         echo "Error loading image: $output"

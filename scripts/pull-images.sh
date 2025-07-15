@@ -36,23 +36,7 @@ done
 echo IMAGE_LIST_STR  = ${IMAGE_LIST_STR}
 echo IMAGE_LIST_FILE = ${IMAGE_LIST_FILE}
 
-IMAGES="apache/apisix:3.9.1-debian
-apache/apisix-dashboard:3.0.0-alpine
-bitnami/etcd:3.5.14
-docker.io/redis:7.2.4
-postgres:15-alpine
-docker.elastic.co/elasticsearch/elasticsearch:8.9.0
-quay.io/keycloak/keycloak:20.0.5
-nginx:1.27.1
-docker.sangfor.com/containerd/chat-server:1.2.0
-docker.sangfor.com/moyix/copilot_proxy:1.5.15
-docker.io/justsong/one-api:latest
-docker.elastic.co/kibana/kibana:8.9.0
-docker.io/grafana/grafana:11.2.0
-quay.io/prometheus/prometheus:v2.54.0
-higress-registry.cn-hangzhou.cr.aliyuncs.com/higress/all-in-one:latest
-"
-
+IMAGES=""
 if [ "${IMAGE_LIST_STR}" != "" ]; then
     IMAGES="${IMAGE_LIST_STR}"
 fi
