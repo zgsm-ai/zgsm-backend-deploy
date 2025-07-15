@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   apisix:
-    image: {{DH_ADDR}}/apisix:3.9.1-debian
+    image: apache/apisix:3.9.1-debian
     restart: always
     environment:
       TZ: "Asia/Shanghai"
@@ -18,7 +18,7 @@ services:
       - shenma
 
   etcd:
-    image: {{DH_ADDR}}/etcd:3.5.14
+    image: bitnami/etcd:3.5.14
     restart: always
     volumes:
       - ./etcd/data:/bitnami/etcd/data
@@ -35,7 +35,7 @@ services:
       - shenma
 
   redis:
-    image: {{DH_ADDR}}/redis:7.2.4
+    image: redis:7.2.4
     restart: always
     environment:
       TZ: "Asia/Shanghai"
@@ -47,7 +47,7 @@ services:
       - shenma
 
   postgres:
-    image: {{DH_ADDR}}/postgres:15-alpine
+    image: postgres:15-alpine
     restart: always
     environment:
       TZ: "Asia/Shanghai"
@@ -62,7 +62,7 @@ services:
       - shenma
 
   portal:
-    image: {{DH_ADDR}}/nginx:1.27.1
+    image: nginx:1.27.1
     restart: always
     environment:
       TZ: "Asia/Shanghai"
@@ -354,7 +354,7 @@ services:
       - shenma
 
   prometheus:
-    image: {{DH_ADDR}}/prometheus:v2.54.0
+    image: quay.io/prometheus/prometheus:v2.54.0
     restart: always
     environment:
       TZ: "Asia/Shanghai"
@@ -368,7 +368,7 @@ services:
       - shenma
 
   grafana:
-    image: {{DH_ADDR}}/grafana:11.2.0
+    image: docker.io/grafana/grafana:11.2.0
     restart: always
     environment:
       TZ: "Asia/Shanghai"
@@ -385,7 +385,7 @@ services:
       - shenma
 
   es:
-    image: {{DH_ADDR}}/elasticsearch:8.9.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.9.0
     environment:
       - TZ=Asia/Shanghai
       - discovery.type=single-node

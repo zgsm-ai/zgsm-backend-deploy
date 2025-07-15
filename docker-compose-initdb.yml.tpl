@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: {{DH_ADDR}}/postgres:15-alpine
+    image: postgres:15-alpine
     restart: always
     environment:
       TZ: "Asia/Shanghai"

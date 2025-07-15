@@ -6,9 +6,9 @@
 # VSCODE扩展连接诸葛神码后端时使用的入口URL地址
 # 一般会利用DNS及应用发布设备将该地址映射到 http://${ZGSM_BACKEND}:${PORT_APISIX_ENTRY}
 ZGSM_BACKEND_BASEURL="https://zgsm.sangfor.com"
-# 诸葛神码后端的IP地址
+# 诸葛神码后端的IP地址，deploy.sh可自动获取
 ZGSM_BACKEND="172.16.0.4"
-
+ZGSM_BACKEND_IP=${ZGSM_BACKEND:-172.16.0.4}
 #---------------------------------------------------------
 # 私有镜像仓库设置
 # 用户可以私有化部署镜像仓库，用于存放诸葛神码所使用的所有镜像

@@ -5,7 +5,7 @@ TEMP=$(getopt -o b:o: --long base-url:,output: -n "$0" -- "$@")
 eval set -- "$TEMP"
 
 # 默认值
-base_url="https://zgsm.sangfor.com/shenma-images/"
+base_url="https://zgsm.sangfor.com/shenma-images"
 output_dir="./images"
 
 # 解析参数
@@ -30,8 +30,6 @@ if [ -z "$output_dir" ]; then
     exit 1
 fi
 
-# 确保base_url以/结尾
-[[ "$base_url" != */ ]] && base_url="$base_url/"
 list_url="https://zgsm.sangfor.com/shenma-images/image-files.list"
 temp_list="$output_dir/image-files.list"
 
@@ -63,6 +61,7 @@ else # curl
     fi
 fi
 
+error_count=0
 # 处理每个文件
 while read -r filename; do
     # 跳过空行
@@ -71,23 +70,31 @@ while read -r filename; do
     fi
     
     # 构建完整URL
-    file_url="${base_url}${filename}"
+    file_url="${base_url}/${filename}"
     output_path="${output_dir}/${filename}"
     
+    # 全局变量，记录是否有下载失败
+    has_error=false
     echo "正在下载: $filename"
-    if [ "$download_cmd" = "wget -q" ]; then
+    if [ "$download_cmd" = "wget" ]; then
         if ! wget -q "$file_url" -O "$output_path"; then
-            echo "下载失败: $filename"
-        else 
-            echo "下载成功: $filename"
+            has_error=true
+            ((error_count++))
         fi
     else # curl
         if ! curl -s -o "$output_path" "$file_url"; then
-            echo "下载失败: $filename"
-        else 
-            echo "下载成功: $filename"
+            has_error=true
         fi
+    fi
+    if [ "$has_error" = true ]; then
+        echo "下载失败: $filename"
+    else
+        echo "下载成功: $filename"
     fi
 done < "$temp_list"
 
-echo "所有文件下载完成"
+if [ "$error_count" -gt 0 ]; then
+    echo "文件下载完成，但有 $error_count 个文件下载失败"
+else
+    echo "所有文件下载成功"
+fi
