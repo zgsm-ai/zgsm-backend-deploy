@@ -89,6 +89,6 @@ zope.interface==6.0
 pydantic==2.5.3
 json_repair==0.8.0
 python-redis-lock==4.0.0
-pyautogen==0.2.27
+ag2==0.2.27
 uvloop==0.19.0
 python-socketio==5.11.2
