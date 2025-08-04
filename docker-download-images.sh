@@ -1,13 +1,11 @@
 #!/bin/sh
 
-. ./configure.sh
-
-# 检查images.list是否存在
-if [ ! -f "scripts/images.list" ]; then
-    echo "images.list不存在，生成新的镜像列表..."
-    bash scripts/get-images-list.sh -o scripts/images.list
+# 检查镜像列表是否存在
+if [ ! -f "scripts/newest-images.list" ] || [ ! -f "scripts/images.list" ]; then
+    echo "镜像列表文件不存在，生成新的镜像列表..."
+    bash scripts/get-images-list.sh -o scripts
 else
-    echo "使用现有的images.list"
+    echo "使用现有的镜像列表文件"
 fi
 
 # 验证镜像是否存在

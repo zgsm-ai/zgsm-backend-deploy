@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS "public"."configuration" (
     "belong_type" VARCHAR(50) NOT NULL,
     "attribute_key" VARCHAR(50) NOT NULL,
     "attribute_value" TEXT NOT NULL,
+    "attribute_type" VARCHAR(50),
     "desc" TEXT
 );
 
@@ -25,11 +26,11 @@ INSERT INTO "public"."api_rule"("id", "deleted", "created_at", "update_at", "rul
 
 
 -- configuration 配置项
-INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_value", "desc") VALUES (38, 'f', '2023-10-25 15:52:15', '2023-10-25 17:53:50.717441', 'prompt_template', 'simplifyCode', '```{language}
+INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_type", "attribute_value", "desc") VALUES (38, 'f', '2023-10-25 15:52:15', '2023-10-25 17:53:50.717441', 'prompt_template', 'simplifyCode', 'string', '```{language}
 {selectedText}
 ```
 Remove unnecessary code, like log statements and unused variables. Leave the rest of the code the same.', '精简代码');
-INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_value", "desc") VALUES (37, 'f', '2023-10-26 10:44:08', '2023-10-26 10:44:08', 'prompt_template', 'scribe_merge_code', '## Instructions
+INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_type", "attribute_value", "desc") VALUES (37, 'f', '2023-10-26 10:44:08', '2023-10-26 10:44:08', 'prompt_template', 'scribe_merge_code', 'string', '## Instructions
 You are now a senior front-end engineer.
 The output consists of three parts: the requirements, the original code, and the developed code.
 Background: The developed code is based on the original code and develops the content mentioned in the requirements
@@ -60,7 +61,7 @@ code
 ```
 
 ## output', '划词对话-合并代码');
-INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_value", "desc") VALUES (36, 'f', '2023-10-26 10:45:03', '2023-10-26 10:45:03', 'prompt_template', 'scribe_generate_code', '## Instructions
+INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_type", "attribute_value", "desc") VALUES (36, 'f', '2023-10-26 10:45:03', '2023-10-26 10:45:03', 'prompt_template', 'scribe_generate_code', 'string', '## Instructions
 You are now a senior front-end engineer.
 The input has three parts, the Requirements, the Selected Code, and the Code example snippets.
 Your job is to read the requirements carefully and then generate code based on the requirements.
@@ -107,7 +108,7 @@ xxx
 ```
 
 ## output', '划词对话-生成代码');
-INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_value", "desc") VALUES (35, 'f', '2023-10-26 10:40:39', '2023-10-26 15:58:35.540552', 'prompt_template', 'scribe_filter_desc', '## Instructions
+INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_type", "attribute_value", "desc") VALUES (35, 'f', '2023-10-26 10:40:39', '2023-10-26 15:58:35.540552', 'prompt_template', 'scribe_filter_desc', 'string', '## Instructions
 You are an experienced front-end engineer and natural language processing engineer.
 Your task is to understand the semantics of [Requirements] and [Function Description Examples] at a high level,
 Then, one by one, from the [Function Description Examples],
@@ -171,7 +172,7 @@ output:
 {selectedText}
 
 ## output', '划词对话-过滤相似示例');
-INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_value", "desc") VALUES (34, 'f', '2023-10-26 10:34:17', '2023-10-26 21:13:02.279627', 'prompt_template', 'scribe_add_tag', '## Instructions
+INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_type", "attribute_value", "desc") VALUES (34, 'f', '2023-10-26 10:34:17', '2023-10-26 21:13:02.279627', 'prompt_template', 'scribe_add_tag', 'string', '## Instructions
 You are an experienced front-end engineer and natural language processing engineer.
 Your job is to decipher the meaning and semantics of the input,
 Then the front-end component knowledge and key information related to the function are extracted as labels.
@@ -205,11 +206,11 @@ output:
 {query}
 
 ## output', '划词对话-打标签');
-INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_value", "desc") VALUES (33, 'f', '2023-10-25 15:51:45', '2023-10-25 17:53:04.11717', 'prompt_template', 'pickCommonFunc', '```{language}
+INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_type", "attribute_value", "desc") VALUES (33, 'f', '2023-10-25 15:51:45', '2023-10-25 17:53:04.11717', 'prompt_template', 'pickCommonFunc', 'string', '```{language}
 {selectedText}
 ```
 This code could be chunked into smaller functions and extracts the common function, which would look like:', '函数提取');
-INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_value", "desc") VALUES (32, 'f', '2023-10-25 15:37:21', '2023-10-25 17:54:07.13688', 'prompt_template', 'optimize', '## Instructions
+INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_type", "attribute_value", "desc") VALUES (32, 'f', '2023-10-25 15:37:21', '2023-10-25 17:54:07.13688', 'prompt_template', 'optimize', 'string', '## Instructions
 How could the readability of the code below be improved?
 The programming language is {language}.
 Consider overall readability and idiomatic constructs.
@@ -231,7 +232,7 @@ The code snippets must contain valid {language} code.
 Must reply with Chinese.
 
 ## Readability Improvements', '千流AI：优化代码（旧）');
-INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_value", "desc") VALUES (31, 'f', '2023-08-03 20:38:52', '2023-10-26 15:37:32.189368', 'prompt_template', 'review', '## Instructions
+INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_type", "attribute_value", "desc") VALUES (31, 'f', '2023-08-03 20:38:52', '2023-10-26 15:37:32.189368', 'prompt_template', 'review', 'string', '## Instructions
 You are now working as a code review specialist.
 Only check for obvious bugs, functional issues, performance issues, stability issues.
 Ignore undefined function problems
@@ -251,7 +252,7 @@ Give solutions,
 If have fix the code example, give fix code example.
 Include code snippets (using Markdown) and examples where appropriate.
 Must reply with Chinese.', '千流AI：代码Review（主动）');
-INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_value", "desc") VALUES (29, 'f', '2023-10-25 15:40:52', '2023-10-26 14:22:19.840531', 'prompt_template', 'generateCodeByForm', '## Instructions
+INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_type", "attribute_value", "desc") VALUES (29, 'f', '2023-10-25 15:40:52', '2023-10-26 14:22:19.840531', 'prompt_template', 'generateCodeByForm', 'string', '## Instructions
 Now you are a Senior {language} Programmer.
 Generate results based on the following requirements.
 The results must use {language}.
@@ -262,7 +263,7 @@ Using Markdown format, and identify its coding language to specify
 ## Requirement
 {requirement_desc}
 ## results', '生成代码 表单');
-INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_value", "desc") VALUES (28, 'f', '2023-10-25 15:43:45', '2023-10-25 17:52:21.803151', 'prompt_template', 'generateCodeByAsk', '## Instructions
+INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_type", "attribute_value", "desc") VALUES (28, 'f', '2023-10-25 15:43:45', '2023-10-25 17:52:21.803151', 'prompt_template', 'generateCodeByAsk', 'string', '## Instructions
 Now you are a senior development engineer .
 Generate code for the following Code .
 {custom_instructions}
@@ -272,7 +273,7 @@ Must reply with Chinese and show me the code in your answer .
 ```
 {code}
 ```', '生成代码（web）');
-INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_value", "desc") VALUES (27, 'f', '2023-10-25 15:39:48', '2023-10-26 15:35:46.253129', 'prompt_template', 'generateCode', '## Instructions
+INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_type", "attribute_value", "desc") VALUES (27, 'f', '2023-10-25 15:39:48', '2023-10-26 15:35:46.253129', 'prompt_template', 'generateCode', 'string', '## Instructions
 Generate code for the following specification.
 {custom_instructions}.
 
@@ -284,7 +285,7 @@ Generate code for the specification.
 Must reply with Chinese.
 
 ## Code', '生成代码');
-INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_value", "desc") VALUES (26, 'f', '2023-10-25 15:33:00', '2023-10-25 17:24:12.543689', 'prompt_template', 'findProblems', '## Instructions
+INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_type", "attribute_value", "desc") VALUES (26, 'f', '2023-10-25 15:33:00', '2023-10-25 17:24:12.543689', 'prompt_template', 'findProblems', 'string', '## Instructions
 What could be wrong with the code below?
 Only consider defects that would lead to incorrect behavior.
 The programming language is {language}.
@@ -304,7 +305,7 @@ Include code snippets (using Markdown) and examples where appropriate.
 Must reply with Chinese.
 
 ## Analysis', '千流AI：查找bug（旧）');
-INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_value", "desc") VALUES (25, 'f', '2023-10-25 15:38:51', '2023-10-25 17:30:40.914434', 'prompt_template', 'explain', '## Instructions
+INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_type", "attribute_value", "desc") VALUES (25, 'f', '2023-10-25 15:38:51', '2023-10-25 17:30:40.914434', 'prompt_template', 'explain', 'string', '## Instructions
 Summarize the code below (emphasizing its key functionality).
 {custom_instructions}.
 
@@ -318,7 +319,7 @@ Summarize the code at a high level (including goal and purpose) with an emphasis
 Must reply with Chinese.
 
 ## Response', '千流AI：解释代码（旧）智能问答->解释代码（新）');
-INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_value", "desc") VALUES (24, 'f', '2023-08-03 20:39:08', '2023-10-26 12:39:33.260368', 'prompt_template', 'auto_review', '## Instructions
+INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_type", "attribute_value", "desc") VALUES (24, 'f', '2023-08-03 20:39:08', '2023-10-26 12:39:33.260368', 'prompt_template', 'auto_review', 'string', '## Instructions
 You are now working as a code review specialist.
 Only check for obvious bugs, functional issues, performance issues, stability issues.
 Ignore undefined function problems
@@ -352,7 +353,7 @@ In the field review_content place include code snippets (using Markdown) and exa
 No problem please reply directly no problem.
 Please simulate that the api only returns json strings.
 The review_content field must be answered in Chinese.', '千流AI：代码Review（自动）');
-INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_value", "desc") VALUES (23, 'f', '2023-10-25 15:34:13', '2023-10-25 17:29:59.561475', 'prompt_template', 'addTests', '## Instructions
+INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_type", "attribute_value", "desc") VALUES (23, 'f', '2023-10-25 15:34:13', '2023-10-25 17:29:59.561475', 'prompt_template', 'addTests', 'string', '## Instructions
 Write a unit test for the code below.
 {custom_instructions}
 
@@ -367,7 +368,7 @@ The programming language is {language}.
 Must reply with Chinese.
 
 ## Unit Test', '千流AI：生成测试（旧）测试生成（新）');
-INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_value", "desc") VALUES (22, 'f', '2023-10-25 15:48:55', '2023-10-25 17:27:20.684803', 'prompt_template', 'addStrongerCode', '```{language}
+INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_type", "attribute_value", "desc") VALUES (22, 'f', '2023-10-25 15:48:55', '2023-10-25 17:27:20.684803', 'prompt_template', 'addStrongerCode', 'string', '```{language}
 {selectedText}
 ```
 Please make the above code more robust, covering more edge cases and handling errors.
@@ -384,7 +385,7 @@ Output example:
 print(123)
 ```
 Output:', '提升健壮性');
-INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_value", "desc") VALUES (21, 'f', '2023-10-25 15:46:30', '2023-10-25 16:38:39.799457', 'prompt_template', 'addDebugCode', '```{language}
+INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_type", "attribute_value", "desc") VALUES (21, 'f', '2023-10-25 15:46:30', '2023-10-25 16:38:39.799457', 'prompt_template', 'addDebugCode', 'string', '```{language}
 {selectedText}
 ```
 Please make the above code easier to debug:
@@ -398,7 +399,7 @@ Output example:
 print(123)
 ```
 Output:', '提升调试性');
-INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_value", "desc") VALUES (20, 'f', '2023-10-25 15:49:22', '2023-10-26 09:52:48.162305', 'prompt_template', 'addComment', '```{language}
+INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_type", "attribute_value", "desc") VALUES (20, 'f', '2023-10-25 15:49:22', '2023-10-26 09:52:48.162305', 'prompt_template', 'addComment', 'string', '```{language}
 {selectedText}
 ```
 Please add Chinese comments to the above code:
@@ -414,7 +415,7 @@ Output example:
 print(123)
 ```
 Output:', '添加注释');
-INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_value", "desc") VALUES (19, 'f', '2023-10-26 10:58:57', '2023-10-27 10:33:11.817751', 'gpt', 'generate_code', '[
+INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_type", "attribute_value", "desc") VALUES (19, 'f', '2023-10-26 10:58:57', '2023-10-27 10:33:11.817751', 'gpt', 'generate_code', 'json', '[
     {
         "language": "python",
         "prompt": "Python",
@@ -744,19 +745,19 @@ INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at",
         ]
     }
 ]', '自动生成代码的配置文件');
-INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_value", "desc") VALUES (18, 'f', '2023-10-25 09:54:45', '2023-10-27 16:03:15.703895', 'permission', 'need_cause_department', '研发体系/用户体验驱动中心/UEDC', '划词对话 需要 拒绝原因 弹框的部门。多部门用 , 分隔');
-INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_value", "desc") VALUES (13, 'f', '2023-08-14 16:56:22', '2023-08-14 16:56:22', 'code_completion', 'allow_department', 'UEDC,研发体系', '允许代码补全的部门，可简写。用 ,分割，区分大小写');
-INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_value", "desc") VALUES (12, 'f', '2023-08-11 15:14:16', '2023-08-11 15:14:16', 'permission', 'allow_user_agent', 'node-fetch,qianliu-ai-jetbrains-plugin,cicd-service,qianliu-devops,qianliu-ai-lanjun', 'user-agent 允许白名单。多配置使用 , 分割');
-INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_value", "desc") VALUES (8, 'f', '2023-07-06 16:23:16', '2023-07-06 16:23:16', 'review', 'review_max_review_num', '5', '');
-INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_value", "desc") VALUES (7, 'f', '2023-06-05 10:07:50', '2023-06-05 10:07:50', 'ai_review', 'suffix_language_mapping', '{
+INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_type", "attribute_value", "desc") VALUES (18, 'f', '2023-10-25 09:54:45', '2023-10-27 16:03:15.703895', 'permission', 'need_cause_department', 'string', '研发体系/用户体验驱动中心/UEDC', '划词对话 需要 拒绝原因 弹框的部门。多部门用 , 分隔');
+INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_type", "attribute_value", "desc") VALUES (13, 'f', '2023-08-14 16:56:22', '2023-08-14 16:56:22', 'code_completion', 'allow_department', 'string', 'UEDC,研发体系', '允许代码补全的部门，可简写。用 ,分割，区分大小写');
+INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_type", "attribute_value", "desc") VALUES (12, 'f', '2023-08-11 15:14:16', '2023-08-11 15:14:16', 'permission', 'allow_user_agent', 'string', 'node-fetch,qianliu-ai-jetbrains-plugin,cicd-service,qianliu-devops,qianliu-ai-lanjun', 'user-agent 允许白名单。多配置使用 , 分割');
+INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_type", "attribute_value", "desc") VALUES (8, 'f', '2023-07-06 16:23:16', '2023-07-06 16:23:16', 'review', 'review_max_review_num', 'number', '5', '');
+INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_type", "attribute_value", "desc") VALUES (7, 'f', '2023-06-05 10:07:50', '2023-06-05 10:07:50', 'ai_review', 'suffix_language_mapping', 'string', '{
         ".c": "C", ".cpp": "C++", ".cc": "C++", ".cxx": "C++", ".java": "Java", ".py": "Python",
         ".rb": "Ruby", ".js": "JavaScript", ".html": "HTML", ".htm": "HTML", ".css": "CSS",
         ".php": "PHP", ".pl": "Perl", ".swift": "Swift", ".go": "Go", ".rs": "Rust",
         ".kt": "Kotlin", ".dart": "Dart", ".scala": "Scala", ".lua": "Lua", ".m": "Objective-C",
         ".mm": "Objective-C++", ".h": "C/C++/Objective-C", ".hpp": "C/C++/Objective-C"
     }', '支持ai-review的语言类型');
-INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_value", "desc") VALUES (6, 'f', '2023-05-26 14:58:44', '2023-05-26 14:58:44', 'plugin', 'users', '刘鹏|林凯鸿t43540', 'ide插件需要提示更新用户，值为用户（姓名+工号），多个用 “|” 隔开：刘鹏z10807|张三xxxx|李四xxxx');
-INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_value", "desc") VALUES (5, 'f', '2023-05-25 16:37:42', '2023-05-25 16:37:42', 'qianliu_ad', 'on', '
+INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_type", "attribute_value", "desc") VALUES (6, 'f', '2023-05-26 14:58:44', '2023-05-26 14:58:44', 'plugin', 'users', 'string', '刘鹏|林凯鸿t43540', 'ide插件需要提示更新用户，值为用户（姓名+工号），多个用 “|” 隔开：刘鹏z10807|张三xxxx|李四xxxx');
+INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_type", "attribute_value", "desc") VALUES (5, 'f', '2023-05-25 16:37:42', '2023-05-25 16:37:42', 'qianliu_ad', 'on', 'string', '
 
 ---
 ## 为了更好的提升千流AI Copilot用户体验，将开展“千流AI copilot反馈有奖活动" !
@@ -775,8 +776,8 @@ INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at",
 
 **如有疑问，请联系：江帅20007  ！**
 ', '键：on为开；off为关。值：广告内容。只能写markdown格式，不要删除 ---  以及以上的内容。最好在测试环境验证一下');
-INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_value", "desc") VALUES (3, 'f', '2023-05-16 10:59:56', '2023-10-27 09:16:52.803654', 'prompt', 'forbidden_word', 'sangfor|深信服|信服|sinfor|sangfor123|admin123|sangfor@123|qwe', 'sangfor|深信服|信服|sinfor|sangfor123|admin123|sangfor@123');
-INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_value", "desc") VALUES (2, 'f', '2023-04-25 11:00:56', '2023-04-25 11:00:56', 'api_documentation', 'text', '### API端点
+INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_type", "attribute_value", "desc") VALUES (3, 'f', '2023-05-16 10:59:56', '2023-10-27 09:16:52.803654', 'prompt', 'forbidden_word', 'string', 'sangfor|深信服|信服|sinfor|sangfor123|admin123|sangfor@123|qwe', 'sangfor|深信服|信服|sinfor|sangfor123|admin123|sangfor@123');
+INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_type", "attribute_value", "desc") VALUES (2, 'f', '2023-04-25 11:00:56', '2023-04-25 11:00:56', 'api_documentation', 'text', 'string', '### API端点
 
 ```
 http://chatgpt.sangfor.com/api/v3/completion
@@ -992,8 +993,7 @@ def timer(func):
 
 
 ', '');
-INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_value", "desc") VALUES (1, 'f', '2023-04-25 11:00:28', '2023-04-25 11:00:28', 'banner', 'text', '【通知】千流 Copilot 全面开放使用，欢迎大家安装使用！ 使用文档：http://docs.sangfor.org/x/rNnHDw', '1.由于每次提问都有费用支出，请勿用于工作无关的问题 ; 2. API已提供申请入口(广场->应用广场->申请)，请勿私自爬取API使用，一经发现，将封号处理！');
-
+INSERT INTO "public"."configuration"("id", "deleted", "created_at", "update_at", "belong_type", "attribute_key", "attribute_type", "attribute_value", "desc") VALUES (1, 'f', '2023-04-25 11:00:28', '2023-04-25 11:00:28', 'banner', 'text', 'string', '【通知】千流 Copilot 全面开放使用，欢迎大家安装使用！ 使用文档：http://docs.sangfor.org/x/rNnHDw', '1.由于每次提问都有费用支出，请勿用于工作无关的问题 ; 2. API已提供申请入口(广场->应用广场->申请)，请勿私自爬取API使用，一经发现，将封号处理！');
 
 --组件库映射配置
 --INSERT INTO "public"."components_map"("id", "deleted", "created_at", "update_at", "team", "git_repos", "inline_chat_components", "fauxpilot_components") VALUES (2, 'f', '2023-10-23 20:22:11', '2023-10-24 10:38:02.358202', 'other', 'just_test', 'test', '');

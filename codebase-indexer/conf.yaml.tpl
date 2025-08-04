@@ -53,7 +53,7 @@ VectorStore:
   MaxRetries: 5
   Weaviate:
     MaxDocuments: 20
-    Endpoint: "weaviate.shenma:8080"
+    Endpoint: "weaviate:8080"
     BatchSize: 100
     ClassName: "CodebaseIndex"
   Embedder:

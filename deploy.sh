@@ -11,6 +11,15 @@ declare -r SERVER_IP
 declare -r BASE_DIR=$(pwd)
 
 # -------------------------- Function Definitions --------------------------
+docker-compose() {
+    # Check if docker has compose subcommand
+    if docker compose version >/dev/null 2>&1; then
+        command docker compose "$@"
+    else
+        command docker-compose "$@"
+    fi
+}
+
 log() {
     local level=$1
     local message=$2
@@ -121,8 +130,8 @@ main() {
 
     # Execute subscripts
     local sub_scripts=(
-        "tpl-resolve.sh"
         "docker-download-images.sh"
+        "tpl-resolve.sh"
         "db-initdb.sh"
     )
     for script in "${sub_scripts[@]}"; do

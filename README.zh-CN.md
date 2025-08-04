@@ -32,10 +32,10 @@ bash deploy.sh
 
 ### 3. 配置AI网关(higress)，对接LLM
 
-神码后端部署完毕后，可以通过地址http://{{ZGSM_BACKEND}}:{{PORT_AI_GATEWAY}}，访问higress页面配置AI网关。
+神码后端部署完毕后，可以通过地址`http://{{ZGSM_BACKEND}}:{{PORT_AI_GATEWAY}}`，访问higress页面配置AI网关。
 其中:
 
-`{{ZGSM_BACKEND}}`, `{{PORT_AI_GATEWAY}}`的值配置在configure.sh文件中。
+`{{ZGSM_BACKEND}}`, `{{PORT_AI_GATEWAY}}`的值配置在configure.sh文件中。PORT_AI_GATEWAY默认值为9000
 
 具体请参考:
 
@@ -43,9 +43,9 @@ bash deploy.sh
 
 ### 4. 配置认证系统(casdoor)，对接用户的认证系统
 
-神码后端部署完毕后，可以通过地址http://{{ZGSM_BACKEND}}:{{PORT_CASDOOR}}，访问神码认证系统casdoor页面，配置对接第三方认证系统。
+神码后端部署完毕后，可以通过地址`http://{{ZGSM_BACKEND}}:{{PORT_CASDOOR}}`，访问神码认证系统casdoor页面，配置对接第三方认证系统。
 
-`{{ZGSM_BACKEND}}`, `{{PORT_CASDOOR}}`的值配置在configure.sh文件中。
+`{{ZGSM_BACKEND}}`, `{{PORT_CASDOOR}}`的值配置在configure.sh文件中。PORT_CASDOOR默认值为9009
 
 具体请参考：
 

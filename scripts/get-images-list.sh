@@ -5,8 +5,8 @@ TEMP=$(getopt -o b:o: --long list-url:,output: -n "$0" -- "$@")
 eval set -- "$TEMP"
 
 # 默认值
-list_url="https://zgsm.sangfor.com/shenma-images/images.list"
-output_file="./images.list"
+list_url="https://zgsm.sangfor.com/shenma-images/newest-images.list"
+output_dir="."
 
 # 解析参数
 while true ; do
@@ -16,13 +16,20 @@ while true ; do
             shift 2
             ;;
         -o|--output)
-            output_file="$2"
+            output_dir="$2"
             shift 2
             ;;
         --) shift ; break ;;
         *) echo "参数解析错误" >&2 ; exit 1 ;;
     esac
 done
+
+# 确保output_dir以'/'结尾
+[[ "${output_dir: -1}" != "/" ]] && output_dir="${output_dir}/"
+
+
+defs_file="${output_dir}newest-images.list"
+list_file="${output_dir}images.list"
 
 # 检测下载工具
 download_cmd=""
@@ -38,15 +45,20 @@ fi
 # 下载文件列表
 echo "正在下载文件列表..."
 if [ "$download_cmd" = "wget" ]; then
-    if ! wget -q "$list_url" -O "$output_file"; then
+    if ! wget -q "$list_url" -O "$defs_file"; then
         echo "无法下载文件列表"
         exit 1
     fi
 else # curl
-    if ! curl -s -o "$output_file" "$list_url"; then
+    if ! curl -s -o "$defs_file" "$list_url"; then
         echo "无法下载文件列表"
         exit 1
     fi
 fi
 
-echo "镜像列表下载成功，已保存到$output_file"
+# 从def-images.list提取镜像列表
+echo "正在处理镜像列表..."
+awk -F'=' '{print $2}' "$defs_file" > "$list_file"
+
+echo "镜像列表下载成功，已保存到$defs_file"
+echo "处理后的镜像列表已保存到$list_file"

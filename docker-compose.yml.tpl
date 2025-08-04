@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   apisix:
-    image: apache/apisix:3.9.1-debian
+    image: {{IMAGE_APISIX}}
     restart: always
     environment:
       TZ: "Asia/Shanghai"
@@ -18,7 +18,7 @@ services:
       - shenma
 
   etcd:
-    image: bitnami/etcd:3.5.14
+    image: {{IMAGE_ETCD}}
     restart: always
     volumes:
       - ./etcd/data:/bitnami/etcd/data
@@ -35,7 +35,7 @@ services:
       - shenma
 
   redis:
-    image: redis:7.2.4
+    image: {{IMAGE_REDIS}}
     restart: always
     environment:
       TZ: "Asia/Shanghai"
@@ -47,7 +47,7 @@ services:
       - shenma
 
   postgres:
-    image: postgres:15-alpine
+    image: {{IMAGE_POSTGRES}}
     restart: always
     environment:
       TZ: "Asia/Shanghai"
@@ -61,8 +61,25 @@ services:
     networks:
       - shenma
 
+  weaviate:
+    image: {{IMAGE_WEAVIATE}}
+    restart: always
+    ports:
+      - "{{PORT_WEAVIATE}}:8080"
+    environment:
+      QUERY_DEFAULTS_LIMIT: 25
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: "true"
+      PERSISTENCE_DATA_PATH: "/var/lib/weaviate"
+      DEFAULT_VECTORIZER_MODULE: "none"
+      ENABLE_MODULES: ""
+      CLUSTER_HOSTNAME: "weaviate"
+    volumes:
+      - ./weaviate/data:/var/lib/weaviate
+    networks:
+      - shenma
+
   portal:
-    image: nginx:1.27.1
+    image: {{IMAGE_NGINX}}
     restart: always
     environment:
       TZ: "Asia/Shanghai"
@@ -75,7 +92,7 @@ services:
       - shenma
 
   codebase-indexer:
-    image: {{DH_ADDR}}/codebase-indexer:latest
+    image: {{IMAGE_CODEBASE_INDEXER}}
     command: ["/app/server", "-f", "/app/conf/conf.yaml"]
     restart: always
     ports:
@@ -94,7 +111,7 @@ services:
       - shenma
 
   chat-rag:
-    image: {{DH_ADDR}}/chat-rag:latest
+    image: {{IMAGE_CHATRAG}}
     command: ["/app/chat-rag", "-f", "/app/etc/chat-api.yaml"]
     restart: always
     ports:
@@ -108,7 +125,7 @@ services:
       - shenma
 
   review-manager:
-    image: {{DH_ADDR}}/review-manager:latest
+    image: {{IMAGE_REVIEW_MANAGER}}
     restart: always
     ports:
       - "{{PORT_REVIEW_MANAGER}}:8080"
@@ -130,7 +147,7 @@ services:
       - shenma
 
   review-worker:
-    image: {{DH_ADDR}}/review-manager:latest
+    image: {{IMAGE_REVIEW_MANAGER}}
     command: ./review-manager worker
     restart: always
     depends_on:
@@ -152,7 +169,7 @@ services:
       - shenma
 
   issue-manager:
-    image: {{DH_ADDR}}/issue-manager:latest
+    image: {{IMAGE_ISSUE_MANAGER}}
     restart: always
     ports:
       - "{{PORT_ISSUE_MANAGER}}:8080"
@@ -171,7 +188,7 @@ services:
       - shenma
 
   review-checker:
-    image: {{DH_ADDR}}/review-checker:latest
+    image: {{IMAGE_REVIEW_CHECKER}}
     restart: always
     ports:
       - "{{PORT_REVIEW_CHECKER}}:8080"
@@ -194,7 +211,7 @@ services:
       - shenma
 
   credit-manager:
-    image: {{DH_ADDR}}/credit-manager:latest
+    image: {{IMAGE_CREDIT_MANAGER}}
     command: ["nginx", "-g", "daemon off;"]
     restart: always
     ports:
@@ -205,7 +222,7 @@ services:
       - shenma
 
   oidc-auth:
-    image: {{DH_ADDR}}/oidc-auth:latest
+    image: {{IMAGE_OIDC_AUTH}}
     restart: always
     ports:
       - "{{PORT_OIDC_AUTH}}:8080"
@@ -236,7 +253,7 @@ services:
       - shenma
 
   quota-manager:
-    image: {{DH_ADDR}}/quota-manager:latest
+    image: {{IMAGE_QUOTA_MANAGER}}
     command: ["/app/quota-manager", "-c", "/app/app-conf.yml"]
     restart: always
     ports:
@@ -251,7 +268,7 @@ services:
       - shenma
 
   chatgpt:
-    image: {{DH_ADDR}}/chat-server:latest
+    image: {{IMAGE_CHAT_SERVER}}
     command: ["/sbin/entrypoint.sh", "app:start"]
     restart: always
     volumes:
@@ -287,7 +304,7 @@ services:
       - shenma
 
   code-completion:
-    image: {{DH_ADDR}}/code-completion:latest
+    image: {{IMAGE_CODE_COMPLETION}}
     restart: always
     ports:
       - "{{PORT_COMPLETION}}:{{PORT_COMPLETION_INTERNAL}}/tcp"
@@ -325,7 +342,7 @@ services:
       - shenma
 
   casdoor:
-    image: {{DH_ADDR}}/casdoor:v1.1.1
+    image: {{IMAGE_CASDOOR}}
     restart: always
     ports:
       - "{{PORT_CASDOOR}}:8000"
@@ -333,13 +350,12 @@ services:
       driverName: postgres
       dataSourceName: "host=postgres port={{PORT_POSTGRES}} user={{POSTGRES_USER}} password={{PASSWORD_POSTGRES}} dbname=casdoor sslmode=disable"
     depends_on:
-      postgres:
-        condition: service_healthy
+      - postgres
     networks:
       - shenma
 
   higress:
-    image: higress-registry.cn-hangzhou.cr.aliyuncs.com/higress/all-in-one:latest
+    image: {{IMAGE_HIGRESS}}
     restart: always
     ports:
       - "{{PORT_AI_GATEWAY}}:8080"
@@ -354,7 +370,7 @@ services:
       - shenma
 
   prometheus:
-    image: quay.io/prometheus/prometheus:v2.54.0
+    image: {{IMAGE_PROMETHEUS}}
     restart: always
     environment:
       TZ: "Asia/Shanghai"
@@ -368,7 +384,7 @@ services:
       - shenma
 
   grafana:
-    image: docker.io/grafana/grafana:11.2.0
+    image: {{IMAGE_GRAFANA}}
     restart: always
     environment:
       TZ: "Asia/Shanghai"
@@ -385,7 +401,7 @@ services:
       - shenma
 
   es:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.9.0
+    image: {{IMAGE_ES}}
     environment:
       - TZ=Asia/Shanghai
       - discovery.type=single-node
