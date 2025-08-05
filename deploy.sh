@@ -153,16 +153,17 @@ main() {
 
     # Configure APISIX
     local apisix_scripts=(
-        "apisix-chatgpt.sh"
-        "apisix-issue.sh"
         "apisix-ai-gateway.sh"
         "apisix-casdoor.sh"
+        "apisix-chatgpt.sh"
         "apisix-chatrag.sh"
         "apisix-cli-tools.sh"
+        "apisix-codebase-indexer.sh"
         "apisix-codereview.sh"
         "apisix-completion-v2.sh"
         "apisix-credit-manager.sh"
         "apisix-grafana.sh"
+        "apisix-issue.sh"
         "apisix-oidc-auth.sh"
         "apisix-quota-manager.sh"
     )
@@ -175,6 +176,8 @@ main() {
     done
 
     sleep 10
+
+    source ./configure.sh
 
     log "INFO" "All operations completed"
     log "INFO" "Please login to the AI-GATEWAY backend [http://${ZGSM_BACKEND}:${PORT_AI_GATEWAY}] (default account: root, password: 123456), and add your LLM api-key in the Channels section! (If the page is blank, please wait as containers may take some time to start)"

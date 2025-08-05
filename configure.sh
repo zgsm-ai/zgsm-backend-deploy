@@ -1,14 +1,5 @@
 #!/bin/sh
 
-#-------------------------------------------------------------------------------
-#   以下设置请根据部署环境信息进行修改
-#-------------------------------------------------------------------------------
-# VSCODE扩展连接诸葛神码后端时使用的入口URL地址
-# 一般会利用DNS及应用发布设备将该地址映射到 http://${ZGSM_BACKEND}:${PORT_APISIX_ENTRY}
-ZGSM_BACKEND_BASEURL="https://zgsm.sangfor.com"
-# 诸葛神码后端的IP地址，deploy.sh可自动获取
-ZGSM_BACKEND="172.16.0.4"
-ZGSM_BACKEND_IP=${ZGSM_BACKEND:-172.16.0.4}
 #---------------------------------------------------------
 # 私有镜像仓库设置
 # 用户可以私有化部署镜像仓库，用于存放诸葛神码所使用的所有镜像
@@ -53,13 +44,13 @@ CODE_COMPLETION_MODEL="DeepSeek-Coder-V2-Lite-Base"
 # 代码补全模型的API-KEY
 CODE_COMPLETION_MODEL_API_KEY="966c3157fe65461dbc731cd540b6cd5d"
 #-------------------------------------------------------------------------------
-# 以下设置如非必要，请勿修改
+# 以下端口设置如非必要，请勿修改
 #-------------------------------------------------------------------------------
 PORT_APISIX_API="9180"
 PORT_APISIX_ENTRY="9080"
 PORT_APISIX_PROMETHEUS="9091"
 PORT_APISIX_CONTROL="9092"
-PORT_APISIX_DASHBOARD="9000"
+PORT_APISIX_DASHBOARD="9093"
 PORT_ETCD="2379"
 PORT_REDIS="6379"
 PORT_POSTGRES="5432"
@@ -73,7 +64,7 @@ PORT_PROMETHEUS="9090"
 PORT_GRAFANA="3000"
 PORT_ES="9200"
 PORT_AI_GATEWAY="9000"
-PORT_HIGRESS_CONTROL="9081"
+PORT_HIGRESS_CONTROL="8001"
 PORT_QUOTA_MANAGER="9001"
 PORT_CREDIT_MANAGER="5173"
 PORT_ISSUE_MANAGER="9003"
@@ -83,6 +74,7 @@ PORT_OIDC_AUTH="9006"
 PORT_CHAT_RAG="9007"
 PORT_CODEBASE_INDEXER="9008"
 PORT_CASDOOR="9009"
+PORT_CHISEL="9010"
 
 APISIX_ADDR="127.0.0.1:${PORT_APISIX_API}"
 AUTH="X-API-KEY: ${APIKEY_APISIX_ADMIN}"
@@ -107,3 +99,12 @@ OIDC_CASDOOR_ADDR="http://casdoor:${PORT_CASDOOR}"
 OIDC_DISCOVERY_ADDR="${OIDC_CASDOOR_ADDR}/.well-known/openid-configuration"
 OIDC_INTROSPECTION_ENDPOINT="${OIDC_CASDOOR_ADDR}/api/login/oauth/introspect"
 OIDC_TOKEN_ENDPOINT=""
+
+#-------------------------------------------------------------------------------
+#   以下设置请根据部署环境信息进行修改
+#-------------------------------------------------------------------------------
+# VSCODE扩展连接诸葛神码后端时使用的入口URL地址
+# 一般会利用DNS及应用发布设备将该地址映射到 http://${ZGSM_BACKEND}:${PORT_APISIX_ENTRY}
+# 诸葛神码后端的IP地址，deploy.sh可自动获取
+ZGSM_BACKEND="172.16.0.4"
+ZGSM_BACKEND_BASEURL="http://${ZGSM_BACKEND}:${PORT_APISIX_ENTRY}"

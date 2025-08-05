@@ -32,10 +32,10 @@ bash deploy.sh
 
 ### 3. 配置AI网关(higress)，对接LLM
 
-神码后端部署完毕后，可以通过地址`http://{{ZGSM_BACKEND}}:{{PORT_AI_GATEWAY}}`，访问higress页面配置AI网关。
+神码后端部署完毕后，可以通过地址`http://{{ZGSM_BACKEND}}:{{PORT_HIGRESS_CONTROL}}`，访问higress页面配置AI网关。
 其中:
 
-`{{ZGSM_BACKEND}}`, `{{PORT_AI_GATEWAY}}`的值配置在configure.sh文件中。PORT_AI_GATEWAY默认值为9000
+`{{ZGSM_BACKEND}}`, `{{PORT_HIGRESS_CONTROL}}`的值配置在configure.sh文件中。PORT_HIGRESS_CONTROL默认值为8001
 
 具体请参考:
 

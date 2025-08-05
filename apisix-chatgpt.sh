@@ -1,11 +1,6 @@
 #!/bin/sh
 
 . ./configure.sh
-. ./utils.sh
-
-echo "Checking APISIX service status..."
-retry "curl -sSf http://$APISIX_ADDR/apisix/admin/routes -H '$AUTH' -H '$TYPE' >/dev/null" 120 5 || fatal "Waiting for APISIX start-up completion timed out"
-echo "APISIX has started successfully (Admin API response normal)"
 
 # chatgpt RESTful API port
 curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT  -d '{

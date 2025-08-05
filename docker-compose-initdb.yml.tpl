@@ -10,6 +10,7 @@ services:
     volumes:
       - ./postgres/data:/var/lib/postgresql/data
       - ./postgres/initdb.d:/docker-entrypoint-initdb.d
+      - ./postgres/scripts:/scripts
     ports:
       - "{{PORT_POSTGRES}}:5432/tcp"
     networks:

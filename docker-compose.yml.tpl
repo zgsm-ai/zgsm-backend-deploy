@@ -359,13 +359,14 @@ services:
     restart: always
     ports:
       - "{{PORT_AI_GATEWAY}}:8080"
+      - "{{PORT_HIGRESS_CONTROL}}:8001"
     environment:
       - "MODE=full"
       - "O11Y=on"
       - "CONFIG_TEMPLATE=ai-gateway"
       - "GATEWAY_HTTP_PORT=8080"
       - "GATEWAY_HTTPS_PORT=8443"
-      - "CONSOLE_PORT={{PORT_HIGRESS_CONTROL}}"
+      - "CONSOLE_PORT=8001"
     networks:
       - shenma
 
