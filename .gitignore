@@ -1,6 +1,11 @@
 .vscode
 .idea
 *.log
+scripts/.env
+scripts/images.list
+scripts/image-files.list
+scripts/newest-images.list
+images
 apisix/config.yaml
 dex/config.yaml
 apisix_dashboard/conf.yaml

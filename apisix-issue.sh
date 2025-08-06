@@ -10,14 +10,15 @@
 curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT  -d '{
     "id": "portal",
     "nodes": {
-        "'"portal:$PORT_PORTAL_INTERNAL"'": 1
+        "portal:80": 1
     },
     "type": "roundrobin"
 }'
 
 # Resources used by login pages
 curl -i  http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
-    "uris": ["/issue/*"],
     "id": "issue-resources",
+    "name": "issue-resources",
+    "uris": ["/issue/*"],
     "upstream_id": "portal"
   }'

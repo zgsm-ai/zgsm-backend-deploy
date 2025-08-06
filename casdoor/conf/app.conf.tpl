@@ -1,0 +1,19 @@
+appname = casdoor
+httpport = 8000
+runmode = dev
+copyrequestbody = true
+SessionOn = true
+driverName = postgres
+dataSourceName = "user={{POSTGRES_USER}} password={{PASSWORD_POSTGRES}} host=postgres port={{PORT_POSTGRES}} dbname=casdoor sslmode=disable"
+dbName=
+redisEndpoint =
+defaultStorageProvider =
+isCloudIntranet = false
+authState = "casdoor"
+socks5Proxy = ""
+verificationCodeTimeout = 10
+initScore = 0
+logPostOnly = true
+origin =
+enableGzip = true
+ldapServerPort = 10389

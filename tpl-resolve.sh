@@ -25,7 +25,7 @@ do
 done
 
 . ./configure.sh
-
+. ./scripts/newest-images.list
 #
 # Process variable markers in a .tpl file, resolve variables to actual values
 # @param input_file Input file
