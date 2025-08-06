@@ -1,84 +1,292 @@
-# Costrict部署工具(用于docker-compose)
+# Costrict 后端部署工具
 
-## 引言
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
+[![Docker](https://img.shields.io/badge/docker-required-blue.svg)](https://docs.docker.com/get-docker/)
+[![Docker Compose](https://img.shields.io/badge/docker--compose-required-blue.svg)](https://docs.docker.com/compose/install/)
 
-## 部署步骤
+## 项目概述
 
-### 0. 前置条件
+Costrict 后端部署工具是基于 Docker Compose 的企业级 AI 代码助手后端服务部署解决方案。该项目提供了完整的微服务架构，包含 AI 网关、身份认证、代码分析、聊天服务等核心组件，支持私有化部署和云端服务两种模式。
 
-#### 使用自部署模型实例
+### 核心特性
 
-1. X64硬件设备,最低配置16C、32G、512G存储,配备支持模型推理服务的GPU(至少2张RTX4090或1张A800)
-2. 安装CentOS 7或WSL Ubuntu,并已安装nvidia-docker、docker-compose等必要组件
+- **微服务架构**: 基于容器化的分布式服务架构
+- **AI 网关集成**: 支持多种大语言模型接入
+- **身份认证系统**: 集成 Casdoor 提供企业级身份管理
+- **代码智能分析**: 提供代码审查、补全、优化等功能
+- **可扩展设计**: 支持横向扩展和自定义插件
 
-#### 使用第三方API服务或自部署模型实例
+### 系统架构
 
-1. X64硬件设备,最低配置16C、32G、512G存储
-2. 安装CentOS 7,已安装docker,docker-compose等必要组件
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   VSCode 插件    │────│   API Gateway   │────│   后端服务群     │
+│   (Costrict)    │    │  (Apache APISIX) │    │  (Microservices) │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+                              │                        │
+                       ┌─────────────────┐    ┌─────────────────┐
+                       │   AI 网关       │    │   数据库集群     │
+                       │   (Higress)     │    │   (PostgreSQL)  │
+                       └─────────────────┘    └─────────────────┘
+```
 
-#### 准备部署脚本
+## 系统要求
 
-下载Costrict后端部署项目(for docker-compose):
+### 自部署模型实例环境
 
-```sh
+**硬件要求**:
+- CPU: Intel x64 架构，最低 16 核心
+- 内存: 最低 32GB RAM
+- 存储: 最低 512GB 可用存储空间
+- GPU: 支持 CUDA 的显卡（代码补全/分析推荐配置: 2×RTX 4090 或 1×A800，对话模型推荐配置: 8*H20）
+
+**软件要求**:
+- 操作系统: CentOS 7+ 或 Ubuntu 18.04+ (支持 WSL)
+- Container Runtime: Docker 20.10+
+- 编排工具: Docker Compose 2.0+
+- NVIDIA 驱动: nvidia-docker 支持
+
+### 第三方 API 服务环境
+
+**硬件要求**:
+- CPU: Intel x64 架构，最低 16 核心
+- 内存: 最低 32GB RAM
+- 存储: 最低 512GB 可用存储空间
+
+**软件要求**:
+- 操作系统: CentOS 7+ 或 Ubuntu 18.04+
+- Container Runtime: Docker 20.10+
+- 编排工具: Docker Compose 2.0+
+
+## 快速开始
+
+### 1. 获取部署代码
+
+```bash
 git clone https://github.com/zgsm-ai/zgsm-backend-deploy.git
 cd zgsm-backend-deploy
 ```
 
-### 1. 根据需求修改配置
+### 2. 环境配置
 
-```sh
+编辑配置文件:
+
+```bash
 vim configure.sh
 ```
 
-根据脚本中的说明修改配置。最重要的配置是COSTRICT_BACKEND_BASEURL, COSTRICT_BACKEND这两个。
+**关键配置参数**:
 
-### 2. 执行部署脚本
+| 参数名称 | 描述 | 默认值 | 是否必需 |
+|---------|------|--------|----------|
+| `COSTRICT_BACKEND_BASEURL` | 后端服务基础 URL | - | ✅ |
+| `COSTRICT_BACKEND` | 后端服务主机地址 | - | ✅ |
+| `PORT_APISIX_ENTRY` | API 网关入口端口 | 9080 | ❌ |
+| `PORT_HIGRESS_CONTROL` | Higress 控制台端口 | 8001 | ❌ |
+| `PORT_CASDOOR` | Casdoor 认证系统端口 | 9009 | ❌ |
 
-```shell
+### 3. 服务部署
+
+执行自动化部署脚本:
+
+```bash
 bash deploy.sh
 ```
 
-### 3. 配置AI网关(higress)，对接LLM
+部署过程包含以下步骤:
+1. 环境检查与依赖验证
+2. Docker 镜像拉取与构建
+3. 数据库初始化
+4. 服务容器启动
+5. 健康检查与状态验证
 
-Costrict后端部署完毕后，可以通过地址`http://{{COSTRICT_BACKEND}}:{{PORT_HIGRESS_CONTROL}}`，访问higress页面配置AI网关。
-其中:
+## 服务配置
 
-`{{COSTRICT_BACKEND}}`, `{{PORT_HIGRESS_CONTROL}}`的值配置在configure.sh文件中。PORT_HIGRESS_CONTROL默认值为8001
+### AI 网关配置 (Higress)
 
-具体请参考:
-
-* [higress](./docs/higress.zh-CN.md)
-
-### 4. 配置认证系统(casdoor)，对接用户的认证系统
-
-Costrict后端部署完毕后，可以通过地址`http://{{COSTRICT_BACKEND}}:{{PORT_CASDOOR}}`，访问Costrict认证系统casdoor页面，配置对接第三方认证系统。
-
-`{{COSTRICT_BACKEND}}`, `{{PORT_CASDOOR}}`的值配置在configure.sh文件中。PORT_CASDOOR默认值为9009
-
-如果仅仅进行测试验证，可以无需配置第三方认证系统，使用预置的默认账号demo进行登录试用。
+部署完成后，通过以下地址访问 Higress 控制台:
 
 ```
-账号： demo
-密码： test123
+http://{COSTRICT_BACKEND}:{PORT_HIGRESS_CONTROL}
 ```
 
-具体请参考：
+配置步骤:
+1. 访问 Higress 管理界面
+2. 配置上游 LLM 服务提供商
+3. 设置路由规则和负载均衡策略
+4. 配置限流和安全策略
 
-* [casdoor](./docs/casdoor.zh-CN.md)
+详细配置指南: [Higress 配置文档](./docs/higress.zh-CN.md)
 
-### 5. 在vscode的Costrict扩展配置Costrict后端入口地址
+### 身份认证系统配置 (Casdoor)
 
-Costrict后端的入口地址，默认为`http://{{COSTRICT_BACKEND}}:{{PORT_APISIX_ENTRY}}`。
+通过以下地址访问 Casdoor 管理界面:
 
-`{{COSTRICT_BACKEND}}`, `{{PORT_APISIX_ENTRY}}`的值配置在configure.sh文件中。PORT_APISIX_ENTRY默认值为9080。
+```
+http://{COSTRICT_BACKEND}:{PORT_CASDOOR}
+```
 
-如果配置有域名服务器，前置应用发布/负载均衡等设备，可以通过这些设备把Costrict后端BASEURL(假设是https://sample.com)绑定到`http://{{COSTRICT_BACKEND}}:{{PORT_APISIX_ENTRY}}`。部署时，需要把configure.sh文件中COSTRICT_BACKEND_BASEURL变量的值设为该地址(比如：COSTRICT_BACKEND_BASEURL="https://sample.com")。
+**测试账户** (仅用于开发和测试环境):
+```
+用户名: demo
+密码: test123
+```
 
-Costrict后端部署完成后，需要配置vscode Costrict扩展的`Costrict Base Url`。
-在vscode中打开Costrict设置的‘提供商’页面，选择API提供商为‘Costrict’，在‘Costrict Base Url’配置部署好的后端入口URL地址，即configure.sh中配置的COSTRICT_BACKEND_BASEURL变量的值。
-然后，点击‘登录Costrict’,使用认证系统许可的账号，或者预设的demo账号进行登录。
+配置功能:
+- 用户管理和权限控制
+- 第三方身份提供商集成 (OIDC/SAML)
+- 多因子身份验证 (MFA)
+- 会话管理和安全策略
 
-接下来，就可以开始使用`Costrict+私有化部署后端`进行开发了！
+详细配置指南: [Casdoor 配置文档](./docs/casdoor.zh-CN.md)
 
-祝您享受AI赋能开发的快乐！
+## 客户端集成
+
+### VSCode 插件配置
+
+1. 安装 Costrict VSCode 扩展
+2. 打开扩展设置中的"提供商"页面
+3. 选择 API 提供商为"Costrict"
+4. 配置后端服务地址:
+   ```
+   Costrict Base URL: {COSTRICT_BACKEND_BASEURL}
+   ```
+5. 点击"登录 Costrict"完成身份验证
+
+**服务访问地址**:
+```
+默认后端入口: http://{COSTRICT_BACKEND}:{PORT_APISIX_ENTRY}
+```
+
+### 域名绑定与负载均衡
+
+对于生产环境，建议通过反向代理或负载均衡器访问服务:
+
+```bash
+# Nginx 配置示例
+upstream costrict_backend {
+    server {COSTRICT_BACKEND}:{PORT_APISIX_ENTRY};
+}
+
+server {
+    listen 443 ssl;
+    server_name your-domain.com;
+    
+    location / {
+        proxy_pass http://costrict_backend;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+```
+
+## 运维管理
+
+### 服务状态监控
+
+检查服务运行状态:
+
+```bash
+# 查看所有服务状态
+docker-compose ps
+
+# 查看服务日志
+docker-compose logs -f [service_name]
+
+# 查看资源使用情况
+docker stats
+```
+
+### 数据备份与恢复
+
+```bash
+# 数据库备份
+bash ./scripts/backup.sh
+
+# 数据库恢复
+bash ./scripts/restore.sh [backup_file]
+```
+
+### 服务扩缩容
+
+```bash
+# 扩容服务实例
+docker-compose up -d --scale chatgpt=3
+
+# 更新服务配置
+docker-compose up -d --force-recreate [service_name]
+```
+
+## 故障排除
+
+### 常见问题
+
+**1. 容器启动失败**
+```bash
+# 检查端口占用
+netstat -tlnp | grep {port}
+
+# 检查磁盘空间
+df -h
+
+# 查看详细错误日志
+docker-compose logs [service_name]
+```
+
+**2. 网络连接问题**
+```bash
+# 测试服务连通性
+curl -v http://{COSTRICT_BACKEND}:{PORT_APISIX_ENTRY}/health
+
+# 检查 Docker 网络
+docker network ls
+docker network inspect {network_name}
+```
+
+**3. 数据库连接问题**
+```bash
+# 检查数据库服务状态
+docker-compose exec postgres pg_isready
+
+# 查看数据库日志
+docker-compose logs postgres
+```
+
+### 日志收集
+
+系统日志位置:
+- 应用日志: `./logs/`
+- 数据库日志: 容器内 `/var/log/postgresql/`
+- 网关日志: 容器内 `/var/log/apisix/`
+
+## 安全注意事项
+
+1. **生产环境部署**:
+   - 修改所有默认密码
+   - 配置 HTTPS 证书
+   - 启用防火墙和访问控制
+   - 定期更新系统和依赖包
+
+2. **网络安全**:
+   - 仅开放必要端口
+   - 配置 VPN 或内网访问
+   - 启用 API 限流和防护
+
+3. **数据保护**:
+   - 定期备份重要数据
+   - 启用数据库加密
+   - 配置访问审计日志
+
+## 许可证
+
+本项目基于 Apache 2.0 许可证开源。详见 [LICENSE](LICENSE) 文件。
+
+## 支持与贡献
+
+- **问题报告**: [GitHub Issues](https://github.com/zgsm-ai/zgsm-backend-deploy/issues)
+- **功能请求**: [GitHub Discussions](https://github.com/zgsm-ai/zgsm-backend-deploy/discussions)
+- **贡献指南**: [CONTRIBUTING.md](CONTRIBUTING.md)
+
+---
+
+**Costrict** - 让 AI 助力您的代码开发之旅
