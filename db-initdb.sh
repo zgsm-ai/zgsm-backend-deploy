@@ -21,11 +21,11 @@ for sql_file in postgres/scripts/*.sql; do
     echo "正在执行SQL文件: $filename，目标数据库: $db"
     
     # 执行SQL文件的命令，使用文件名前缀作为数据库名
-    docker exec -it "${DEPLOY}-postgres-1" /usr/local/bin/psql -U $POSTGRES_USER -d $db -f "/scripts/$filename"
+    docker exec -i "${DEPLOY}-postgres-1" /usr/local/bin/psql -U $POSTGRES_USER -d $db -f "/scripts/$filename"
 done
 
 SQL="SELECT datname AS database_name FROM pg_database ORDER BY datname;"
-docker exec -it "${DEPLOY}-postgres-1" /usr/local/bin/psql -U $POSTGRES_USER -c "$SQL"
+docker exec -i "${DEPLOY}-postgres-1" /usr/local/bin/psql -U $POSTGRES_USER -c "$SQL"
 
 # 定义需要创建的数据库列表
 DBLIST="chatgpt auth oneapi quota_manager codereview casdoor codebase_indexer"
@@ -35,7 +35,7 @@ for db in $DBLIST; do
     echo "db: ${db}"
     echo "$SQL"
     echo "--------------------------------------------------------------------------"
-    docker exec -it "${DEPLOY}-postgres-1" /usr/local/bin/psql -U $POSTGRES_USER -d $db -c "$SQL"
+    docker exec -i "${DEPLOY}-postgres-1" /usr/local/bin/psql -U $POSTGRES_USER -d $db -c "$SQL"
 done
 
 retry "docker compose -f docker-compose-initdb.yml down" 60 3 || fatal "Failed to stop postgres"
