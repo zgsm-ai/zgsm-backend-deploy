@@ -367,6 +367,8 @@ services:
       - "GATEWAY_HTTP_PORT=8080"
       - "GATEWAY_HTTPS_PORT=8443"
       - "CONSOLE_PORT=8001"
+    volumes:
+      - ./higress/data:/data
     networks:
       - shenma
 
