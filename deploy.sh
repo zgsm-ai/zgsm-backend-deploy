@@ -123,7 +123,7 @@ main() {
     cd "$BASE_DIR" || exit 1
 
     # Parameter replacement
-    safe_sed "s/ZGSM_BACKEND=\".*\"/ZGSM_BACKEND=\"$SERVER_IP\"/g" configure.sh
+    safe_sed "s/COSTRICT_BACKEND=\".*\"/COSTRICT_BACKEND=\"$SERVER_IP\"/g" configure.sh
 
     # Modify directory permissions
     safe_chown
@@ -180,7 +180,7 @@ main() {
     source ./configure.sh
 
     log "INFO" "All operations completed"
-    log "INFO" "Please login to the AI-GATEWAY backend [http://${ZGSM_BACKEND}:${PORT_AI_GATEWAY}] (default account: root, password: 123456), and add your LLM api-key in the Channels section! (If the page is blank, please wait as containers may take some time to start)"
+    log "INFO" "Please login to the AI-GATEWAY backend [http://${COSTRICT_BACKEND}:${PORT_HIGRESS_CONTROL}] (default account: root, password: 123456), and add your LLM api-key in the Channels section! (If the page is blank, please wait as containers may take some time to start)"
 }
 
 main "$@"
