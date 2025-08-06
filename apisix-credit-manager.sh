@@ -5,7 +5,7 @@
 curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT -d '{
     "id": "credit-manager",
     "nodes": {
-      "credit-manager:5173": 1
+      "credit-manager:80": 1
     },
     "type": "roundrobin"
 }'

@@ -3,7 +3,7 @@ Host: 0.0.0.0
 Port: 8888
 
 # Model endpoints configuration
-LLMEndpoint: "http://higress-gateway:80/v1/chat/completions"
+LLMEndpoint: "http://higress:8080/v1/chat/completions"
 
 # Token processing configuration
 TokenThreshold: 32_000

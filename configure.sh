@@ -68,7 +68,7 @@ PASSWORD_ELASTIC="4c6y4g6Z09T2w33pYRNKE3LG"
 # 对话默认使用的模型名称
 CHAT_DEFAULT_MODEL="deepseek-chat"
 CHAT_API_KEY="966c3157fe65461dbc731cd540b6cd5d"
-CHAT_AIGW_ADDR="http://higress:${PORT_AI_GATEWAY}/v1/chat/completions"
+CHAT_AIGW_ADDR="http://higress:8080/v1/chat/completions"
 
 # 代码补全模型的URL
 CODE_COMPLETION_MODEL_HOST="http://172.16.254.5:32081/v1/completions"

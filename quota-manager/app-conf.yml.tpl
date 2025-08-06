@@ -15,8 +15,8 @@ auth_database:
   sslmode: "disable"
 
 aigateway:
-  host: "higress-gateway"
-  port: 80
+  host: "higress"
+  port: 8080
   admin_path: "/v1/chat/completions/quota"
   auth_header: "x-admin-key"
   auth_value: "12345678"
