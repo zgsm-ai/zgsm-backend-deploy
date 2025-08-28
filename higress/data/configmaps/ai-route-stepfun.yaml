@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    higress.io/config-map-type: ai-route
+    higress.io/resource-definer: higress
+  name: ai-route-stepfun
+  namespace: higress-system
+  resourceVersion: "1"
+data:
+  data: |
+    {
+      "name": "stepfun",
+      "upstreams": [
+        {
+          "provider": "stepfun"
+        }
+      ],
+      "modelPredicates": [
+        {
+          "matchType": "PRE",
+          "matchValue": "step-"
+        }
+      ],
+      "version": "1"
+    }

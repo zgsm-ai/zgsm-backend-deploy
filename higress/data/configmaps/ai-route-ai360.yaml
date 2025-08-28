@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    higress.io/config-map-type: ai-route
+    higress.io/resource-definer: higress
+  name: ai-route-ai360
+  namespace: higress-system
+  resourceVersion: "1"
+data:
+  data: |
+    {
+      "name": "ai360",
+      "upstreams": [
+        {
+          "provider": "ai360"
+        }
+      ],
+      "modelPredicates": [
+        {
+          "matchType": "PRE",
+          "matchValue": "360GPT"
+        }
+      ],
+      "version": "1"
+    }

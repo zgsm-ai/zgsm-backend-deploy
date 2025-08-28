@@ -1,0 +1,223 @@
+apiVersion: extensions.higress.io/v1alpha1
+kind: WasmPlugin
+metadata:
+  annotations:
+    higress.io/comment: PLEASE DO NOT EDIT DIRECTLY. This resource is managed by Higress.
+    higress.io/wasm-plugin-title: AI Proxy
+  creationTimestamp: null
+  labels:
+    higress.io/internal: "true"
+    higress.io/resource-definer: higress
+    higress.io/wasm-plugin-built-in: "true"
+    higress.io/wasm-plugin-category: ai
+    higress.io/wasm-plugin-name: ai-proxy
+    higress.io/wasm-plugin-version: 1.0.0
+  managedFields:
+  - apiVersion: extensions.higress.io/v1alpha1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          f:higress.io/comment: {}
+        f:labels:
+          f:higress.io/internal: {}
+      f:spec:
+        f:defaultConfig:
+          f:providers: {}
+        f:matchRules: {}
+        f:url: {}
+    manager: Kubernetes Java Client
+    operation: Update
+    time: "2025-08-06T09:34:36Z"
+  name: ai-proxy.internal
+  namespace: higress-system
+  resourceVersion: "4"
+spec:
+  defaultConfig:
+    providers:
+    - apiTokens:
+      - YOUR_DASHSCOPE_API_KEY
+      id: aliyun
+      type: qwen
+    - apiTokens:
+      - YOUR_MOONSHOT_API_KEY
+      id: moonshot
+      type: moonshot
+    - apiTokens:
+      - YOUR_OPENAI_API_KEY
+      id: openai
+      type: openai
+    - apiTokens:
+      - YOUR_AI360_API_KEY
+      id: ai360
+      type: ai360
+    - apiTokens:
+      - YOUR_BAICHUAN_API_KEY
+      id: baichuan
+      type: baichuan
+    - apiTokens:
+      - YOUR_YI_API_KEY
+      id: yi
+      type: yi
+    - apiTokens:
+      - YOUR_DEEPSEEK_API_KEY
+      id: deepseek
+      type: deepseek
+    - apiTokens:
+      - YOUR_ZHIPUAI_API_KEY
+      id: zhipuai
+      type: zhipuai
+    - apiTokens:
+      - YOUR_BAIDU_API_KEY
+      id: baidu
+      type: baidu
+    - apiTokens:
+      - YOUR_STEPFUN_API_KEY
+      id: stepfun
+      type: stepfun
+    - apiTokens:
+      - YOUR_GEMINI_API_KEY
+      id: gemini
+      type: gemini
+    - apiTokens:
+      - YOUR_MISTRAL_API_KEY
+      id: mistral
+      type: mistral
+    - apiTokens:
+      - YOUR_COHERE_API_KEY
+      id: cohere
+      type: cohere
+    - apiTokens:
+      - YOUR_DOUBAO_API_KEY
+      id: doubao
+      type: doubao
+    - apiTokens:
+      - YOUR_AZURE_API_KEY
+      azureServiceUrl: https://YOUR_RESOURCE_NAME.openai.azure.com/openai/deployments/YOUR_DEPLOYMENT_NAME/chat/completions?api-version=2024-06-01
+      id: azure
+      type: azure
+    - apiTokens:
+      - YOUR_CLAUDE_API_KEY
+      claudeVersion: "2023-06-01"
+      id: claude
+      type: claude
+    - apiTokens:
+      - YOUR_OLLAMA_API_KEY
+      id: ollama
+      ollamaServerHost: YOUR_OLLAMA_SERVER_HOST
+      ollamaServerPort: 11434
+      type: ollama
+    - apiTokens:
+      - YOUR_MINIMAX_API_KEY
+      id: minimax
+      minimaxGroupId: ""
+      type: minimax
+    - failover:
+        enabled: false
+      id: glm
+      openaiCustomUrl: http://172.16.254.5:32325/v1
+      openaiExtraCustomUrls: []
+      retryOnFailure:
+        enabled: false
+      type: openai
+  defaultConfigDisable: false
+  failStrategy: FAIL_OPEN
+  matchRules:
+  - config:
+      activeProviderId: glm
+    configDisable: false
+    service:
+    - llm-glm.internal.static
+  - config:
+      activeProviderId: aliyun
+    configDisable: false
+    service:
+    - llm-aliyun.internal.dns
+  - config:
+      activeProviderId: moonshot
+    configDisable: false
+    service:
+    - llm-moonshot.internal.dns
+  - config:
+      activeProviderId: openai
+    configDisable: false
+    service:
+    - llm-openai.internal.dns
+  - config:
+      activeProviderId: ai360
+    configDisable: false
+    service:
+    - llm-ai360.internal.dns
+  - config:
+      activeProviderId: baichuan
+    configDisable: false
+    service:
+    - llm-baichuan.internal.dns
+  - config:
+      activeProviderId: yi
+    configDisable: false
+    service:
+    - llm-yi.internal.dns
+  - config:
+      activeProviderId: deepseek
+    configDisable: false
+    service:
+    - llm-deepseek.internal.dns
+  - config:
+      activeProviderId: zhipuai
+    configDisable: false
+    service:
+    - llm-zhipuai.internal.dns
+  - config:
+      activeProviderId: baidu
+    configDisable: false
+    service:
+    - llm-baidu.internal.dns
+  - config:
+      activeProviderId: stepfun
+    configDisable: false
+    service:
+    - llm-stepfun.internal.dns
+  - config:
+      activeProviderId: gemini
+    configDisable: false
+    service:
+    - llm-gemini.internal.dns
+  - config:
+      activeProviderId: mistral
+    configDisable: false
+    service:
+    - llm-mistral.internal.dns
+  - config:
+      activeProviderId: cohere
+    configDisable: false
+    service:
+    - llm-cohere.internal.dns
+  - config:
+      activeProviderId: doubao
+    configDisable: false
+    service:
+    - llm-doubao.internal.dns
+  - config:
+      activeProviderId: azure
+    configDisable: false
+    service:
+    - llm-azure.internal.dns
+  - config:
+      activeProviderId: claude
+    configDisable: false
+    service:
+    - llm-claude.internal.dns
+  - config:
+      activeProviderId: ollama
+    configDisable: false
+    service:
+    - llm-ollama.internal.dns
+  - config:
+      activeProviderId: minimax
+    configDisable: false
+    service:
+    - llm-minimax.internal.dns
+  priority: 100
+  url: oci://zgsm/ai-proxy-shenma:1.0.0
+status: {}

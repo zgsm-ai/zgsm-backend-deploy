@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    higress.io/config-map-type: ai-route
+    higress.io/resource-definer: higress
+  name: ai-route-baichuan
+  namespace: higress-system
+  resourceVersion: "1"
+data:
+  data: |
+    {
+      "name": "baichuan",
+      "upstreams": [
+        {
+          "provider": "baichuan"
+        }
+      ],
+      "modelPredicates": [
+        {
+          "matchType": "PRE",
+          "matchValue": "Baichuan"
+        }
+      ],
+      "version": "1"
+    }

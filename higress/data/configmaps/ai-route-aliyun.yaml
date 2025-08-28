@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    higress.io/config-map-type: ai-route
+    higress.io/resource-definer: higress
+  name: ai-route-aliyun
+  namespace: higress-system
+  resourceVersion: "1"
+data:
+  data: |
+    {
+      "name": "aliyun",
+      "upstreams": [
+        {
+          "provider": "aliyun"
+        }
+      ],
+      "modelPredicates": [
+        {
+          "matchType": "PRE",
+          "matchValue": "qwen-"
+        }
+      ],
+      "version": "1"
+    }

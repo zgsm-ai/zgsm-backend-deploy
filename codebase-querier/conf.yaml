@@ -1,0 +1,119 @@
+Name: codebase-querier
+Host: 0.0.0.0
+Port: 8888
+#Timeout: 30000 #ms
+Timeout: 300000 #ms，debug使用，300s
+MaxBytes: 104857600 # 100MB
+MaxConns: 100
+Verbose: false
+Mode: dev # dev,test,rt,pre, pro
+DevServer:
+  Enabled: true #health check metrics
+Auth:
+  UserInfoHeader: "x-userinfo"
+
+Log:
+  Mode: console # console,file,volume
+  ServiceName: "codebase-querier"
+  Encoding: plain # json,plain
+  Path: "/app/logs"
+  Level: info # debug,info,error,severe
+  KeepDays: 15
+  MaxSize: 100 # MB per file, take affect when Rotation is size.
+  Rotation: daily # split by day or size
+
+proxy_config:
+  mode: "full_path"              # 使用全路径模式
+  port_manager_url: "http://127.0.0.1:31226"
+  forward_url: "http://codebase-indexer:8888"  # 转发地址
+  dynamic_port: true
+  routes:                        # 路由规则数组
+    - path_prefix: "/codebase-indexer/api/v1/register"     # API服务路径前缀
+      target:                    # 目标服务配置
+        url: "http://localhost:11380"  # API服务地址
+        timeout: 30s             # 30秒
+    - path_prefix: "/codebase-indexer/api/v1/search/relation"     # API服务路径前缀
+      target:                    # 目标服务配置
+        url: "http://localhost:11380"  # API服务地址
+        timeout: 30s             # 30秒
+    - path_prefix: "/codebase-indexer/api/v1/search/definition"     # API服务路径前缀
+      target:                    # 目标服务配置
+        url: "http://localhost:11380"  # API服务地址
+        timeout: 30s             # 30秒
+    - path_prefix: "/codebase-indexer/api/v1/files/structure"     # API服务路径前缀
+      target:                    # 目标服务配置
+        url: "http://localhost:11380"  # API服务地址
+        timeout: 30s             # 30秒
+    - path_prefix: "/codebase-indexer/api/v1/files/content"     # API服务路径前缀
+      target:                    # 目标服务配置
+        url: "http://localhost:11380"  # API服务地址
+        timeout: 30s             # 30秒
+    - path_prefix: "/codebase-indexer/api/v1/codebases/directory"     # API服务路径前缀
+      target:                    # 目标服务配置
+        url: "http://localhost:11380"  # API服务地址
+        timeout: 30s             # 30秒
+    - path_prefix: "/codebase-indexer/api/v1/codebases/hash"     # API服务路径前缀
+      target:                    # 目标服务配置
+        url: "http://localhost:11380"  # API服务地址
+        timeout: 30s             # 30秒
+    - path_prefix: "/codebase-indexer/api/v1/search/reference"     # API服务路径前缀
+      target:                    # 目标服务配置
+        url: "http://localhost:11380"  # API服务地址
+        timeout: 30s             # 30秒
+    - path_prefix: "/codebase-indexer/api/v1/index/summary"     # API服务路径前缀
+      target:                    # 目标服务配置
+        url: "http://localhost:11380"  # API服务地址
+        timeout: 30s             # 30秒
+    - path_prefix: "/codebase-indexer/api/v1/index/task"     # API服务路径前缀
+      target:                    # 目标服务配置
+        url: "http://localhost:11380"  # API服务地址
+        timeout: 30s             # 30秒
+    - path_prefix: "/codebase-indexer/api/v1/index"     # API服务路径前缀
+      target:                    # 目标服务配置
+        url: "http://localhost:11380"  # API服务地址
+        timeout: 30s             # 30秒
+    - path_prefix: "/codebase-indexer/api/v1/codebase"     # API服务路径前缀
+      target:                    # 目标服务配置
+        url: "http://localhost:11380"  # API服务地址
+        timeout: 30s             # 30秒
+    - path_prefix: "/codebase-indexer/api/v1/snippets/read"     # API服务路径前缀
+      target:                    # 目标服务配置
+        url: "http://localhost:11380"  # API服务地址
+        timeout: 30s             # 30秒
+    - path_prefix: "/codebase-embedder/api/v1/search/semantic"     # API服务路径前缀
+      target:                    # 目标服务配置
+        url: "http://localhost:11380"  # API服务地址
+        timeout: 30s             # 30秒    
+    - path_prefix: "/codebase-embedder/api/v1/embeddings/summary"     # API服务路径前缀
+      target:                    # 目标服务配置
+        url: "http://localhost:11380"  # API服务地址
+        timeout: 30s             # 30秒   
+    
+  rewrite:
+    enabled: false               # 全路径模式下禁用路径重写
+    rules: []
+  headers:
+    pass_through: true           # 是否透传所有header
+    exclude:                     # 需要排除的header
+      - "X-Internal-*"
+      - "Authorization"
+    override:                    # 需要覆盖的header
+      Host: "localhost:8080"
+  port_manager:                    # 端口管理器配置（新配置）
+    url: "http://tunnel-manager:8080"  # 端口管理器URL
+    forward_url: "http://cotun"
+    timeout: 30s                  # 请求超时时间
+    cache_exp: 5m                  # 缓存过期时间
+    max_idle_conns: 10              # 最大空闲连接数
+    max_idle_conns_per_host: 5        # 每个主机的最大空闲连接数
+    idle_conn_timeout: 30s          # 空闲连接超时时间
+  header_based_forward:
+    enabled: true                    # 启用基于请求头的转发
+    header_name: "X-Costrict-Version" # 请求头名称
+    paths:                          # 多路径配置数组
+      - path: "/codebase-embedder/api/v1/search/semantic" # 目标路径
+        with_header_url: "http://codebase-embedder:8888/codebase-embedder/api/v1/search/semantic"     # 有请求头时的转发地址
+        without_header_url: "http://codebase-indexer:8888/codebase-indexer/api/v1/search/semantic"       # 无请求头时的转发地址
+      - path: "/codebase-embedder/api/v1/embeddings/summary" # 第二个目标路径
+        with_header_url: "http://codebase-embedder:8888/codebase-embedder/api/v1/embeddings/summary"     # 有请求头时的转发地址
+        without_header_url: "http://codebase-indexer:8888/codebase-indexer/api/v1/embeddings/summary"       # 无请求头时的转发地址

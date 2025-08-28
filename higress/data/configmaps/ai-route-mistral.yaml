@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    higress.io/config-map-type: ai-route
+    higress.io/resource-definer: higress
+  name: ai-route-mistral
+  namespace: higress-system
+  resourceVersion: "1"
+data:
+  data: |
+    {
+      "name": "mistral",
+      "upstreams": [
+        {
+          "provider": "mistral"
+        }
+      ],
+      "modelPredicates": [
+        {
+          "matchType": "REGULAR",
+          "matchValue": "open-mistral-.*|mistral-.*"
+        }
+      ],
+      "version": "1"
+    }

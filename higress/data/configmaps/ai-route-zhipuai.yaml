@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    higress.io/config-map-type: ai-route
+    higress.io/resource-definer: higress
+  name: ai-route-zhipuai
+  namespace: higress-system
+  resourceVersion: "1"
+data:
+  data: |
+    {
+      "name": "zhipuai",
+      "upstreams": [
+        {
+          "provider": "zhipuai"
+        }
+      ],
+      "modelPredicates": [
+        {
+          "matchType": "PRE",
+          "matchValue": "GLM-"
+        }
+      ],
+      "version": "1"
+    }

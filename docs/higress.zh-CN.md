@@ -8,6 +8,8 @@
 
 首先，需要安装 Higress AI 网关。具体安装步骤可以参考官方文档：[一键部署 Higress AI 网关](https://higress.cn/ai/quick-start/)。
 
+默认登录用户名&密码: admin/test123
+
 ### 2. 配置 Redis
 
 Redis 用于存储配额等信息。

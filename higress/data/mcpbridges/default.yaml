@@ -1,0 +1,123 @@
+apiVersion: networking.higress.io/v1
+kind: McpBridge
+metadata:
+  creationTimestamp: "2000-01-01T00:00:00Z"
+  managedFields:
+  - apiVersion: networking.higress.io/v1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:spec:
+        f:registries: {}
+    manager: Kubernetes Java Client
+    operation: Update
+    time: "2025-08-06T09:30:36Z"
+  name: default
+  namespace: higress-system
+  resourceVersion: "3"
+spec:
+  registries:
+  - domain: 127.0.0.1:8001
+    name: higress-console
+    port: 80
+    type: static
+  - domain: dashscope.aliyuncs.com
+    name: llm-aliyun.internal
+    port: 443
+    protocol: https
+    type: dns
+  - domain: api.moonshot.cn
+    name: llm-moonshot.internal
+    port: 443
+    protocol: https
+    type: dns
+  - domain: api.openai.com
+    name: llm-openai.internal
+    port: 443
+    protocol: https
+    type: dns
+  - domain: api.360.cn
+    name: llm-ai360.internal
+    port: 443
+    protocol: https
+    type: dns
+  - domain: api.baichuan-ai.com
+    name: llm-baichuan.internal
+    port: 443
+    protocol: https
+    type: dns
+  - domain: api.lingyiwanwu.com
+    name: llm-yi.internal
+    port: 443
+    protocol: https
+    type: dns
+  - domain: api.deepseek.com
+    name: llm-deepseek.internal
+    port: 443
+    protocol: https
+    type: dns
+  - domain: open.bigmodel.cn
+    name: llm-zhipuai.internal
+    port: 443
+    protocol: https
+    type: dns
+  - domain: qianfan.baidubce.com
+    name: llm-baidu.internal
+    port: 443
+    protocol: https
+    type: dns
+  - domain: api.stepfun.com
+    name: llm-stepfun.internal
+    port: 443
+    protocol: https
+    type: dns
+  - domain: generativelanguage.googleapis.com
+    name: llm-gemini.internal
+    port: 443
+    protocol: https
+    type: dns
+  - domain: api.mistral.ai
+    name: llm-mistral.internal
+    port: 443
+    protocol: https
+    type: dns
+  - domain: api.cohere.com
+    name: llm-cohere.internal
+    port: 443
+    protocol: https
+    type: dns
+  - domain: ark.cn-beijing.volces.com
+    name: llm-doubao.internal
+    port: 443
+    protocol: https
+    type: dns
+  - domain: YOUR_RESOURCE_NAME.openai.azure.com
+    name: llm-azure.internal
+    port: 443
+    protocol: https
+    type: dns
+  - domain: api.anthropic.com
+    name: llm-claude.internal
+    port: 443
+    protocol: https
+    type: dns
+  - domain: YOUR_OLLAMA_SERVER_HOST
+    name: llm-ollama.internal
+    port: 11434
+    protocol: http
+    type: dns
+  - domain: api.minimax.chat
+    name: llm-minimax.internal
+    port: 443
+    protocol: https
+    type: dns
+  - domain: 127.0.0.1:6379
+    name: local-redis
+    port: 80
+    protocol: http
+    type: static
+  - domain: 172.16.254.5:32325
+    name: llm-glm.internal
+    port: 80
+    protocol: http
+    type: static
+status: {}

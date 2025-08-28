@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    higress.io/config-map-type: ai-route
+    higress.io/resource-definer: higress
+  name: ai-route-azure
+  namespace: higress-system
+  resourceVersion: "1"
+data:
+  data: |
+    {
+      "name": "azure",
+      "upstreams": [
+        {
+          "provider": "azure"
+        }
+      ],
+      "modelPredicates": [
+        {
+          "matchType": "REGULAR",
+          "matchValue": "gpt-.*|o1-.*|o3-.*"
+        }
+      ],
+      "version": "1"
+    }

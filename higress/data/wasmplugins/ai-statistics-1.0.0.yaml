@@ -1,0 +1,375 @@
+apiVersion: extensions.higress.io/v1alpha1
+kind: WasmPlugin
+metadata:
+  annotations:
+    higress.io/wasm-plugin-title: AI Statistics
+  creationTimestamp: null
+  labels:
+    higress.io/resource-definer: higress
+    higress.io/wasm-plugin-built-in: "true"
+    higress.io/wasm-plugin-category: ai
+    higress.io/wasm-plugin-name: ai-statistics
+    higress.io/wasm-plugin-version: 1.0.0
+  managedFields:
+  - apiVersion: extensions.higress.io/v1alpha1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:spec:
+        f:defaultConfigDisable: {}
+        f:matchRules: {}
+        f:url: {}
+    manager: Kubernetes Java Client
+    operation: Update
+    time: "2025-08-06T09:35:54Z"
+  name: ai-statistics-1.0.0
+  namespace: higress-system
+  resourceVersion: "4"
+spec:
+  defaultConfigDisable: false
+  failStrategy: FAIL_OPEN
+  matchRules:
+  - config:
+      attributes:
+      - apply_to_log: true
+        key: question
+        value: messages.@reverse.0.content
+        value_source: request_body
+      - apply_to_log: true
+        key: answer
+        rule: append
+        value: choices.0.delta.content
+        value_source: response_streaming_body
+      - apply_to_log: true
+        key: answer
+        value: choices.0.message.content
+        value_source: response_body
+    configDisable: false
+    ingress:
+    - ai-route-aliyun.internal
+  - config:
+      attributes:
+      - apply_to_log: true
+        key: question
+        value: messages.@reverse.0.content
+        value_source: request_body
+      - apply_to_log: true
+        key: answer
+        rule: append
+        value: choices.0.delta.content
+        value_source: response_streaming_body
+      - apply_to_log: true
+        key: answer
+        value: choices.0.message.content
+        value_source: response_body
+    configDisable: false
+    ingress:
+    - ai-route-moonshot.internal
+  - config:
+      attributes:
+      - apply_to_log: true
+        key: question
+        value: messages.@reverse.0.content
+        value_source: request_body
+      - apply_to_log: true
+        key: answer
+        rule: append
+        value: choices.0.delta.content
+        value_source: response_streaming_body
+      - apply_to_log: true
+        key: answer
+        value: choices.0.message.content
+        value_source: response_body
+    configDisable: false
+    ingress:
+    - ai-route-openai.internal
+  - config:
+      attributes:
+      - apply_to_log: true
+        key: question
+        value: messages.@reverse.0.content
+        value_source: request_body
+      - apply_to_log: true
+        key: answer
+        rule: append
+        value: choices.0.delta.content
+        value_source: response_streaming_body
+      - apply_to_log: true
+        key: answer
+        value: choices.0.message.content
+        value_source: response_body
+    configDisable: false
+    ingress:
+    - ai-route-ai360.internal
+  - config:
+      attributes:
+      - apply_to_log: true
+        key: question
+        value: messages.@reverse.0.content
+        value_source: request_body
+      - apply_to_log: true
+        key: answer
+        rule: append
+        value: choices.0.delta.content
+        value_source: response_streaming_body
+      - apply_to_log: true
+        key: answer
+        value: choices.0.message.content
+        value_source: response_body
+    configDisable: false
+    ingress:
+    - ai-route-baichuan.internal
+  - config:
+      attributes:
+      - apply_to_log: true
+        key: question
+        value: messages.@reverse.0.content
+        value_source: request_body
+      - apply_to_log: true
+        key: answer
+        rule: append
+        value: choices.0.delta.content
+        value_source: response_streaming_body
+      - apply_to_log: true
+        key: answer
+        value: choices.0.message.content
+        value_source: response_body
+    configDisable: false
+    ingress:
+    - ai-route-yi.internal
+  - config:
+      attributes:
+      - apply_to_log: true
+        key: question
+        value: messages.@reverse.0.content
+        value_source: request_body
+      - apply_to_log: true
+        key: answer
+        rule: append
+        value: choices.0.delta.content
+        value_source: response_streaming_body
+      - apply_to_log: true
+        key: answer
+        value: choices.0.message.content
+        value_source: response_body
+    configDisable: false
+    ingress:
+    - ai-route-deepseek.internal
+  - config:
+      attributes:
+      - apply_to_log: true
+        key: question
+        value: messages.@reverse.0.content
+        value_source: request_body
+      - apply_to_log: true
+        key: answer
+        rule: append
+        value: choices.0.delta.content
+        value_source: response_streaming_body
+      - apply_to_log: true
+        key: answer
+        value: choices.0.message.content
+        value_source: response_body
+    configDisable: false
+    ingress:
+    - ai-route-zhipuai.internal
+  - config:
+      attributes:
+      - apply_to_log: true
+        key: question
+        value: messages.@reverse.0.content
+        value_source: request_body
+      - apply_to_log: true
+        key: answer
+        rule: append
+        value: choices.0.delta.content
+        value_source: response_streaming_body
+      - apply_to_log: true
+        key: answer
+        value: choices.0.message.content
+        value_source: response_body
+    configDisable: false
+    ingress:
+    - ai-route-baidu.internal
+  - config:
+      attributes:
+      - apply_to_log: true
+        key: question
+        value: messages.@reverse.0.content
+        value_source: request_body
+      - apply_to_log: true
+        key: answer
+        rule: append
+        value: choices.0.delta.content
+        value_source: response_streaming_body
+      - apply_to_log: true
+        key: answer
+        value: choices.0.message.content
+        value_source: response_body
+    configDisable: false
+    ingress:
+    - ai-route-stepfun.internal
+  - config:
+      attributes:
+      - apply_to_log: true
+        key: question
+        value: messages.@reverse.0.content
+        value_source: request_body
+      - apply_to_log: true
+        key: answer
+        rule: append
+        value: choices.0.delta.content
+        value_source: response_streaming_body
+      - apply_to_log: true
+        key: answer
+        value: choices.0.message.content
+        value_source: response_body
+    configDisable: false
+    ingress:
+    - ai-route-gemini.internal
+  - config:
+      attributes:
+      - apply_to_log: true
+        key: question
+        value: messages.@reverse.0.content
+        value_source: request_body
+      - apply_to_log: true
+        key: answer
+        rule: append
+        value: choices.0.delta.content
+        value_source: response_streaming_body
+      - apply_to_log: true
+        key: answer
+        value: choices.0.message.content
+        value_source: response_body
+    configDisable: false
+    ingress:
+    - ai-route-mistral.internal
+  - config:
+      attributes:
+      - apply_to_log: true
+        key: question
+        value: messages.@reverse.0.content
+        value_source: request_body
+      - apply_to_log: true
+        key: answer
+        rule: append
+        value: choices.0.delta.content
+        value_source: response_streaming_body
+      - apply_to_log: true
+        key: answer
+        value: choices.0.message.content
+        value_source: response_body
+    configDisable: false
+    ingress:
+    - ai-route-cohere.internal
+  - config:
+      attributes:
+      - apply_to_log: true
+        key: question
+        value: messages.@reverse.0.content
+        value_source: request_body
+      - apply_to_log: true
+        key: answer
+        rule: append
+        value: choices.0.delta.content
+        value_source: response_streaming_body
+      - apply_to_log: true
+        key: answer
+        value: choices.0.message.content
+        value_source: response_body
+    configDisable: false
+    ingress:
+    - ai-route-doubao.internal
+  - config:
+      attributes:
+      - apply_to_log: true
+        key: question
+        value: messages.@reverse.0.content
+        value_source: request_body
+      - apply_to_log: true
+        key: answer
+        rule: append
+        value: choices.0.delta.content
+        value_source: response_streaming_body
+      - apply_to_log: true
+        key: answer
+        value: choices.0.message.content
+        value_source: response_body
+    configDisable: false
+    ingress:
+    - ai-route-azure.internal
+  - config:
+      attributes:
+      - apply_to_log: true
+        key: question
+        value: messages.@reverse.0.content
+        value_source: request_body
+      - apply_to_log: true
+        key: answer
+        rule: append
+        value: choices.0.delta.content
+        value_source: response_streaming_body
+      - apply_to_log: true
+        key: answer
+        value: choices.0.message.content
+        value_source: response_body
+    configDisable: false
+    ingress:
+    - ai-route-claude.internal
+  - config:
+      attributes:
+      - apply_to_log: true
+        key: question
+        value: messages.@reverse.0.content
+        value_source: request_body
+      - apply_to_log: true
+        key: answer
+        rule: append
+        value: choices.0.delta.content
+        value_source: response_streaming_body
+      - apply_to_log: true
+        key: answer
+        value: choices.0.message.content
+        value_source: response_body
+    configDisable: false
+    ingress:
+    - ai-route-ollama.internal
+  - config:
+      attributes:
+      - apply_to_log: true
+        key: question
+        value: messages.@reverse.0.content
+        value_source: request_body
+      - apply_to_log: true
+        key: answer
+        rule: append
+        value: choices.0.delta.content
+        value_source: response_streaming_body
+      - apply_to_log: true
+        key: answer
+        value: choices.0.message.content
+        value_source: response_body
+    configDisable: false
+    ingress:
+    - ai-route-minimax.internal
+  - config:
+      attributes:
+      - apply_to_log: true
+        key: question
+        value: messages.@reverse.0.content
+        value_source: request_body
+      - apply_to_log: true
+        key: answer
+        rule: append
+        value: choices.0.delta.content
+        value_source: response_streaming_body
+      - apply_to_log: true
+        key: answer
+        value: choices.0.message.content
+        value_source: response_body
+    configDisable: false
+    ingress:
+    - ai-route-glm.internal
+  priority: 900
+  url: oci://zgsm/ai-statistics-shenma:1.0.0
+status: {}

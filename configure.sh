@@ -31,7 +31,8 @@ PORT_OIDC_AUTH="9006"
 PORT_CHAT_RAG="9007"
 PORT_CODEBASE_INDEXER="9008"
 PORT_CASDOOR="9009"
-PORT_CHISEL="9010"
+PORT_COTUN="9010"
+PORT_TUNNEL_MANAGER="9011"
 
 #---------------------------------------------------------
 # 私有镜像仓库设置

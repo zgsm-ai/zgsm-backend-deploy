@@ -31,3 +31,11 @@ scheduler:
 
 voucher:
   signing_key: "e8a3b2d1c0f9e7d6a5b4c3d2e1f0a9b8c7d6e5f4a3b2c1d0e9f8a7b6c5d4e3f2"
+
+github_star_check:
+  enabled: false
+  required_repo: "zgsm-ai.costrict"
+
+log:
+  level: "warn"
+  stdout_only: true

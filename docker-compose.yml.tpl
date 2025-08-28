@@ -73,6 +73,8 @@ services:
       DEFAULT_VECTORIZER_MODULE: "none"
       ENABLE_MODULES: ""
       CLUSTER_HOSTNAME: "weaviate"
+      ASYNC_INDEXING: "true"
+      AUTHENTICATION_APIKEY_ENABLED: "false"
     volumes:
       - ./weaviate/data:/var/lib/weaviate
     networks:
@@ -91,25 +93,6 @@ services:
     networks:
       - shenma
 
-  codebase-indexer:
-    image: {{IMAGE_CODEBASE_INDEXER}}
-    command: ["/app/server", "-f", "/app/conf/conf.yaml"]
-    restart: always
-    ports:
-      - "{{PORT_CODEBASE_INDEXER}}:8888"
-      - "6060:6060"
-    environment:
-      - TZ=Asia/Shanghai
-      - INDEX_NODE=1
-      - DB_PASSWORD={{PASSWORD_POSTGRES}}
-    volumes:
-      - ./codebase-indexer/conf.yaml:/app/conf/conf.yaml
-      - ./codebase-indexer/codegraph.yaml:/app/conf/codegraph.yaml
-      - ./codebase-indexer/logs:/app/logs
-      - ./codebase-indexer/store:/mnt/codebase-store
-    networks:
-      - shenma
-
   chat-rag:
     image: {{IMAGE_CHATRAG}}
     command: ["/app/chat-rag", "-f", "/app/etc/chat-api.yaml"]
@@ -120,7 +103,7 @@ services:
       - ./chat-rag/logs:/data/logs
       - ./chat-rag/chat-api.yaml:/app/etc/chat-api.yaml:ro
     depends_on:
-      - codebase-indexer
+      - codebase-querier
     networks:
       - shenma
 
@@ -317,7 +300,7 @@ services:
       - SNIPPET_TOP_N=0
       - MAX_TOKENS=500
       - MAX_MODEL_LEN=5000,1000
-      - CODEBASE_INDEXER_API_BASE_URL=http://codebase-indexer:{{PORT_CODEBASE_INDEXER}}
+      - CODEBASE_INDEXER_API_BASE_URL=http://codebase-querier:{{PORT_CODEBASE_INDEXER}}
       - CONTEXT_COST_TIME=1500
       - MAX_MODEL_COST_TIME=2800
       - MAX_COST_TIME=3000
@@ -338,6 +321,93 @@ services:
       - OPENAI_MODEL_AUTHORIZATION=sk-CsPvPQwVPGVcPEBm6485D534F690407aA3113f7c13D633Cd
     depends_on:
       - redis
+    networks:
+      - shenma
+
+  codebase-querier:
+    image: {{IMAGE_CODEBASE_QUERIER}}
+    restart: always
+    command: ["/app/server", "-f", "/app/conf/conf.yaml"]
+    ports:
+      - "8888:8888"
+      - "6060:6060"
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./codebase-querier/conf.yaml:/app/conf/conf.yaml:ro
+      - ./codebase-querier/logs:/app/logs
+    networks:
+      - shenma
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 8G
+        reservations:
+          cpus: '2'
+          memory: 4G
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8888/health"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  codebase-embedder:
+    image: {{IMAGE_CODEBASE_EMBEDDER}}
+    restart: always
+    command: ["/app/server", "-f", "/app/conf/conf.yaml"]
+    ports:
+      - "8889:8888"
+      - "6061:6060"
+    environment:
+      - TZ=Asia/Shanghai
+      - INDEX_NODE=1
+    volumes:
+      - ./codebase-embedder/conf.yaml:/app/conf/conf.yaml:ro
+      - ./codebase-embedder/logs:/app/logs
+    networks:
+      - shenma
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 8G
+        reservations:
+          cpus: '2'
+          memory: 4G
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8888/health"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    depends_on:
+      - codebase-querier
+
+  cotun:
+    image: {{IMAGE_COTUN}}
+    restart: always
+    command: ["server", "--reverse", "--port", "8080", "--authfile", "/cotun/users.json"]
+    environment:
+      TZ: "Asia/Shanghai"
+    volumes:
+      - ./cotun/users.json:/cotun/users.json
+    ports:
+      - "{{PORT_COTUN}}:8080/tcp"
+    networks:
+      - shenma
+
+  tunnel-manager:
+    image: {{IMAGE_TUNNEL_MANAGER}}
+    restart: always
+    environment:
+      TZ: "Asia/Shanghai"
+    ports:
+      - "{{PORT_TUNNEL_MANAGER}}:8080"
+    volumes:
+      - ./tunnel-manager/config.yaml:/config.yaml
+      - ./tunnel-manager/data:/data
     networks:
       - shenma
 

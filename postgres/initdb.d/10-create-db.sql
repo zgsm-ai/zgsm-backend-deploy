@@ -6,4 +6,4 @@ CREATE DATABASE oneapi;
 CREATE DATABASE quota_manager;
 CREATE DATABASE codereview;
 CREATE DATABASE codebase_indexer;
-
+CREATE DATABASE codebase_embedder;
