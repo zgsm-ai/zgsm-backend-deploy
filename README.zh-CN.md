@@ -85,7 +85,37 @@ vim configure.sh
 | `PORT_HIGRESS_CONTROL` | Higress 控制台端口 | 8001 | ❌ |
 | `PORT_CASDOOR` | Casdoor 认证系统端口 | 9009 | ❌ |
 
-### 3. 服务部署
+### 3. 准备后端服务镜像
+
+Costrict后端镜像主要保存在docker hub镜像仓库docker.io/zgsm中。
+
+在执行部署前，需要先保证后端部署需要的镜像，可以正常从镜像仓库拉取。
+
+Costrict后端需要的镜像，可以查看scripts/images.list文件获取完整列表。
+
+通过下述命令可以从云端获取该列表文件。
+
+```bash
+bash scripts/get-images-list.sh -o scripts
+```
+
+部署脚本在部署过程中会自动拉取所有后端部署需要的镜像。
+
+但是，如果部署服务器无法访问docker hub镜像仓库，则需要提前将镜像下载，保存到部署机器的指定目录(假设保存在/root/images下)。然后运行下述命令预加载好。
+
+```bash
+bash scripts/load-images.sh -l /root/images
+```
+
+除了从docker镜像仓库拉取并导出镜像文件，还可以从百度网盘下载Costrict后端部署需要的所有镜像文件。
+
+网盘地址：
+
+```
+https://pan.baidu.com/s/12kP5VyQinFNrXFsKEWFGJw?pwd=k2dh
+```
+
+### 4. 服务部署
 
 执行自动化部署脚本:
 
@@ -94,6 +124,7 @@ bash deploy.sh
 ```
 
 部署过程包含以下步骤:
+
 1. 环境检查与依赖验证
 2. Docker 镜像拉取与构建
 3. 数据库初始化
@@ -108,6 +139,13 @@ bash deploy.sh
 
 ```
 http://{COSTRICT_BACKEND}:{PORT_HIGRESS_CONTROL}
+```
+
+**管理账户默认用户名密码** (登录后请及时修改):
+
+```
+用户名: admin
+密码: test123
 ```
 
 配置步骤:

@@ -21,12 +21,12 @@ datasources:
    name: 'apisix'
    org_id: 1
    type: 'prometheus'
-   url: 'http://prometheus:{{PORT_PROMETHEUS}}'
+   url: 'http://prometheus:9090'
    version: 1
  - name: Elastic
    type: elasticsearch
    access: proxy
-   url: http://es:{{PORT_ES}}
+   url: http://es:9200
    jsonData:
     index: '[metrics-]YYYY.MM.DD'
     interval: Daily

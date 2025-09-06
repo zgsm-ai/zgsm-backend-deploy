@@ -1,0 +1,214 @@
+{
+    "quota-manager.bad_request": {
+        "message": "錯誤的請求 - 無效的請求參數",
+        "solution": "請確認請求參數是否正確"
+    },
+    "quota-manager.unauthorized": {
+        "message": "未授權 - 身份驗證失敗",
+        "solution": "請重新登入"
+    },
+    "quota-manager.internal_error": {
+        "message": "內部伺服器錯誤 - 意外的伺服器錯誤",
+        "solution": "請聯繫管理員"
+    },
+    "quota-manager.invalid_strategy_id": {
+        "message": "無效的策略 ID - 策略 ID 格式無效",
+        "solution": "請確認策略 ID 是否正確"
+    },
+    "quota-manager.strategy_not_found": {
+        "message": "未找到策略 - 未找到具有指定 ID 的策略",
+        "solution": "請確認策略 ID 是否正確"
+    },
+    "quota-manager.insufficient_quota": {
+        "message": "配額不足 - 用戶沒有足夠的配額",
+        "solution": "請獲取更多 credit 後再次嘗試"
+    },
+    "quota-manager.voucher_invalid": {
+        "message": "無效的憑證 - 憑證代碼無效或格式錯誤",
+        "solution": "請使用正確的兌換碼"
+    },
+    "quota-manager.voucher_expired": {
+        "message": "憑證已過期 - 憑證代碼已過期",
+        "solution": "請使用正確的兌換碼"
+    },
+    "quota-manager.voucher_already_redeemed": {
+        "message": "憑證已被兌換 - 憑證已被使用",
+        "solution": "請使用正確的兌換碼"
+    },
+    "quota-manager.token_invalid": {
+        "message": "令牌無效 - JWT 令牌無效或缺失",
+        "solution": "請重新登入"
+    },
+    "quota-manager.quota_transfer_failed": {
+        "message": "配額轉移失敗 - 轉移配額失敗",
+        "solution": "請再次嘗試或聯繫管理員"
+    },
+    "quota-manager.database_error": {
+        "message": "資料庫錯誤 - 資料庫操作失敗",
+        "solution": "請再次嘗試或聯繫管理員"
+    },
+    "quota-manager.aigateway_error": {
+        "message": "AiGateway 錯誤 - AiGateway 服務出錯",
+        "solution": "請再次嘗試或聯繫管理員"
+    },
+    "ai-gateway.build_models_failed": {
+        "message": "生成模型列表失敗",
+        "solution": "請再次嘗試"
+    },
+    "ai-gateway.send_models_response_failed": {
+        "message": "獲取模型列表失敗",
+        "solution": "請再次嘗試"
+    },
+    "ai-gateway.unauthorized": {
+        "message": "管理 API 身份驗證失敗",
+        "solution": "請重新登入"
+    },
+    "ai-gateway.no_token": {
+        "message": "未提供 JWT 令牌",
+        "solution": "請重新登入"
+    },
+    "ai-gateway.invalid_token": {
+        "message": "無效的 JWT 令牌格式",
+        "solution": "請重新登入"
+    },
+    "ai-gateway.token_parse_failed": {
+        "message": "JWT 令牌解析失敗",
+        "solution": "請重新登入"
+    },
+    "ai-gateway.no_userid": {
+        "message": "在 JWT 令牌中未找到用戶 ID",
+        "solution": "請重新登入"
+    },
+    "ai-gateway.no_employee_number": {
+        "message": "工號不存在",
+        "solution": "請確認用戶ID是否正確"
+    },
+    "ai-gateway.model_permission_denied": {
+        "message": "沒有對應模型的權限",
+        "solution": "請先申請模型權限"
+    },
+    "ai-gateway.total_quota_error": {
+        "message": "獲取總配額失敗",
+        "solution": "請再次嘗試或聯繫管理員"
+    },
+    "ai-gateway.used_quota_error": {
+        "message": "獲取已使用配額失敗",
+        "solution": "請再次嘗試或聯繫管理員"
+    },
+    "ai-gateway.insufficient_quota": {
+        "message": "配額不足 - 用戶沒有足夠的配額",
+        "solution": "請獲取更多 credit 後再次嘗試"
+    },
+    "ai-gateway.deduction_failed": {
+        "message": "額度扣減失敗",
+        "solution": "請再次嘗試或聯繫管理員"
+    },
+    "ai-gateway.deduction_inconsistent": {
+        "message": "額度數據異常",
+        "solution": "請聯繫管理員"
+    },
+    "ai-gateway.invalid_params": {
+        "message": "無效的請求參數",
+        "solution": "請確認請求參數是否正確"
+    },
+    "ai-gateway.redis_error": {
+        "message": "Redis 連接錯誤",
+        "solution": "請再次嘗試或聯繫管理員"
+    },
+    "ai-gateway.invalid_quota_format": {
+        "message": "額度數據異常",
+        "solution": "請聯繫管理員"
+    },
+    "ai-gateway.invalid_quota_value": {
+        "message": "額度數據異常",
+        "solution": "請聯繫管理員"
+    },
+    "ai-gateway.star_required": {
+        "message": "需要先 star GitHub 項目",
+        "solution": "需要先 star GitHub 項目"
+    },
+    "oidc-auth.badRequestParameter": {
+        "message": "參數傳遞錯誤",
+        "solution": "請通過VSCode插件發起登入，不要手動修改請求參數"
+    },
+    "oidc-auth.loginEncryptFailed": {
+        "message": "登入資料加密失敗",
+        "solution": "請通過VSCode插件發起登入，不要手動修改請求參數"
+    },
+    "oidc-auth.LoginDecryptFailed": {
+        "message": "登入資料解密失敗",
+        "solution": "請通過VSCode插件發起登入，不要手動修改請求參數"
+    },
+    "oidc-auth.userNotFound": {
+        "message": "使用者不存在",
+        "solution": "請重新登入，獲取有效的token"
+    },
+    "oidc-auth.tokenInvalid": {
+        "message": "無效的 token",
+        "solution": "請重新登入，獲取有效的token"
+    },
+    "oidc-auth.updateInfoFailed": {
+        "message": "更新資訊失敗",
+        "solution": "請重試，或重新登入"
+    },
+    "oidc-auth.bindAccountFailed": {
+        "message": "綁定帳號失敗",
+        "solution": "請重試，或重新登入"
+    },
+    "oidc-auth.tokenGenerateFailed": {
+        "message": "生成 token 失敗",
+        "solution": "請重試，或重新登入"
+    },
+    "oidc-auth.authenticationFailed": {
+        "message": "鑑權失敗",
+        "solution": "請重新登入，獲取有效的token"
+    },
+    "chat-rag.context_length_exceeded": {
+        "message": "請求超出了模型的最大上下文長度限制，請縮短輸入內容",
+        "solution": "您可以開啟自動壓縮上下文功能，或重新開啟新的對話任務。"
+    },
+    "chat-rag.model_services_unavailable": {
+        "message": "大模型服務暫時不可用，請稍後重試。",
+        "solution": "請稍後重試，或聯繫管理員。"
+    },
+    "chat-rag.internal_error": {
+        "message": "内部服务器错误",
+        "solution": "請稍後重試，或聯繫管理員。"
+    },
+    "chat-rag.model_unavailable": {
+        "message": "",
+        "solution": ""
+    },
+    "chat-rag.model_services_unauthorized": {
+        "message": "",
+        "solution": ""
+    },
+    "codebase-indexer.unsupported_language": {
+        "message": "不支援的語言",
+        "solution": "暫不支援該編程語言"
+    },
+    "codebase-indexer.network_connection_error": {
+        "message": "網路連線錯誤",
+        "solution": ""
+    },
+    "codebase-indexer.authentication_failed": {
+        "message": "鑑權失敗",
+        "solution": "請重新登入，獲取有效的token"
+    },
+    "codebase-indexer.internal_server_error": {
+        "message": "內部伺服器錯誤",
+        "solution": "請稍後重試，或聯繫管理員。"
+    },
+    "codebase-indexer.file_embedding_failed": {
+        "message": "文件解析失敗",
+        "solution": ""
+    },
+    "codebase-querier.findPortFailed": {
+        "message": "獲取客戶端反向代理端口失敗",
+        "solution": "檢查客戶端反向代理隧道是否成功"
+    },
+    "codebase-embedder.server_busy": {
+        "message": "向量構建服務繁忙",
+        "solution": ""
+    }
+}

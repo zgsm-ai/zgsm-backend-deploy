@@ -4,7 +4,7 @@ runmode = dev
 copyrequestbody = true
 SessionOn = true
 driverName = postgres
-dataSourceName = "user={{POSTGRES_USER}} password={{PASSWORD_POSTGRES}} host=postgres port={{PORT_POSTGRES}} dbname=casdoor sslmode=disable"
+dataSourceName = "user={{POSTGRES_USER}} password={{PASSWORD_POSTGRES}} host=postgres port=5432 dbname=casdoor sslmode=disable"
 dbName=
 redisEndpoint =
 defaultStorageProvider =

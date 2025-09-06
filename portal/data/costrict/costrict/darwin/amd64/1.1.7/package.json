@@ -1,0 +1,18 @@
+{
+  "packageName": "costrict",
+  "packageType": "exec",
+  "fileName": "costrict",
+  "os": "darwin",
+  "arch": "amd64",
+  "size": 32402720,
+  "checksum": "735cab606a0a48a0c836577fae7db6e2",
+  "sign": "624521fbefdd7f2114538ec299b6daf1e97028f8fb09f007ee1387e74a9f5c8e135328cd8a3987415b7d376199e09258aec693b4ffcd249ca797c98ac1abd27eeda87a1220231c943d44e4da551e0f902713ce2b4fda6cf7b56e0be3ca28b57d84d303c6b7a9a27d4e3fb85a7601052ca5a0bfab7f8aa1db4281500a96f397f742a3e7a4ddee02f1ad749b56bb3f6ca1387155841beb2bacb98d8d0f41fd1ba31efdfd44c2da474b9f4510ff2fedee92878c5d346298afd617f22d7286b3008f1d06a6080544e59a35b52486740fbc58bdfe314749f7ad14fe871506a4df33e45ab32461bfb5a89c47b7d4cec4afc57b3a3a9347842819dd180a9b213c346aef",
+  "checksumAlgo": "md5",
+  "versionId": {
+    "major": 1,
+    "minor": 1,
+    "micro": 7
+  },
+  "build": "",
+  "description": "Costrict client process management service"
+}

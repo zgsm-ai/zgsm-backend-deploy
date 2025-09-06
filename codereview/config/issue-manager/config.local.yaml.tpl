@@ -1,7 +1,7 @@
 database:
   type: postgres
   host: postgres
-  port: {{PORT_POSTGRES}}
+  port: 5432
   user: {{POSTGRES_USER}}
   password: {{PASSWORD_POSTGRES}}
   dbname: codereview

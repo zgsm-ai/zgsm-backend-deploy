@@ -7,7 +7,7 @@ SERVICE_NAME="grafana"
 curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT -d '{
     "id": "grafana",
     "nodes": {
-      "'"grafana:${PORT_GRAFANA}"'": 1
+      "grafana:3000": 1
     },
     "type": "roundrobin"
   }'

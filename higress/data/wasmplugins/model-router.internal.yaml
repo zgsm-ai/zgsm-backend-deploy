@@ -1,0 +1,38 @@
+apiVersion: extensions.higress.io/v1alpha1
+kind: WasmPlugin
+metadata:
+  annotations:
+    higress.io/comment: PLEASE DO NOT EDIT DIRECTLY. This resource is managed by Higress.
+    higress.io/wasm-plugin-title: AI Model Router
+  creationTimestamp: null
+  labels:
+    higress.io/internal: "true"
+    higress.io/resource-definer: higress
+    higress.io/wasm-plugin-built-in: "true"
+    higress.io/wasm-plugin-category: ai
+    higress.io/wasm-plugin-name: model-router
+    higress.io/wasm-plugin-version: 1.0.0
+  managedFields:
+  - apiVersion: extensions.higress.io/v1alpha1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          f:higress.io/comment: {}
+        f:labels:
+          f:higress.io/internal: {}
+    manager: Kubernetes Java Client
+    operation: Update
+    time: "2025-08-06T09:32:22Z"
+  name: model-router.internal
+  namespace: higress-system
+  resourceVersion: "2"
+spec:
+  defaultConfig:
+    modelToHeader: x-higress-llm-model
+  defaultConfigDisable: false
+  failStrategy: FAIL_OPEN
+  phase: AUTHN
+  priority: 900
+  url: http://portal:80/wasm/model_router.wasm
+status: {}

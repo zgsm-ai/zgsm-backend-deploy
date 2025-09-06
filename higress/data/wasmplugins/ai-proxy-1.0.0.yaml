@@ -1,0 +1,64 @@
+apiVersion: extensions.higress.io/v1alpha1
+kind: WasmPlugin
+metadata:
+  annotations:
+    higress.io/wasm-plugin-description: Provide unified OpenAI API compatible interface
+      to call different AI service providers.
+    higress.io/wasm-plugin-icon: https://img.alicdn.com/imgextra/i1/O1CN018iKKih1iVx287RltL_!!6000000004419-2-tps-42-42.png
+    higress.io/wasm-plugin-title: AI Proxy
+  creationTimestamp: "2025-08-06T09:34:36Z"
+  labels:
+    higress.io/resource-definer: higress
+    higress.io/wasm-plugin-built-in: "true"
+    higress.io/wasm-plugin-category: ai
+    higress.io/wasm-plugin-name: ai-proxy
+    higress.io/wasm-plugin-version: 1.0.0
+  managedFields:
+  - apiVersion: extensions.higress.io/v1alpha1
+    fieldsType: FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          .: {}
+          f:higress.io/wasm-plugin-description: {}
+          f:higress.io/wasm-plugin-icon: {}
+          f:higress.io/wasm-plugin-title: {}
+        f:labels:
+          .: {}
+          f:higress.io/resource-definer: {}
+          f:higress.io/wasm-plugin-built-in: {}
+          f:higress.io/wasm-plugin-category: {}
+          f:higress.io/wasm-plugin-name: {}
+          f:higress.io/wasm-plugin-version: {}
+      f:spec:
+        f:defaultConfig:
+          .: {}
+          f:provider:
+            .: {}
+            f:modelMapping:
+              .: {}
+              f:*: {}
+              f:deepseek-v3: {}
+            f:type: {}
+        f:defaultConfigDisable: {}
+        f:failStrategy: {}
+        f:priority: {}
+        f:url: {}
+    manager: Kubernetes Java Client
+    operation: Update
+    time: "2025-08-06T09:35:08Z"
+  name: ai-proxy-1.0.0
+  namespace: higress-system
+  resourceVersion: "2"
+spec:
+  defaultConfig:
+    provider:
+      modelMapping:
+        '*': ""
+        deepseek-v3: deepseek-v3
+      type: openai
+  defaultConfigDisable: true
+  failStrategy: FAIL_OPEN
+  priority: 100
+  url: http://portal:80/wasm/ai-proxy.wasm
+status: {}

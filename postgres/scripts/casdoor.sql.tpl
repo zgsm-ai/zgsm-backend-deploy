@@ -19,8 +19,7 @@
 -- ----------------------------
 -- Sequence structure for casbin_api_rule_id_seq
 -- ----------------------------
-DROP SEQUENCE IF EXISTS "public"."casbin_api_rule_id_seq";
-CREATE SEQUENCE "public"."casbin_api_rule_id_seq" 
+CREATE SEQUENCE IF NOT EXISTS "public"."casbin_api_rule_id_seq"
 INCREMENT 1
 MINVALUE  1
 MAXVALUE 9223372036854775807
@@ -30,8 +29,7 @@ CACHE 1;
 -- ----------------------------
 -- Sequence structure for casbin_rule_id_seq
 -- ----------------------------
-DROP SEQUENCE IF EXISTS "public"."casbin_rule_id_seq";
-CREATE SEQUENCE "public"."casbin_rule_id_seq" 
+CREATE SEQUENCE IF NOT EXISTS "public"."casbin_rule_id_seq"
 INCREMENT 1
 MINVALUE  1
 MAXVALUE 9223372036854775807
@@ -41,8 +39,7 @@ CACHE 1;
 -- ----------------------------
 -- Sequence structure for casbin_user_rule_id_seq
 -- ----------------------------
-DROP SEQUENCE IF EXISTS "public"."casbin_user_rule_id_seq";
-CREATE SEQUENCE "public"."casbin_user_rule_id_seq" 
+CREATE SEQUENCE IF NOT EXISTS "public"."casbin_user_rule_id_seq"
 INCREMENT 1
 MINVALUE  1
 MAXVALUE 9223372036854775807
@@ -52,8 +49,7 @@ CACHE 1;
 -- ----------------------------
 -- Sequence structure for permission_rule_id_seq
 -- ----------------------------
-DROP SEQUENCE IF EXISTS "public"."permission_rule_id_seq";
-CREATE SEQUENCE "public"."permission_rule_id_seq" 
+CREATE SEQUENCE IF NOT EXISTS "public"."permission_rule_id_seq"
 INCREMENT 1
 MINVALUE  1
 MAXVALUE 9223372036854775807
@@ -63,8 +59,7 @@ CACHE 1;
 -- ----------------------------
 -- Sequence structure for record_id_seq
 -- ----------------------------
-DROP SEQUENCE IF EXISTS "public"."record_id_seq";
-CREATE SEQUENCE "public"."record_id_seq" 
+CREATE SEQUENCE IF NOT EXISTS "public"."record_id_seq"
 INCREMENT 1
 MINVALUE  1
 MAXVALUE 2147483647
@@ -74,8 +69,7 @@ CACHE 1;
 -- ----------------------------
 -- Table structure for adapter
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."adapter";
-CREATE TABLE "public"."adapter" (
+CREATE TABLE IF NOT EXISTS "public"."adapter" (
   "owner" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "name" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "created_time" varchar(100) COLLATE "pg_catalog"."default",
@@ -100,8 +94,7 @@ INSERT INTO "public"."adapter" VALUES ('built-in', 'user-adapter-built-in', '202
 -- ----------------------------
 -- Table structure for application
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."application";
-CREATE TABLE "public"."application" (
+CREATE TABLE IF NOT EXISTS "public"."application" (
   "owner" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "name" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "created_time" varchar(100) COLLATE "pg_catalog"."default",
@@ -179,8 +172,7 @@ INSERT INTO "public"."application" VALUES ('admin', 'app-built-in', '2025-07-31T
 -- ----------------------------
 -- Table structure for casbin_api_rule
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."casbin_api_rule";
-CREATE TABLE "public"."casbin_api_rule" (
+CREATE TABLE IF NOT EXISTS "public"."casbin_api_rule" (
   "id" int8 NOT NULL DEFAULT nextval('casbin_api_rule_id_seq'::regclass),
   "ptype" varchar(100) COLLATE "pg_catalog"."default" NOT NULL DEFAULT ''::character varying,
   "v0" varchar(100) COLLATE "pg_catalog"."default" NOT NULL DEFAULT ''::character varying,
@@ -268,8 +260,7 @@ INSERT INTO "public"."casbin_api_rule" VALUES (69, 'p', '*', '*', 'POST', '/api/
 -- ----------------------------
 -- Table structure for casbin_rule
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."casbin_rule";
-CREATE TABLE "public"."casbin_rule" (
+CREATE TABLE IF NOT EXISTS "public"."casbin_rule" (
   "id" int8 NOT NULL DEFAULT nextval('casbin_rule_id_seq'::regclass),
   "ptype" varchar(100) COLLATE "pg_catalog"."default" NOT NULL DEFAULT ''::character varying,
   "v0" varchar(100) COLLATE "pg_catalog"."default" NOT NULL DEFAULT ''::character varying,
@@ -288,8 +279,7 @@ CREATE TABLE "public"."casbin_rule" (
 -- ----------------------------
 -- Table structure for casbin_user_rule
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."casbin_user_rule";
-CREATE TABLE "public"."casbin_user_rule" (
+CREATE TABLE IF NOT EXISTS "public"."casbin_user_rule" (
   "id" int8 NOT NULL DEFAULT nextval('casbin_user_rule_id_seq'::regclass),
   "ptype" varchar(100) COLLATE "pg_catalog"."default" NOT NULL DEFAULT ''::character varying,
   "v0" varchar(100) COLLATE "pg_catalog"."default" NOT NULL DEFAULT ''::character varying,
@@ -308,8 +298,7 @@ CREATE TABLE "public"."casbin_user_rule" (
 -- ----------------------------
 -- Table structure for cert
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."cert";
-CREATE TABLE "public"."cert" (
+CREATE TABLE IF NOT EXISTS "public"."cert" (
   "owner" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "name" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "created_time" varchar(100) COLLATE "pg_catalog"."default",
@@ -412,8 +401,7 @@ JmHhW2JbQ9c3/KVtVzQagLQ5MuyyC/Noy9XJZYk6lJWhIVKLHLL1UAWdf3w=
 -- ----------------------------
 -- Table structure for enforcer
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."enforcer";
-CREATE TABLE "public"."enforcer" (
+CREATE TABLE IF NOT EXISTS "public"."enforcer" (
   "owner" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "name" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "created_time" varchar(100) COLLATE "pg_catalog"."default",
@@ -435,8 +423,7 @@ INSERT INTO "public"."enforcer" VALUES ('built-in', 'user-enforcer-built-in', '2
 -- ----------------------------
 -- Table structure for group
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."group";
-CREATE TABLE "public"."group" (
+CREATE TABLE IF NOT EXISTS "public"."group" (
   "owner" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "name" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "created_time" varchar(100) COLLATE "pg_catalog"."default",
@@ -461,8 +448,7 @@ CREATE TABLE "public"."group" (
 -- ----------------------------
 -- Table structure for invitation
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."invitation";
-CREATE TABLE "public"."invitation" (
+CREATE TABLE IF NOT EXISTS "public"."invitation" (
   "owner" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "name" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "created_time" varchar(100) COLLATE "pg_catalog"."default",
@@ -490,8 +476,7 @@ INSERT INTO "public"."invitation" VALUES ('built-in', 'invitation_i3bahu', '2025
 -- ----------------------------
 -- Table structure for ldap
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."ldap";
-CREATE TABLE "public"."ldap" (
+CREATE TABLE IF NOT EXISTS "public"."ldap" (
   "id" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "owner" varchar(100) COLLATE "pg_catalog"."default",
   "created_time" varchar(100) COLLATE "pg_catalog"."default",
@@ -520,8 +505,7 @@ INSERT INTO "public"."ldap" VALUES ('ldap-built-in', 'built-in', '2025-07-31T18:
 -- ----------------------------
 -- Table structure for model
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."model";
-CREATE TABLE "public"."model" (
+CREATE TABLE IF NOT EXISTS "public"."model" (
   "owner" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "name" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "created_time" varchar(100) COLLATE "pg_catalog"."default",
@@ -572,8 +556,7 @@ m = g(r.sub, p.sub) && r.obj == p.obj && r.act == p.act');
 -- ----------------------------
 -- Table structure for organization
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."organization";
-CREATE TABLE "public"."organization" (
+CREATE TABLE IF NOT EXISTS "public"."organization" (
   "owner" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "name" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "created_time" varchar(100) COLLATE "pg_catalog"."default",
@@ -622,8 +605,7 @@ INSERT INTO "public"."organization" VALUES ('admin', 'user-group', '2025-08-01T0
 -- ----------------------------
 -- Table structure for payment
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."payment";
-CREATE TABLE "public"."payment" (
+CREATE TABLE IF NOT EXISTS "public"."payment" (
   "owner" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "name" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "created_time" varchar(100) COLLATE "pg_catalog"."default",
@@ -663,8 +645,7 @@ CREATE TABLE "public"."payment" (
 -- ----------------------------
 -- Table structure for permission
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."permission";
-CREATE TABLE "public"."permission" (
+CREATE TABLE IF NOT EXISTS "public"."permission" (
   "owner" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "name" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "created_time" varchar(100) COLLATE "pg_catalog"."default",
@@ -696,8 +677,7 @@ INSERT INTO "public"."permission" VALUES ('built-in', 'permission-built-in', '20
 -- ----------------------------
 -- Table structure for permission_rule
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."permission_rule";
-CREATE TABLE "public"."permission_rule" (
+CREATE TABLE IF NOT EXISTS "public"."permission_rule" (
   "id" int8 NOT NULL DEFAULT nextval('permission_rule_id_seq'::regclass),
   "ptype" varchar(100) COLLATE "pg_catalog"."default" NOT NULL DEFAULT ''::character varying,
   "v0" varchar(100) COLLATE "pg_catalog"."default" NOT NULL DEFAULT ''::character varying,
@@ -719,8 +699,7 @@ INSERT INTO "public"."permission_rule" VALUES (3, 'p', 'built-in/*', 'app-built-
 -- ----------------------------
 -- Table structure for plan
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."plan";
-CREATE TABLE "public"."plan" (
+CREATE TABLE IF NOT EXISTS "public"."plan" (
   "owner" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "name" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "created_time" varchar(100) COLLATE "pg_catalog"."default",
@@ -743,8 +722,7 @@ CREATE TABLE "public"."plan" (
 -- ----------------------------
 -- Table structure for pricing
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."pricing";
-CREATE TABLE "public"."pricing" (
+CREATE TABLE IF NOT EXISTS "public"."pricing" (
   "owner" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "name" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "created_time" varchar(100) COLLATE "pg_catalog"."default",
@@ -764,8 +742,7 @@ CREATE TABLE "public"."pricing" (
 -- ----------------------------
 -- Table structure for product
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."product";
-CREATE TABLE "public"."product" (
+CREATE TABLE IF NOT EXISTS "public"."product" (
   "owner" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "name" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "created_time" varchar(100) COLLATE "pg_catalog"."default",
@@ -792,8 +769,7 @@ CREATE TABLE "public"."product" (
 -- ----------------------------
 -- Table structure for provider
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."provider";
-CREATE TABLE "public"."provider" (
+CREATE TABLE IF NOT EXISTS "public"."provider" (
   "owner" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "name" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "created_time" varchar(100) COLLATE "pg_catalog"."default",
@@ -847,8 +823,7 @@ INSERT INTO "public"."provider" VALUES ('user-group', 'SMS', '2025-08-01T02:40:4
 -- ----------------------------
 -- Table structure for radius_accounting
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."radius_accounting";
-CREATE TABLE "public"."radius_accounting" (
+CREATE TABLE IF NOT EXISTS "public"."radius_accounting" (
   "owner" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "name" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "created_time" timestamp(6),
@@ -881,8 +856,7 @@ CREATE TABLE "public"."radius_accounting" (
 -- ----------------------------
 -- Table structure for record
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."record";
-CREATE TABLE "public"."record" (
+CREATE TABLE IF NOT EXISTS "public"."record" (
   "id" int4 NOT NULL DEFAULT nextval('record_id_seq'::regclass),
   "owner" varchar(100) COLLATE "pg_catalog"."default",
   "name" varchar(100) COLLATE "pg_catalog"."default",
@@ -908,8 +882,7 @@ CREATE TABLE "public"."record" (
 -- ----------------------------
 -- Table structure for resource
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."resource";
-CREATE TABLE "public"."resource" (
+CREATE TABLE IF NOT EXISTS "public"."resource" (
   "owner" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "name" varchar(180) COLLATE "pg_catalog"."default" NOT NULL,
   "created_time" varchar(100) COLLATE "pg_catalog"."default",
@@ -934,8 +907,7 @@ CREATE TABLE "public"."resource" (
 -- ----------------------------
 -- Table structure for role
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."role";
-CREATE TABLE "public"."role" (
+CREATE TABLE IF NOT EXISTS "public"."role" (
   "owner" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "name" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "created_time" varchar(100) COLLATE "pg_catalog"."default",
@@ -956,8 +928,7 @@ CREATE TABLE "public"."role" (
 -- ----------------------------
 -- Table structure for session
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."session";
-CREATE TABLE "public"."session" (
+CREATE TABLE IF NOT EXISTS "public"."session" (
   "owner" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "name" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "application" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
@@ -975,8 +946,7 @@ INSERT INTO "public"."session" VALUES ('user-group', 'demo', 'loginApp', '2025-0
 -- ----------------------------
 -- Table structure for subscription
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."subscription";
-CREATE TABLE "public"."subscription" (
+CREATE TABLE IF NOT EXISTS "public"."subscription" (
   "owner" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "name" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "display_name" varchar(100) COLLATE "pg_catalog"."default",
@@ -1000,8 +970,7 @@ CREATE TABLE "public"."subscription" (
 -- ----------------------------
 -- Table structure for syncer
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."syncer";
-CREATE TABLE "public"."syncer" (
+CREATE TABLE IF NOT EXISTS "public"."syncer" (
   "owner" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "name" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "created_time" varchar(100) COLLATE "pg_catalog"."default",
@@ -1038,8 +1007,7 @@ CREATE TABLE "public"."syncer" (
 -- ----------------------------
 -- Table structure for token
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."token";
-CREATE TABLE "public"."token" (
+CREATE TABLE IF NOT EXISTS "public"."token" (
   "owner" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "name" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "created_time" varchar(100) COLLATE "pg_catalog"."default",
@@ -1067,8 +1035,7 @@ CREATE TABLE "public"."token" (
 -- ----------------------------
 -- Table structure for transaction
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."transaction";
-CREATE TABLE "public"."transaction" (
+CREATE TABLE IF NOT EXISTS "public"."transaction" (
   "owner" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "name" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "created_time" varchar(100) COLLATE "pg_catalog"."default",
@@ -1097,8 +1064,7 @@ CREATE TABLE "public"."transaction" (
 -- ----------------------------
 -- Table structure for user
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."user";
-CREATE TABLE "public"."user" (
+CREATE TABLE IF NOT EXISTS "public"."user" (
   "owner" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "name" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
   "created_time" varchar(100) COLLATE "pg_catalog"."default",
@@ -1265,8 +1231,7 @@ INSERT INTO "public"."user" VALUES ('user-group', 'demo', '2025-08-05T02:25:13Z'
 -- ----------------------------
 -- Table structure for user_identity_binding
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."user_identity_binding";
-CREATE TABLE "public"."user_identity_binding" (
+CREATE TABLE IF NOT EXISTS "public"."user_identity_binding" (
   "id" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "universal_id" varchar(100) COLLATE "pg_catalog"."default",
   "auth_type" varchar(50) COLLATE "pg_catalog"."default",
@@ -1284,8 +1249,7 @@ INSERT INTO "public"."user_identity_binding" VALUES ('d38b8690-f846-4251-81de-28
 -- ----------------------------
 -- Table structure for verification_record
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."verification_record";
-CREATE TABLE "public"."verification_record" (
+CREATE TABLE IF NOT EXISTS "public"."verification_record" (
   "owner" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "name" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "created_time" varchar(100) COLLATE "pg_catalog"."default",
@@ -1307,8 +1271,7 @@ CREATE TABLE "public"."verification_record" (
 -- ----------------------------
 -- Table structure for webhook
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."webhook";
-CREATE TABLE "public"."webhook" (
+CREATE TABLE IF NOT EXISTS "public"."webhook" (
   "owner" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "name" varchar(100) COLLATE "pg_catalog"."default" NOT NULL,
   "created_time" varchar(100) COLLATE "pg_catalog"."default",
