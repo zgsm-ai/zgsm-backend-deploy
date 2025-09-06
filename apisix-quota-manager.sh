@@ -5,7 +5,7 @@
 curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT  -d '{
     "id": "quota-manager",
     "nodes": {
-      "quota-manager-svc:8080": 1
+      "quota-manager:8080": 1
     },
     "type": "roundrobin"
   }'

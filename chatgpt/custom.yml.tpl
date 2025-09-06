@@ -1,7 +1,7 @@
 app:
   PEDESTAL_SERVER:
-    server_url: "{{CHAT_AIGW_ADDR}}"
-    api_key: "{{CHAT_API_KEY}}"
+    server_url: "{{AI_GATEWAY_ADDR}}"
+    api_key: "{{CHAT_APIKEY}}"
 celery:
-  broker_url: "redis://redis:{{PORT_REDIS}}/0"
-  result_backend: "redis://redis:{{PORT_REDIS}}/1"
+  broker_url: "redis://redis:6379/0"
+  result_backend: "redis://redis:6379/1"

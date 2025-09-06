@@ -1,0 +1,18 @@
+{
+  "packageName": "system",
+  "packageType": "conf",
+  "fileName": "system-spec.json",
+  "os": "windows",
+  "arch": "arm64",
+  "size": 1553,
+  "checksum": "5086ce8eb7a5c3394c0e888ae71bc356",
+  "sign": "860e4a74c0dc681ed4af37b0c2d656537e58638c75ed758c69136531a9f0aa87a324e18f6834a566d1946b38d6bf3e881d5e324cc473dfd7940f91c25e637f07c79a9644498185e41f2f16e78e7059e0292c23388b534ae5ab913c38ec0b044ba22a9881df373cc85c78e0e4a3b1c43947de2645971873e22019ee0ac0014d403dc492e3e4c0bac42073fc67d5cd756771cc9d9b32d69f31291b05fe16252013cb55a711537ad957ea2ec2b5546506150d698fe83a8bf66f4ca956405dbb3b44af27994f8980fa76072e48531d32aedc81fcc32255779432e454491b42d9a93c0a95e43dd1996e6562fb917309889a49f419ce260aa8fe23745f3623933c99dd",
+  "checksumAlgo": "md5",
+  "versionId": {
+    "major": 1,
+    "minor": 0,
+    "micro": 818
+  },
+  "build": "",
+  "description": "Client Subsystem Definition File"
+}

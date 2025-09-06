@@ -5,7 +5,7 @@
 curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT -d '{
     "id": "shenma-client",
     "nodes": {
-      "portal:8080": 1
+      "portal:80": 1
     },
     "type": "roundrobin"
   }'

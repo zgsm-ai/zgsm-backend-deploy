@@ -6,7 +6,7 @@
 curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT  -d '{
     "id": "cotun-websocket",
     "nodes": {
-      "cotun.costrict.svc.cluster.local:8080": 1
+      "cotun:8080": 1
     },
     "type": "roundrobin"
   }'

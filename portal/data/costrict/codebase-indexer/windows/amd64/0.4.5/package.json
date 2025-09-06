@@ -1,0 +1,18 @@
+{
+  "packageName": "codebase-indexer",
+  "packageType": "exec",
+  "fileName": "codebase-indexer.exe",
+  "os": "windows",
+  "arch": "amd64",
+  "size": 35732592,
+  "checksum": "5de0f7e30aa3ea8589727cb9bdce6900",
+  "sign": "0a59bc953fe4061dad313df919d5907c3579194b6b838d678a559acbac9bc4997773a731092cc51a7d78b1159d3a2e20a3e5d1b1484b0a83348079ddc86f9012091b33d364cef864d981742389a7fe49846fd5c3a088c875c289d51a7d1f2f972bc0eac8405b37898bd63cac10ef31220afa50d3cbec5c4696109d8c250a55a1ba87e1c1f93ba73c33a34b8475ecc50883570126efe032a72f698677204a9443f27c4b9e2544adcc148c4804750be5ee0aaf03608c2090e899db602587d420f62bf4c3026b3203c8787c368ecd4db73050c44975d3e9df935afe31769c096375282c932ca4501de0ef6a633c39843f03bb772765352f1f9e88617d4daed968b7",
+  "checksumAlgo": "md5",
+  "versionId": {
+    "major": 0,
+    "minor": 4,
+    "micro": 5
+  },
+  "build": "",
+  "description": ""
+}

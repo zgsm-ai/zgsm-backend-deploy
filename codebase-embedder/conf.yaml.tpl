@@ -57,15 +57,15 @@ VectorStore:
     MaxRetries: 3
     BatchSize: 10
     StripNewLines: true
-    Model: gte-modernbert-base
-    ApiKey: "sk-xpiL5eRv65f8LKO8Ac9f1f66702c4f769f0794Ea0cF6B6Db"
-    ApiBase: http://172.16.254.5:32326/v1/embeddings
+    Model: {{EMBEDDER_MODEL}}
+    ApiKey: {{EMBEDDER_APIKEY}}
+    ApiBase: {{EMBEDDER_BASEURL}}
   Reranker:
     Timeout: 10s
     MaxRetries: 3
-    Model: gte-reranker-modernbert-base
-    ApiKey: "sk-xpiL5eRv65f8LKO8Ac9f1f66702c4f769f0794Ea0cF6B6Db"
-    ApiBase:  http://172.16.254.5:32323/v1/rerank
+    Model: {{RERANKER_MODEL}}
+    ApiKey: {{RERANKER_APIKEY}}
+    ApiBase: {{RERANKER_BASEURL}}
 
 Log:
   Mode: console # console,file,volume
@@ -85,4 +85,8 @@ Validation:
   skip_patterns: []
 TokenLimit:
   max_running_tasks: 100  
-  enabled: true
+  enabled: true 
+HealthCheck:
+  Enabled: true
+  URL: http://codebase-querier:8888/codebase-indexer/api/v1/index/summary
+  Timeout: 3s

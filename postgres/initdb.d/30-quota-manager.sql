@@ -9,8 +9,7 @@ CREATE DATABASE auth;
 -- ----------------------------
 -- Table structure for auth_users
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."auth_users";
-CREATE TABLE "public"."auth_users" (
+CREATE TABLE IF NOT EXISTS "public"."auth_users" (
   "id" uuid NOT NULL,
   "created_at" timestamptz(0),
   "updated_at" timestamptz(0),

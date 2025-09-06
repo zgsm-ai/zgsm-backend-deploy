@@ -1,0 +1,43 @@
+{
+  "packageName": "codebase-indexer",
+  "os": "linux",
+  "arch": "arm64",
+  "newest": {
+    "versionId": {
+      "major": 0,
+      "minor": 4,
+      "micro": 5
+    },
+    "appUrl": "/codebase-indexer/linux/arm64/0.4.5/codebase-indexer",
+    "infoUrl": "/codebase-indexer/linux/arm64/0.4.5/package.json"
+  },
+  "versions": [
+    {
+      "versionId": {
+        "major": 0,
+        "minor": 4,
+        "micro": 3
+      },
+      "appUrl": "/codebase-indexer/linux/arm64/0.4.3/codebase-indexer",
+      "infoUrl": "/codebase-indexer/linux/arm64/0.4.3/package.json"
+    },
+    {
+      "versionId": {
+        "major": 0,
+        "minor": 4,
+        "micro": 4
+      },
+      "appUrl": "/codebase-indexer/linux/arm64/0.4.4/codebase-indexer",
+      "infoUrl": "/codebase-indexer/linux/arm64/0.4.4/package.json"
+    },
+    {
+      "versionId": {
+        "major": 0,
+        "minor": 4,
+        "micro": 5
+      },
+      "appUrl": "/codebase-indexer/linux/arm64/0.4.5/codebase-indexer",
+      "infoUrl": "/codebase-indexer/linux/arm64/0.4.5/package.json"
+    }
+  ]
+}

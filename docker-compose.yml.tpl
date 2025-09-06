@@ -30,7 +30,7 @@ services:
       ETCD_ADVERTISE_CLIENT_URLS: "http://127.0.0.1:{{PORT_ETCD}}"
       ETCD_LISTEN_CLIENT_URLS: "http://0.0.0.0:{{PORT_ETCD}}"
     ports:
-      - "{{PORT_ETCD}}:{{PORT_ETCD}}/tcp"
+      - "{{PORT_ETCD}}:2379/tcp"
     networks:
       - shenma
 
@@ -117,12 +117,12 @@ services:
       - redis
     environment:
       DATABASE_HOST: postgres
-      DATABASE_PORT: {{PORT_POSTGRES}}
+      DATABASE_PORT: 5432
       DATABASE_USER: {{POSTGRES_USER}}
       DATABASE_PASSWORD: {{PASSWORD_POSTGRES}}
       DATABASE_NAME: codereview
       REDIS_HOST: redis
-      REDIS_PORT: {{PORT_REDIS}}
+      REDIS_PORT: 6379
     volumes:
       - ./codereview/logs/review-manager:/app/logs
       - ./codereview/config/review-manager:/app/config
@@ -139,12 +139,12 @@ services:
       - review-manager
     environment:
       DATABASE_HOST: postgres
-      DATABASE_PORT: {{PORT_POSTGRES}}
+      DATABASE_PORT: 5432
       DATABASE_USER: {{POSTGRES_USER}}
       DATABASE_PASSWORD: {{PASSWORD_POSTGRES}}
       DATABASE_NAME: codereview
       REDIS_HOST: redis
-      REDIS_PORT: {{PORT_REDIS}}
+      REDIS_PORT: 6379
     volumes:
       - ./codereview/logs/review-worker:/app/logs
       - ./codereview/config/review-manager:/app/config
@@ -160,7 +160,7 @@ services:
       - postgres
     environment:
       DATABASE_HOST: postgres
-      DATABASE_PORT: {{PORT_POSTGRES}}
+      DATABASE_PORT: 5432
       DATABASE_USER: {{POSTGRES_USER}}
       DATABASE_PASSWORD: {{PASSWORD_POSTGRES}}
       DATABASE_NAME: codereview
@@ -180,12 +180,12 @@ services:
       - redis
     environment:
       DATABASE_HOST: postgres
-      DATABASE_PORT: {{PORT_POSTGRES}}
+      DATABASE_PORT: 5432
       DATABASE_USER: {{POSTGRES_USER}}
       DATABASE_PASSWORD: {{PASSWORD_POSTGRES}}
       DATABASE_NAME: codereview
       REDIS_HOST: redis
-      REDIS_PORT: {{PORT_REDIS}}
+      REDIS_PORT: 6379
       REDIS_DB: 2
     volumes:
       - ./codereview/logs/review-checker:/app/logs
@@ -227,7 +227,7 @@ services:
       DATABASE_HOST: postgres
       DATABASE_DBNAME: auth
       DATABASE_PASSWORD: {{PASSWORD_POSTGRES}}
-      DATABASE_PORT: {{PORT_POSTGRES}}
+      DATABASE_PORT: 5432
       DATABASE_USERNAME: {{POSTGRES_USER}}
       ENCRYPT_AESKEY: pUD8mylndVVK7hTNt56VZMkNrppinbNg
     volumes:
@@ -266,13 +266,13 @@ services:
     environment:
       - TZ=Asia/Shanghai
       - CACHE_DB=chatgpt
-      - REDIS_URL=redis://redis:{{PORT_REDIS}}/0
+      - REDIS_URL=redis://redis:6379/0
       - SERVE_THREADS=200
       - SERVE_CONNECTION_LIMIT=512
-      - PG_URL=postgres:{{PORT_POSTGRES}}
+      - PG_URL=postgres:5432
       - DB_NAME=chatgpt
       - DATABASE_URI=postgresext+pool://{{POSTGRES_USER}}:{{PASSWORD_POSTGRES}}@postgres/chatgpt
-      - ES_SERVER=http://es:{{PORT_ES}}
+      - ES_SERVER=http://es:9200
       - ES_PASSWORD={{PASSWORD_ELASTIC}}
       - CUSTOM_CONFIG_FILE=/custom.yml
       - DEFAULT_MODEL_NAME={{CHAT_DEFAULT_MODEL}}
@@ -290,7 +290,7 @@ services:
     image: {{IMAGE_CODE_COMPLETION}}
     restart: always
     ports:
-      - "{{PORT_COMPLETION}}:{{PORT_COMPLETION_INTERNAL}}/tcp"
+      - "{{PORT_COMPLETION}}:5000/tcp"
     environment:
       - TZ=Asia/Shanghai
       - THRESHOLD_SCORE=0.3
@@ -300,7 +300,7 @@ services:
       - SNIPPET_TOP_N=0
       - MAX_TOKENS=500
       - MAX_MODEL_LEN=5000,1000
-      - CODEBASE_INDEXER_API_BASE_URL=http://codebase-querier:{{PORT_CODEBASE_INDEXER}}
+      - CODEBASE_INDEXER_API_BASE_URL=http://codebase-querier:8888
       - CONTEXT_COST_TIME=1500
       - MAX_MODEL_COST_TIME=2800
       - MAX_COST_TIME=3000
@@ -311,13 +311,13 @@ services:
       - DISABLED_REJECT_AUTHORIZATION=True
       - ENABLE_REDIS=False
       - REDIS_HOST=redis
-      - REDIS_PORT={{PORT_REDIS}}
+      - REDIS_PORT=6379
       - REDIS_DB=0
       - REDIS_PWD="{{PASSWORD_REDIS}}"
       - MAIN_MODEL_TYPE=openai
-      - OPENAI_MODEL_HOST={{CODE_COMPLETION_MODEL_HOST}}
-      - OPENAI_MODEL={{CODE_COMPLETION_MODEL}}
-      - OPENAI_MODEL_API_KEY={{CODE_COMPLETION_MODEL_API_KEY}}
+      - OPENAI_MODEL_HOST={{COMPLETION_BASEURL}}
+      - OPENAI_MODEL={{COMPLETION_MODEL}}
+      - OPENAI_MODEL_API_KEY={{COMPLETION_APIKEY}}
       - OPENAI_MODEL_AUTHORIZATION=sk-CsPvPQwVPGVcPEBm6485D534F690407aA3113f7c13D633Cd
     depends_on:
       - redis
@@ -418,7 +418,7 @@ services:
       - "{{PORT_CASDOOR}}:8000"
     environment:
       driverName: postgres
-      dataSourceName: "host=postgres port={{PORT_POSTGRES}} user={{POSTGRES_USER}} password={{PASSWORD_POSTGRES}} dbname=casdoor sslmode=disable"
+      dataSourceName: "host=postgres port=5432 user={{POSTGRES_USER}} password={{PASSWORD_POSTGRES}} dbname=casdoor sslmode=disable"
     depends_on:
       - postgres
     networks:

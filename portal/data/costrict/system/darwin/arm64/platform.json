@@ -1,0 +1,25 @@
+{
+  "packageName": "system",
+  "os": "darwin",
+  "arch": "arm64",
+  "newest": {
+    "versionId": {
+      "major": 1,
+      "minor": 0,
+      "micro": 818
+    },
+    "appUrl": "/system/darwin/arm64/1.0.818/system-spec.json",
+    "infoUrl": "/system/darwin/arm64/1.0.818/package.json"
+  },
+  "versions": [
+    {
+      "versionId": {
+        "major": 1,
+        "minor": 0,
+        "micro": 818
+      },
+      "appUrl": "/system/darwin/arm64/1.0.818/system-spec.json",
+      "infoUrl": "/system/darwin/arm64/1.0.818/package.json"
+    }
+  ]
+}

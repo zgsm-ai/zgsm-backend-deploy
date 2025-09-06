@@ -1,0 +1,10 @@
+{
+  "packages": [
+    "costrict-config",
+    "cotun",
+    "smc",
+    "system",
+    "costrict",
+    "codebase-indexer"
+  ]
+}

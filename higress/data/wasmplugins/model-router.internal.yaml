@@ -34,5 +34,5 @@ spec:
   failStrategy: FAIL_OPEN
   phase: AUTHN
   priority: 900
-  url: oci://higress-registry.cn-hangzhou.cr.aliyuncs.com/plugins/model-router:1.0.0
+  url: http://portal:80/wasm/model_router.wasm
 status: {}

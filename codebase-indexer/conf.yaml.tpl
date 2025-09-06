@@ -13,7 +13,7 @@ Auth:
   UserInfoHeader: "x-userinfo"
 Database:
   Driver: postgres
-  DataSource: postgres://{{POSTGRES_USER}}:{{PASSWORD_POSTGRES}}@postgres:{{PORT_POSTGRES}}/codebase_indexer?sslmode=disable
+  DataSource: postgres://{{POSTGRES_USER}}:{{PASSWORD_POSTGRES}}@postgres:5432/codebase_indexer?sslmode=disable
   AutoMigrate:
     enable: true    
 IndexTask:
@@ -38,7 +38,7 @@ Cleaner:
   CodebaseExpireDays: 3
     
 Redis:
-  Addr: redis:{{PORT_REDIS}}
+  Addr: redis:6379
     
 MessageQueue:
   Type: redis

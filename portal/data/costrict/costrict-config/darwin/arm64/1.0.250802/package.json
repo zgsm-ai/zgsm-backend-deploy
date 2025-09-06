@@ -1,0 +1,18 @@
+{
+  "packageName": "costrict-config",
+  "packageType": "conf",
+  "fileName": "costrict.json",
+  "os": "darwin",
+  "arch": "arm64",
+  "size": 681,
+  "checksum": "c5a86823d87e7370167d62c51c6bc621",
+  "sign": "7789ed1d18591577be3a2870c98901756ec0ee0ea53ebaa4ce969e559d1b64627d33f96c936152a3f6a161e7ff9e628dc44020fa4493d9cd13f95687135f7a9c987ad1142f71a2bea62965a853e6dcf8f04e2b8d21b40cfdfca2c0cdb30f42d462a81ae362bccaecdba3d499e2463df0019f2477d8d5e0d4b731d9b18a4df628b7d7b5eae1ab7e0b45e86ffdef5b2bec0f8df810845b17962b1def8af054fd6d7f84b83f3234a81aa9f2bdb326cc7ae3f3b7892975a2d4049ecb0b015f159a47ad59d9b839bc4699a577f7522867679cef66bbecc72ca5f38b75a5a84bd193cd8d7d6718870733a72ab4766cea4c14ccb748c204fe839ad72e1f00e8b78da3af",
+  "checksumAlgo": "md5",
+  "versionId": {
+    "major": 1,
+    "minor": 0,
+    "micro": 250802
+  },
+  "build": "",
+  "description": "Costrict configure file"
+}

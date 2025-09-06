@@ -6,7 +6,7 @@
 curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT  -d '{
    "id": "chatgpt",
    "nodes": {
-     "'"chatgpt:$PORT_CHATGPT_API"'": 1
+     "chatgpt:5000": 1
    },
    "type": "roundrobin"
  }'
@@ -15,7 +15,7 @@ curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT 
 curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT  -d '{
     "id": "websocket",
     "nodes": {
-      "'"chatgpt:$PORT_CHATGPT_WS"'": 1
+      "chatgpt:8765": 1
     },
     "type": "roundrobin"
   }'

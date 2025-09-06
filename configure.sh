@@ -8,7 +8,7 @@ PORT_APISIX_ENTRY="9080"
 PORT_APISIX_PROMETHEUS="9091"
 PORT_APISIX_CONTROL="9092"
 PORT_APISIX_DASHBOARD="9093"
-PORT_ETCD="2379"
+PORT_ETCD="2382"
 PORT_REDIS="6379"
 PORT_POSTGRES="5432"
 PORT_WEAVIATE="5003"
@@ -16,7 +16,6 @@ PORT_PORTAL="9081"
 PORT_CHATGPT_API="5000"
 PORT_CHATGPT_WS="8765"
 PORT_COMPLETION="5001"
-PORT_COMPLETION_INTERNAL="5000"
 PORT_PROMETHEUS="9090"
 PORT_GRAFANA="3000"
 PORT_ES="9200"
@@ -66,17 +65,38 @@ PASSWORD_ELASTIC="4c6y4g6Z09T2w33pYRNKE3LG"
 #---------------------------------------------------------
 # 大模型相关设置，请根据实际部署情况设置
 #---------------------------------------------------------
-# 对话默认使用的模型名称
-CHAT_DEFAULT_MODEL="deepseek-chat"
-CHAT_API_KEY="966c3157fe65461dbc731cd540b6cd5d"
-CHAT_AIGW_ADDR="http://higress:8080/v1/chat/completions"
+AI_GATEWAY_ADDR="http://higress:8080/v1/chat/completions"
+# 对话默认使用的模型名称，暂时需在higress中配置
+CHAT_MODEL_HOST="10.72.12.32:2334"
+CHAT_BASEURL="http://10.72.12.32:2334"
+CHAT_DEFAULT_MODEL="GLM-4.5-FP8"
+CHAT_MODEL_DESC="GLM-4.5-FP8量化版——又快又好用的顶尖大模型"
+CHAT_MODEL_CONTEXTSIZE=65536
+CHAT_APIKEY=""
 
-# 代码补全模型的URL
-CODE_COMPLETION_MODEL_HOST="http://172.16.254.5:32081/v1/completions"
-# 代码补全采用的模型名称
-CODE_COMPLETION_MODEL="DeepSeek-Coder-V2-Lite-Base"
-# 代码补全模型的API-KEY
-CODE_COMPLETION_MODEL_API_KEY="966c3157fe65461dbc731cd540b6cd5d"
+# Codereview模型的URL,MODEL,APIKEY
+CODEREVIEW_MODEL_HOST="10.72.12.32:2337"
+CODEREVIEW_BASEURL="http://10.72.12.32:2337"
+CODEREVIEW_MODEL="Qwen3-Coder-30B-A3B"
+CODEREVIEW_APIKEY=""
+CODEREVIEW_MODEL_DESC="Qwen3"
+CODEREIVEW_MODEL_CONTEXTSIZE=262144
+
+# 代码补全模型的URL,MODEL,APIKEY
+COMPLETION_BASEURL="http://10.72.12.32:2333/v1/completions"
+#COMPLETION_MODEL="DeepSeek-Coder-V2-Lite-Base"
+COMPLETION_MODEL="DeepSeek-Coder-V2-Lite"
+COMPLETION_APIKEY=""
+
+# 向量嵌入模型的BASE URL,MODEL和APIKEY
+EMBEDDER_BASEURL="http://10.72.12.32:2336/v1/embeddings"
+EMBEDDER_MODEL="embedding"
+EMBEDDER_APIKEY=""
+
+# RAG排序模型的BASE URL,MODEL和APIKEY
+RERANKER_BASEURL="http://10.72.12.32:2335/v1/rerank"
+RERANKER_MODEL="rerank"
+RERANKER_APIKEY=""
 
 #---------------------------------------------------------
 # apisix设置，无需修改
@@ -92,8 +112,8 @@ TYPE="Content-Type: application/json"
 POSTGRES_USER="zgsm"
 POSTGRES_DB="zgsm"
 
-PGSQL_ADDR="postgres:${PORT_POSTGRES}"
-REDIS_ADDR="redis:${PORT_REDIS}"
+PGSQL_ADDR="postgres:5432"
+REDIS_ADDR="redis:6379"
 
 #---------------------------------------------------------
 # 认证设置(oidc-auth/casdoor)，无需修改
@@ -118,6 +138,6 @@ OIDC_TOKEN_ENDPOINT=""
 #-------------------------------------------------------------------------------
 # VSCODE扩展连接诸葛神码后端时使用的入口URL地址
 # 一般会利用DNS及应用发布设备将该地址映射到 http://${COSTRICT_BACKEND}:${PORT_APISIX_ENTRY}
-# 诸葛神码后端的IP地址，deploy.sh可自动获取
+# 诸葛神码后端的IP地址，`deploy.sh --auto-ip`可自动获取
 COSTRICT_BACKEND="172.16.0.4"
 COSTRICT_BACKEND_BASEURL="http://${COSTRICT_BACKEND}:${PORT_APISIX_ENTRY}"

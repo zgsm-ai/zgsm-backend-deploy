@@ -60,5 +60,5 @@ spec:
   defaultConfigDisable: true
   failStrategy: FAIL_OPEN
   priority: 100
-  url: oci://zgsm/ai-proxy-shenma:1.0.0
+  url: http://portal:80/wasm/ai-proxy.wasm
 status: {}

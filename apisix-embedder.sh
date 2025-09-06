@@ -32,7 +32,7 @@ curl -i http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d 
       "introspection_endpoint_auth_method": "client_secret_basic",
       "introspection_interval": 60,
       "bearer_only": true,
-      "scope": "openid profile email"
+      "scope": "openid profile email",
       "set_access_token_header": true,
       "set_id_token_header": true,
       "set_userinfo_header": true,

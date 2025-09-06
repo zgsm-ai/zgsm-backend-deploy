@@ -1,6 +1,6 @@
 database:
   host: "postgres"
-  port: {{PORT_POSTGRES}}
+  port: 5432
   user: "{{POSTGRES_USER}}"
   password: "{{PASSWORD_POSTGRES}}"
   dbname: "quota_manager"
@@ -8,7 +8,7 @@ database:
 
 auth_database:
   host: "postgres"
-  port: {{PORT_POSTGRES}}
+  port: 5432
   user: "{{POSTGRES_USER}}"
   password: "{{PASSWORD_POSTGRES}}"
   dbname: "auth"

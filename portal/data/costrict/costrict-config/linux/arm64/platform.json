@@ -1,0 +1,25 @@
+{
+  "packageName": "costrict-config",
+  "os": "linux",
+  "arch": "arm64",
+  "newest": {
+    "versionId": {
+      "major": 1,
+      "minor": 0,
+      "micro": 250802
+    },
+    "appUrl": "/costrict-config/linux/arm64/1.0.250802/costrict.json",
+    "infoUrl": "/costrict-config/linux/arm64/1.0.250802/package.json"
+  },
+  "versions": [
+    {
+      "versionId": {
+        "major": 1,
+        "minor": 0,
+        "micro": 250802
+      },
+      "appUrl": "/costrict-config/linux/arm64/1.0.250802/costrict.json",
+      "infoUrl": "/costrict-config/linux/arm64/1.0.250802/package.json"
+    }
+  ]
+}
