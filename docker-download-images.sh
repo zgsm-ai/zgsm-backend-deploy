@@ -1,11 +1,18 @@
 #!/bin/sh
 
 # 检查镜像列表是否存在
-if [ ! -f "scripts/newest-images.list" ] || [ ! -f "scripts/images.list" ]; then
-    echo "镜像列表文件不存在，生成新的镜像列表..."
+if [ ! -f "scripts/newest-images.list" ]; then
+    echo "镜像列表文件‘scripts/newest-images.list’不存在，生成新的镜像列表..."
     bash scripts/get-images-list.sh -o scripts
 else
-    echo "使用现有的镜像列表文件"
+    echo "使用现有的镜像列表文件‘scripts/newest-images.list’"
+fi
+
+if [ ! -f "scripts/images.list" ]; then
+    echo "镜像列表文件‘scripts/images.list’不存在，生成新的镜像列表..."
+    awk -F'=' '{print $2}' "scripts/newest-images.list" > "scripts/images.list"
+else
+    echo "使用现有的镜像列表文件‘scripts/images.list’"
 fi
 
 # 验证镜像是否存在
