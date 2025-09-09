@@ -20,10 +20,6 @@
     {
       "os": "darwin",
       "arch": "arm64"
-    },
-    {
-      "os": "linux",
-      "arch": "386"
     }
   ]
 }

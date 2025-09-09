@@ -5,11 +5,11 @@
   "newest": {
     "versionId": {
       "major": 1,
-      "minor": 0,
-      "micro": 250817
+      "minor": 1,
+      "micro": 0
     },
-    "appUrl": "/cotun/linux/amd64/1.0.250817/cotun",
-    "infoUrl": "/cotun/linux/amd64/1.0.250817/package.json"
+    "appUrl": "/cotun/linux/amd64/1.1.0/cotun",
+    "infoUrl": "/cotun/linux/amd64/1.1.0/package.json"
   },
   "versions": [
     {
@@ -20,6 +20,15 @@
       },
       "appUrl": "/cotun/linux/amd64/1.0.250817/cotun",
       "infoUrl": "/cotun/linux/amd64/1.0.250817/package.json"
+    },
+    {
+      "versionId": {
+        "major": 1,
+        "minor": 1,
+        "micro": 0
+      },
+      "appUrl": "/cotun/linux/amd64/1.1.0/cotun",
+      "infoUrl": "/cotun/linux/amd64/1.1.0/package.json"
     }
   ]
 }
