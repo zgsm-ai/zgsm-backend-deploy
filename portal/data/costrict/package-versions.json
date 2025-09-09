@@ -25,7 +25,7 @@
     {
       "name": "cotun",
       "path": "../../cotun",
-      "version": "1.0.250817",
+      "version": "1.1.0",
       "type": "exec",
       "description": "Stream transfer tools"
     },
