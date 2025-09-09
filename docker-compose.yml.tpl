@@ -264,21 +264,21 @@ services:
       - "{{PORT_CHATGPT_WS}}:8765/tcp"
       - "5555:5555/tcp"
     environment:
-      - TZ=Asia/Shanghai
-      - CACHE_DB=chatgpt
-      - REDIS_URL=redis://redis:6379/0
-      - SERVE_THREADS=200
-      - SERVE_CONNECTION_LIMIT=512
-      - PG_URL=postgres:5432
-      - DB_NAME=chatgpt
-      - DATABASE_URI=postgresext+pool://{{POSTGRES_USER}}:{{PASSWORD_POSTGRES}}@postgres/chatgpt
-      - ES_SERVER=http://es:9200
-      - ES_PASSWORD={{PASSWORD_ELASTIC}}
-      - CUSTOM_CONFIG_FILE=/custom.yml
-      - DEFAULT_MODEL_NAME={{CHAT_DEFAULT_MODEL}}
-      - GEVENT_SUPPORT=True
-      - NO_COLOR=1
-      - DEPLOYMENT_TYPE=all
+      TZ: Asia/Shanghai
+      CACHE_DB: chatgpt
+      REDIS_URL: redis://redis:6379/0
+      SERVE_THREADS: 200
+      SERVE_CONNECTION_LIMIT: 512
+      PG_URL: postgres:5432
+      DB_NAME: chatgpt
+      DATABASE_URI: postgresext+pool://{{POSTGRES_USER}}:{{PASSWORD_POSTGRES}}@postgres/chatgpt
+      ES_SERVER: http://es:9200
+      ES_PASSWORD: {{PASSWORD_ELASTIC}}
+      CUSTOM_CONFIG_FILE: /custom.yml
+      DEFAULT_MODEL_NAME: {{CHAT_DEFAULT_MODEL}}
+      GEVENT_SUPPORT: True
+      NO_COLOR: 1
+      DEPLOYMENT_TYPE: all
     depends_on:
       - redis
       - postgres
@@ -314,7 +314,7 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_DB: 0
-      REDIS_PWD: "sf2025~SHENMA"
+      REDIS_PWD: "{{PASSWORD_REDIS}}"
       MAIN_MODEL_TYPE: openai
       # 模型地址
       OPENAI_MODEL_HOST: "{{COMPLETION_BASEURL}}"
@@ -434,12 +434,12 @@ services:
       - "{{PORT_AI_GATEWAY}}:8080"
       - "{{PORT_HIGRESS_CONTROL}}:8001"
     environment:
-      - "MODE=full"
-      - "O11Y=on"
-      - "CONFIG_TEMPLATE=ai-gateway"
-      - "GATEWAY_HTTP_PORT=8080"
-      - "GATEWAY_HTTPS_PORT=8443"
-      - "CONSOLE_PORT=8001"
+      MODE: full
+      O11Y: on
+      CONFIG_TEMPLATE: ai-gateway
+      GATEWAY_HTTP_PORT: 8080
+      GATEWAY_HTTPS_PORT: 8443
+      CONSOLE_PORT: 8001
     volumes:
       - ./higress/data:/data
     networks:
@@ -479,14 +479,14 @@ services:
   es:
     image: {{IMAGE_ES}}
     environment:
-      - TZ=Asia/Shanghai
-      - discovery.type=single-node
-      - bootstrap.memory_lock=true
-      - xpack.security.enabled=false
-      - xpack.security.http.ssl.enabled=false  # Disable HTTPS
-      - xpack.ml.enabled=false
-      - "ELASTIC_PASSWORD={{PASSWORD_ELASTIC}}"
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      TZ: Asia/Shanghai
+      discovery.type: single-node
+      bootstrap.memory_lock: true
+      xpack.security.enabled: false
+      xpack.security.http.ssl.enabled: false  # Disable HTTPS
+      xpack.ml.enabled: false
+      ELASTIC_PASSWORD: "{{PASSWORD_ELASTIC}}"
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
     user: "1000:1000"
     ulimits:
       memlock:

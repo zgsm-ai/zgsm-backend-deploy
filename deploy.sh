@@ -242,7 +242,7 @@ main() {
     source ./configure.sh
 
     log "INFO" "All operations completed"
-    log "INFO" "Please login to the AI-GATEWAY backend [http://${COSTRICT_BACKEND}:${PORT_HIGRESS_CONTROL}] (default account: root, password: 123456), and add your LLM api-key in the Channels section! (If the page is blank, please wait as containers may take some time to start)"
+    log "INFO" "Please login to the AI-GATEWAY backend [http://${COSTRICT_BACKEND}:${PORT_HIGRESS_CONTROL}] (default account: admin, password: test123), and add your LLM api-key in the Channels section! (If the page is blank, please wait as containers may take some time to start)"
 }
 
 main "$@"
