@@ -292,33 +292,36 @@ services:
     ports:
       - "{{PORT_COMPLETION}}:5000/tcp"
     environment:
-      - TZ=Asia/Shanghai
-      - THRESHOLD_SCORE=0.3
-      - STR_PATTERN=import +.*|from +.*|from +.* import *.*
-      - USER_CODE_UPLOAD_DELAY=30
-      - CONTEXT_LINES_LIMIT=1000
-      - SNIPPET_TOP_N=0
-      - MAX_TOKENS=500
-      - MAX_MODEL_LEN=5000,1000
-      - CODEBASE_INDEXER_API_BASE_URL=http://codebase-querier:8888
-      - CONTEXT_COST_TIME=1500
-      - MAX_MODEL_COST_TIME=2800
-      - MAX_COST_TIME=3000
-      - MULTI_LINE_STREAM_K=8
-      - MIN_PREFIX_TOKEN=2000
-      - COMPLETION_CACHE_TIME=86400
-      - CONTINUE_COMPLETION_CACHE_EXPIRED=30
-      - DISABLED_REJECT_AUTHORIZATION=True
-      - ENABLE_REDIS=False
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - REDIS_DB=0
-      - REDIS_PWD="{{PASSWORD_REDIS}}"
-      - MAIN_MODEL_TYPE=openai
-      - OPENAI_MODEL_HOST={{COMPLETION_BASEURL}}
-      - OPENAI_MODEL={{COMPLETION_MODEL}}
-      - OPENAI_MODEL_API_KEY={{COMPLETION_APIKEY}}
-      - OPENAI_MODEL_AUTHORIZATION=sk-CsPvPQwVPGVcPEBm6485D534F690407aA3113f7c13D633Cd
+      TZ: Asia/Shanghai
+      THRESHOLD_SCORE: 0.3
+      STR_PATTERN: import +.*|from +.*|from +.* import *.*
+      USER_CODE_UPLOAD_DELAY: 30
+      CODEBASE_DEFINITION_URL: http://codebase-querier:8888/codebase-indexer/api/v1/search/definition
+      CODEBASE_SEMANTIC_URL: http://codebase-querier:8888/codebase-embedder/api/v1/search/semantic
+      CONTEXT_LINES_LIMIT: 1000
+      SNIPPET_TOP_N: 0
+      MAX_TOKENS: 500
+      MAX_MODEL_LEN: 5000,1000
+      CONTEXT_COST_TIME: 1500
+      MAX_MODEL_COST_TIME: 2800
+      MAX_COST_TIME: 3000
+      MULTI_LINE_STREAM_K: 8
+      MIN_PREFIX_TOKEN: 2000
+      COMPLETION_CACHE_TIME: 86400
+      CONTINUE_COMPLETION_CACHE_EXPIRED: 30
+      DISABLED_REJECT_AUTHORIZATION: True
+      ENABLE_REDIS: False
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      REDIS_PWD: "sf2025~SHENMA"
+      MAIN_MODEL_TYPE: openai
+      # 模型地址
+      OPENAI_MODEL_HOST: "{{COMPLETION_BASEURL}}"
+      # 模型名称
+      OPENAI_MODEL: "{{COMPLETION_MODEL}}"
+      # 认证头 Authorization 的值
+      OPENAI_MODEL_AUTHORIZATION: "{{COMPLETION_APIKEY}}"
     depends_on:
       - redis
     networks:
