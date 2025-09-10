@@ -25,7 +25,7 @@ spec:
     port: 11434
     protocol: http
     type: dns
-  - domain: 127.0.0.1:6379
+  - domain: {{COSTRICT_BACKEND}}:6379
     name: local-redis
     port: 80
     protocol: http
