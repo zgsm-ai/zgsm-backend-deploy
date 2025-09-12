@@ -72,7 +72,7 @@ costrict的核心功能都依赖大语言模型，总共需要准备如下模型
 
 推荐模型和下载地址：
 
-对话模型： `GLM-4.5-106B-A12B-FP8`、`GLM-4.5-106B-A12B-FP8`
+对话模型： `GLM-4.5-FP8`、`GLM-4.5-106B-A12B-FP8`
 
 code review模型：`Qwen2.5-Coder-32B-Instruct`
 
