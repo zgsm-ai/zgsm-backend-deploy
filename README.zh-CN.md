@@ -58,6 +58,43 @@ Costrict 后端部署工具是基于 Docker Compose 的企业级 AI 代码助手
 - Container Runtime: Docker 20.10+
 - 编排工具: Docker Compose 2.0+
 
+### 模型要求
+
+costrict的核心功能都依赖大语言模型，总共需要准备如下模型服务
+
+```
+1. 对话模型(提供 /v1/chat/completions 接口）
+2. code review模型(提供和对话模型一样的 /v1/chat/completions 接口）
+3. embedding模型(提供/v1/embeddings 接口)
+4. rerank 模型(提供 /v1/rerank 接口)
+5. 补全模型(提供 /v1/completions 接口)
+```
+
+推荐模型和下载地址：
+
+对话模型： `GLM-4.5-106B-A12B-FP8`、`GLM-4.5-106B-A12B-FP8`
+
+code review模型：`Qwen2.5-Coder-32B-Instruct`
+
+补全模型：`DeepSeek-Coder-V2-Lite-Base`
+
+embedding模型：`gte-modernbert-baseRAG/Embedding`
+
+rerank模型：`gte-reranker-modernbert-baseRAG/Rerank`
+
+```
+https://modelscope.cn/models/ZhipuAI/GLM-4.5-FP8
+https://modelscope.cn/models/Qwen/Qwen2.5-Coder-32B-Instruct
+https://modelscope.cn/models/deepseek-ai/DeepSeek-Coder-V2-Lite-Base
+https://modelscope.cn/models/iic/gte-reranker-modernbert-base
+https://modelscope.cn/models/iic/gte-reranker-modernbert-base
+https://modelscope.cn/models/ZhipuAI/GLM-4.5-Air-FP8
+https://modelscope.cn/models/Qwen/Qwen3-Coder-30B-A3B-Instruct
+```
+
+
+
+
 ## 快速开始
 
 ### 1. 获取部署代码
