@@ -61,7 +61,8 @@ PASSWORD_REDIS="sf2025~SHENMA"
 PASSWORD_POSTGRES="sf2025~SHENMA"
 # elasticsearch的访问密码
 PASSWORD_ELASTIC="4c6y4g6Z09T2w33pYRNKE3LG"
-
+# 
+KEY_QUOTA_MANAGER=""
 #---------------------------------------------------------
 # 大模型相关设置，请根据实际部署情况设置
 #---------------------------------------------------------

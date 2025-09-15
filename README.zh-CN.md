@@ -122,13 +122,41 @@ vim configure.sh
 | `PORT_HIGRESS_CONTROL` | Higress 控制台端口 | 8001 | ❌ |
 | `PORT_CASDOOR` | Casdoor 认证系统端口 | 9009 | ❌ |
 
+模型设置：
+
+| 参数名称 | 描述 | 默认值 | 是否必需 |
+|---------|------|--------|----------|
+| `CHAT_MODEL_HOST` | 对话模型的IP+PORT | - | ✅ |
+| `CHAT_BASEURL` | 对话模型的访问地址 | - | ✅ |
+| `CHAT_DEFAULT_MODEL` | 对话模型的名称 | - | ✅ |
+| `CHAT_MODEL_CONTEXTSIZE` | 对话模型的上下文长度 | - | ✅ |
+| `CHAT_MODEL_DESC` | 对话模型的描述信息 | - | ❌ |
+| `CHAT_APIKEY` | 对话模型的APIKEY，如果模型启用了APIKEY鉴权，则需要设置 | - | ❌ |
+| `CODEREVIEW_MODEL_HOST` | Codereview模型的IP+PORT | - | ✅ |
+| `CODEREVIEW_BASEURL` | Codereview模型的访问地址 | - | ✅ |
+| `CODEREVIEW_MODEL` | Codereview模型的名称 | - | ✅ |
+| `CODEREVIEW_MODEL_CONTEXTSIZE` | Codereview模型的上下文长度 | - | ✅ |
+| `CODEREVIEW_MODEL_DESC` | Codereview模型的描述信息 | - | ❌ |
+| `CODEREVIEW_APIKEY` | Codereview模型的APIKEY，如果模型启用了APIKEY鉴权，则需要设置 | - | ❌ |
+| `COMPLETION_BASEURL` | 代码补全模型的访问地址 | - | ✅ |
+| `COMPLETION_MODEL` | 代码补全模型的名称 | - | ✅ |
+| `COMPLETION_APIKEY` | 代码补全模型的APIKEY，如果模型启用了APIKEY鉴权，则需要设置 | - | ❌ |
+| `EMBEDDER_BASEURL` | 向量嵌入模型的访问地址 | - | ✅ |
+| `EMBEDDER_MODEL` | 向量嵌入模型的名称 | - | ✅ |
+| `EMBEDDER_APIKEY` | 向量嵌入模型的APIKEY，如果模型启用了APIKEY鉴权，则需要设置 | - | ❌ |
+| `RERANKER_BASEURL` | rerank模型的访问地址 | - | ✅ |
+| `RERANKER_MODEL` | rerank模型的名称 | - | ✅ |
+| `RERANKER_APIKEY` | rerank模型的APIKEY，如果模型启用了APIKEY鉴权，则需要设置 | - | ❌ |
+
+注：代码补全、向量嵌入、rerank模型仅供Costrict内部使用，不会出现在用户可选择的模型列表中。
+
 ### 3. 准备后端服务镜像
 
 Costrict后端镜像主要保存在docker hub镜像仓库docker.io/zgsm中。
 
 在执行部署前，需要先保证后端部署需要的镜像，可以正常从镜像仓库拉取。
 
-Costrict后端需要的镜像，可以查看scripts/images.list文件获取完整列表。
+Costrict后端需要的镜像，可以查看scripts/newest-images.list文件获取完整列表。
 
 通过下述命令可以从云端获取该列表文件。
 
