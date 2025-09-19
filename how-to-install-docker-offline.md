@@ -71,13 +71,15 @@ docker info
 
 ```bash
 # docker-compose-linux-x86_64 是文件下载的实际位置
-mv docker-compose-linux-x86_64 /usr/bin/docker-compose
-chmod +x /usr/local/bin/docker-compose
-sudo ln -s /usr/local/bin/docker-compose /usr/bin/
+sudo mv docker-compose-linux-x86_64 /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+cp -a /usr/local/bin/docker-compose  ~/.docker/cli-plugins/docker-compose # 添加到docker 子命令
 ```
 
 ### 验证
 
 ```bash
 docker-compose 
+docker compose
 ```
