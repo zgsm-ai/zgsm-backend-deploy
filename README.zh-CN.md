@@ -55,7 +55,7 @@ Costrict 后端部署工具是基于 Docker Compose 的企业级 AI 代码助手
 
 **软件要求**:
 - 操作系统: CentOS 7+ 或 Ubuntu 18.04+
-- Container Runtime: Docker 20.10+
+- Container Runtime: Docker 20.10+ (可参考[离线安装docker](./how-to-install-docker-offline.md)离线安装)
 - 编排工具: Docker Compose 2.0+
 
 ### 模型要求
