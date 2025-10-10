@@ -94,6 +94,9 @@ https://modelscope.cn/models/iic/gte-reranker-modernbert-base
 
 
 
+## 部署检查清单
+
+在开始部署之前，请同步打开查看 [部署检查清单](./docs/deploy-checklist.zh-CN.md) 中的内容；并在整个部署过程中补充完成所有项目，以确保最终部署成功。
 
 ## 快速开始
 

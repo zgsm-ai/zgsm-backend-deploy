@@ -41,7 +41,8 @@ fi
 function verify_images() {
     echo "开始检查镜像..."
     for image in `echo ${IMAGES}`; do
-        if [ -z "$(docker images -q ${image} 2> /dev/null)" ]; then
+        image_id=$(docker images -q "${image}" 2> /dev/null)
+        if [ -z "${image_id}" ]; then
             echo "[缺失] ${image}"
             MISSING_IMAGES=$((MISSING_IMAGES+1))
         else

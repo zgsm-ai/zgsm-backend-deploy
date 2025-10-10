@@ -58,6 +58,44 @@ Costrict Backend Deployment Tool is an enterprise-level AI code assistant backen
 - Container Runtime: Docker 20.10+
 - Orchestration Tool: Docker Compose 2.0+
 
+### Model Requirements
+
+The core functions of costrict all depend on large language models, and the following model services need to be prepared in total:
+
+```
+1. Chat model (providing /v1/chat/completions interface)
+2. Code review model (providing the same /v1/chat/completions interface as the chat model)
+3. Embedding model (providing /v1/embeddings interface)
+4. Rerank model (providing /v1/rerank interface)
+5. Completion model (providing /v1/completions interface)
+```
+
+Recommended models and download addresses:
+
+Chat model: `GLM-4.5-FP8`, `GLM-4.5-106B-A12B-FP8`
+
+Code review model: `Qwen2.5-Coder-32B-Instruct`
+
+Completion model: `DeepSeek-Coder-V2-Lite-Base`
+
+Embedding model: `gte-modernbert-baseRAG/Embedding`
+
+Rerank model: `gte-reranker-modernbert-baseRAG/Rerank`
+
+```
+https://modelscope.cn/models/ZhipuAI/GLM-4.5-FP8
+https://modelscope.cn/models/ZhipuAI/GLM-4.5-Air-FP8
+https://modelscope.cn/models/Qwen/Qwen2.5-Coder-32B-Instruct
+https://modelscope.cn/models/Qwen/Qwen3-Coder-30B-A3B-Instruct
+https://modelscope.cn/models/deepseek-ai/DeepSeek-Coder-V2-Lite-Base
+https://modelscope.cn/models/iic/gte-modernbert-base
+https://modelscope.cn/models/iic/gte-reranker-modernbert-base
+```
+
+## Deployment Checklist
+
+Before starting the deployment, please open and view the [Deployment Checklist](./docs/deploy-checklist.zh-CN.md) simultaneously, and complete all items throughout the deployment process to ensure a successful final deployment.
+
 ## Quick Start
 
 ### 1. Get Deployment Code
