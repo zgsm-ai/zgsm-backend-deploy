@@ -169,11 +169,11 @@
     },
     "chat-rag.context_length_exceeded": {
         "message": "The request exceeds the model's maximum context length. Please reduce the length of your input.",
-        "solution": "You can enable the automatic compression of context feature, or start a new conversation task."
+        "solution": "It might be due to an excessive number of conversation rounds or reading a large file/non-text file. To continue, please create a new task."
     },
     "chat-rag.model_services_unavailable": {
         "message": "Unable to access the AI model services. Please try again later.",
-        "solution": "Service unavailability may be caused by excessive model load, model queue timeout (180s), or model service abnormalities. If you encounter an error after waiting a long time, it is likely due to excessive model load resulting in queue failure. We recommend trying again later."
+        "solution": "There may be a variety of reasons causing the service to be unavailable, such as excessively long context, excessive model load, model queuing timeout (180s), or model service anomalies. If you receive an error after waiting for a long time, it indicates that the model was under excessive load and the queuing failed. Please try again later."
     },
     "chat-rag.internal_error": {
         "message": "Internal Server Error",
@@ -190,6 +190,14 @@
     "chat-rag.chat-rag.too_many_requests": {
         "message": "The number of requests to the model or the number of tokens has reached the official limit.",
         "solution": "Please try again later."
+    },
+    "chat-rag.context_too_long": {
+        "message": "The context is too long",
+        "solution": "It might be due to an excessive number of conversation rounds or reading a large file/non-text file. To continue, please create a new task."
+    },
+    "chat-rag.network_interrupt": {
+        "message": "Internal network interruption.",
+        "solution": "Network interruption caused by server network fluctuations, please try again later."
     },
     "codebase-indexer.unsupported_language": {
         "message": "Unsupported Language",

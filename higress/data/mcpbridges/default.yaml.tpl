@@ -25,18 +25,13 @@ spec:
     port: 11434
     protocol: http
     type: dns
-  - domain: {{COSTRICT_BACKEND}}:6379
+  - domain: redis:6379
     name: local-redis
     port: 80
     protocol: http
     type: static
   - domain: {{CHAT_MODEL_HOST}}
     name: llm-chatrag.internal
-    port: 80
-    protocol: http
-    type: static
-  - domain: {{CODEREVIEW_MODEL_HOST}}
-    name: llm-codereview.internal
     port: 80
     protocol: http
     type: static

@@ -1,0 +1,26 @@
+{
+  "server": {
+    "registerExpireMinutes": 20,
+    "hashTreeExpireHours": 24
+  },
+  "scan": {
+    "maxFileSizeKB": 2048,
+    "maxFileCount": 10000,
+    "folderIgnorePatterns": [
+      ".*",
+      "logs/", "temp/", "tmp/", "node_modules/",
+      "bin/", "dist/", "build/", "out/",
+      "__pycache__/", "venv/", "target/", "vendor/"
+    ],
+    "fileIncludePatterns": [
+      
+    ]
+  },
+  "sync": {
+    "intervalMinutes": 5,
+    "maxRetries": 3,
+    "retryDelaySeconds": 3,
+    "embeddingSuccessPercent": 80.0,
+    "codegraphSuccessPercent": 90.0
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "packageName": "cotun-options",
+  "packageType": "conf",
+  "fileName": "config/cotun-options.json",
+  "os": "darwin",
+  "arch": "amd64",
+  "size": 127,
+  "checksum": "df9651b5612f090af262c3ce1c49360e",
+  "sign": "1eaf795d32394a9535dda9da0a0d5667814932d26e6eaed58bdf41d14c1fd95d1a04bb94c619b8ffb9406e4d38b527dd5f2d4938ea7c32eb1695c2b21c655ed8a7005f2f650cdb802fde1cfa50ce5ca93ab725c77e005888e1a636c17458bf0bfadd9c6cc1afc7427ac10b248a921fc25ef4220f0b31ae74d09c35eb3bc3e2299d485c287e96394b7c9961f475f5632ab551d14834cb4f76b1e6c7065d4d8e7ae40dbf1f34eb9325e8654a9d32f6d4f7aa1eb2a9657c18160f0cd8e77bce12095e03d8b2d6e46e1ab03e9b133215fce1ddfd623b3f709a3986cf9601c8c473ed4d99587cfcbde3082f500403280014af7454a95050ac1f862fb9a8bc15e51a1d",
+  "checksumAlgo": "md5",
+  "versionId": {
+    "major": 1,
+    "minor": 0,
+    "micro": 0
+  },
+  "build": "",
+  "description": "Cotun option file"
+}

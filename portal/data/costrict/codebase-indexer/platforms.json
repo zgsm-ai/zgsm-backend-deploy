@@ -2,6 +2,14 @@
   "packageName": "codebase-indexer",
   "platforms": [
     {
+      "os": "darwin",
+      "arch": "amd64"
+    },
+    {
+      "os": "darwin",
+      "arch": "arm64"
+    },
+    {
       "os": "linux",
       "arch": "amd64"
     },
@@ -12,14 +20,158 @@
     {
       "os": "windows",
       "arch": "amd64"
-    },
-    {
-      "os": "darwin",
-      "arch": "amd64"
-    },
-    {
-      "os": "darwin",
-      "arch": "arm64"
     }
-  ]
+  ],
+  "overviews": {
+    "darwin-amd64": {
+      "os": "darwin",
+      "arch": "amd64",
+      "newest": {
+        "versionId": {
+          "major": 0,
+          "minor": 5,
+          "micro": 11
+        },
+        "packageType": "exec",
+        "fileName": "codebase-indexer",
+        "size": 37765744,
+        "build": "",
+        "description": "Codebase index building and query tools"
+      },
+      "versions": [
+        {
+          "versionId": {
+            "major": 0,
+            "minor": 5,
+            "micro": 11
+          },
+          "packageType": "exec",
+          "fileName": "codebase-indexer",
+          "size": 37765744,
+          "build": "",
+          "description": "Codebase index building and query tools"
+        }
+      ]
+    },
+    "darwin-arm64": {
+      "os": "darwin",
+      "arch": "arm64",
+      "newest": {
+        "versionId": {
+          "major": 0,
+          "minor": 5,
+          "micro": 11
+        },
+        "packageType": "exec",
+        "fileName": "codebase-indexer",
+        "size": 36162880,
+        "build": "",
+        "description": "Codebase index building and query tools"
+      },
+      "versions": [
+        {
+          "versionId": {
+            "major": 0,
+            "minor": 5,
+            "micro": 11
+          },
+          "packageType": "exec",
+          "fileName": "codebase-indexer",
+          "size": 36162880,
+          "build": "",
+          "description": "Codebase index building and query tools"
+        }
+      ]
+    },
+    "linux-amd64": {
+      "os": "linux",
+      "arch": "amd64",
+      "newest": {
+        "versionId": {
+          "major": 0,
+          "minor": 5,
+          "micro": 11
+        },
+        "packageType": "exec",
+        "fileName": "codebase-indexer",
+        "size": 37355136,
+        "build": "",
+        "description": "Codebase index building and query tools"
+      },
+      "versions": [
+        {
+          "versionId": {
+            "major": 0,
+            "minor": 5,
+            "micro": 11
+          },
+          "packageType": "exec",
+          "fileName": "codebase-indexer",
+          "size": 37355136,
+          "build": "",
+          "description": "Codebase index building and query tools"
+        }
+      ]
+    },
+    "linux-arm64": {
+      "os": "linux",
+      "arch": "arm64",
+      "newest": {
+        "versionId": {
+          "major": 0,
+          "minor": 5,
+          "micro": 11
+        },
+        "packageType": "exec",
+        "fileName": "codebase-indexer",
+        "size": 36461936,
+        "build": "",
+        "description": "Codebase index building and query tools"
+      },
+      "versions": [
+        {
+          "versionId": {
+            "major": 0,
+            "minor": 5,
+            "micro": 11
+          },
+          "packageType": "exec",
+          "fileName": "codebase-indexer",
+          "size": 36461936,
+          "build": "",
+          "description": "Codebase index building and query tools"
+        }
+      ]
+    },
+    "windows-amd64": {
+      "os": "windows",
+      "arch": "amd64",
+      "newest": {
+        "versionId": {
+          "major": 0,
+          "minor": 5,
+          "micro": 11
+        },
+        "packageType": "exec",
+        "fileName": "codebase-indexer.exe",
+        "size": 38072432,
+        "build": "",
+        "description": "Codebase index building and query tools"
+      },
+      "versions": [
+        {
+          "versionId": {
+            "major": 0,
+            "minor": 5,
+            "micro": 11
+          },
+          "packageType": "exec",
+          "fileName": "codebase-indexer.exe",
+          "size": 38072432,
+          "build": "",
+          "description": "Codebase index building and query tools"
+        }
+      ]
+    }
+  }
 }

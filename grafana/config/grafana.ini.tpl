@@ -35,7 +35,7 @@
 ;http_addr =
 
 # The http port  to use
-;http_port = {{PORT_GRAFANA}}
+;http_port = 3000
 
 # The public facing domain name used to access grafana from a browser
 ;domain = localhost
@@ -117,7 +117,7 @@
 
 # cache connectionstring options
 # database: will use Grafana primary database.
-# redis: config like redis server e.g. `addr=127.0.0.1:{{PORT_REDIS}},pool_size=100,db=0,ssl=false`. Only addr is required. ssl may be 'true', 'false', or 'insecure'.
+# redis: config like redis server e.g. `addr=redis:6379,pool_size=100,db=0,ssl=false`. Only addr is required. ssl may be 'true', 'false', or 'insecure'.
 # memcache: 127.0.0.1:11211
 ;connstr =
 

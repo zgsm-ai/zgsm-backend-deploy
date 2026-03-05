@@ -1,4 +1,0 @@
-[flake8]
-ignore = D,W503,W605
-max-line-length = 128
-exclude = .*,__pycache__,db/migrations/*,grpc_service/pb,venv/*,env/*,template/*,tests/mock/*

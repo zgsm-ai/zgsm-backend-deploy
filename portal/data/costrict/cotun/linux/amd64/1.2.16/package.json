@@ -1,0 +1,18 @@
+{
+  "packageName": "cotun",
+  "packageType": "exec",
+  "fileName": "cotun",
+  "os": "linux",
+  "arch": "amd64",
+  "size": 6824120,
+  "checksum": "a8a0a581e6207648af16e2376d2f2572",
+  "sign": "125778d0afa41caba9f1c3d80717612e7d1fdadfeae3d4fc8ce6dbe3a086d8a0ad8064c16855b47812710323dff67949445ca40a81f4d606f3fe1e0c03fd832b3f70313765157d43a9b79e373d9b71d6cb111b0788ff4ebadc8545763971ad04daa5dc7ce29c7ec02cb07da9e01021b145c6e838f11d6299351e8ba4fce1cdb46132b1beabc6f4bcf019716602690ee76cd0a70e1be85cf8f34d07b29711073274e88b837c1899f0c78f4acfd9bccbf74d4445ffdea46d08d7912768d119f07bea22bc2d86efa9d9af1fb1a788f5f891208463542005504506db322d1602d41f8153fb4e3cf5a2103fb61f042cda3b7e54fd82503f61bb2543526adc1e0aad22",
+  "checksumAlgo": "md5",
+  "versionId": {
+    "major": 1,
+    "minor": 2,
+    "micro": 16
+  },
+  "build": "",
+  "description": "Stream transfer tools"
+}

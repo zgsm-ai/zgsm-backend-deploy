@@ -36,9 +36,9 @@ CREATE TABLE IF NOT EXISTS "public"."auth_users" (
 CREATE INDEX "idx_auth_users_email" ON "public"."auth_users" USING btree (
   "email" COLLATE "pg_catalog"."default" "pg_catalog"."text_ops" ASC NULLS LAST
 );
-CREATE UNIQUE INDEX "idx_auth_users_github_id" ON "public"."auth_users" USING btree (
-  "github_id" COLLATE "pg_catalog"."default" "pg_catalog"."text_ops" ASC NULLS LAST
-);
+-- CREATE UNIQUE INDEX "idx_auth_users_github_id" ON "public"."auth_users" USING btree (
+--   "github_id" COLLATE "pg_catalog"."default" "pg_catalog"."text_ops" ASC NULLS LAST
+-- );
 CREATE INDEX "idx_auth_users_name" ON "public"."auth_users" USING btree (
   "name" COLLATE "pg_catalog"."default" "pg_catalog"."text_ops" ASC NULLS LAST
 );

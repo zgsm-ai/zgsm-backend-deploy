@@ -1,0 +1,18 @@
+{
+  "packageName": "codebase-indexer",
+  "packageType": "exec",
+  "fileName": "codebase-indexer",
+  "os": "darwin",
+  "arch": "amd64",
+  "size": 37765744,
+  "checksum": "b10464f35a0f04179a3bf03375efa12a",
+  "sign": "2b92549db7f06eda4ff88b89eadf1675c31f3b8306b7457bd15a3a88fc2a53fa8df364fbfe4106bdc7d3ebd14d87b469312e75e2e551a22a72ea997b54106484807f1ecc8e334174e74d6870abe079eab8b54df7bca895bd2896ead7714ea44b50481f5f72f2e81b6e6ddbea3f6455197ff5c1bae049b31e144f38a55e59ad2da1753db08bcee4c40758546bc90e23ae3ba48ab09fcf707d315debdc736aff003c5a8c000b093ad34b51cc81d3876ec03931c6367cba848efd582382d04d57f951427dccf69903747805ec0db26aef9d1ce49485ff65b172b39871b83e8ffe9b7d37ff53c345a2e650d05aea015bba7a3b2a15fd9610ba07885fb18c6755d637",
+  "checksumAlgo": "md5",
+  "versionId": {
+    "major": 0,
+    "minor": 5,
+    "micro": 11
+  },
+  "build": "",
+  "description": "Codebase index building and query tools"
+}

@@ -1,0 +1,18 @@
+{
+  "packageName": "costrict",
+  "packageType": "exec",
+  "fileName": "costrict.exe",
+  "os": "windows",
+  "arch": "arm64",
+  "size": 31142912,
+  "checksum": "b657ba40d99a5e778e7169a1891fc452",
+  "sign": "950833aab7640a21694edcb5f75bdbcbada13265b9fbba51e54aff9ba55e46012f3031094885297fa6512103b04126486134bc9d0fe3fd56a6cefc14704a1a9d91b146a63fb7374e4462ea544035048f4aff0768f72c786cc3ac037e36a8864ccabd0f131e9c9bc91340ed7453aaf3367d9b903ba48f45320ed3807bfc73d0021f86bad843fd37eb01eebd67fdce67447506ff7de50dacccbf42f366773d54d4684907edcb890c4026bb05d805fdaa841f0773e44336228e46d602322ef4a3ecc755cee13b7a6c8ef4467720f67473981ead838a9f2bde7d00c0f06e17800acf8f75241c724bafdff4f5298293d88d2f32161864c1b73f5119a61e05ba1aa41d",
+  "checksumAlgo": "md5",
+  "versionId": {
+    "major": 1,
+    "minor": 1,
+    "micro": 18
+  },
+  "build": "",
+  "description": "Costrict client process management service"
+}

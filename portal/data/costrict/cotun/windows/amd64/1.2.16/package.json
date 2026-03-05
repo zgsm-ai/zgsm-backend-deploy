@@ -1,0 +1,18 @@
+{
+  "packageName": "cotun",
+  "packageType": "exec",
+  "fileName": "cotun.exe",
+  "os": "windows",
+  "arch": "amd64",
+  "size": 7092848,
+  "checksum": "4d49a75385e4e4a5b534c9e44bb8ff2f",
+  "sign": "2c52489a4c529eba1703dabe9927ca22cfbba6ad3ffc44b281cbc8dce9194411afeefaa6f7032d240823451ee0a517559c2788ed2503fa5e73e762ace3923c3d39a867802d56e0c552f8ddfd087355df48640f5388136476978d26501ee9bc2e07cfa0bdf5483817f3ef3ba44d1a8c2bf567adfdb32439911185e26948270ea32bcbfd2914b10d779a4546b9723d3cca18e6ba50a0d4d576b119d7dbb7bacd9a3164a3c05dddb38102fe5261d9825c423874f8c1255071d3213ed1192a531f9ea9889ffb2a15487ca03a0e2c2ac01b9adfe5b1052b39c096e3f5e8420e8414e76f8473611b0df2f01a9e92a16372a351a42eaa323b2b8cb4ad3663205ad6de9d",
+  "checksumAlgo": "md5",
+  "versionId": {
+    "major": 1,
+    "minor": 2,
+    "micro": 16
+  },
+  "build": "",
+  "description": "Stream transfer tools"
+}

@@ -1,0 +1,18 @@
+{
+  "packageName": "cotun",
+  "packageType": "exec",
+  "fileName": "cotun",
+  "os": "darwin",
+  "arch": "amd64",
+  "size": 7094896,
+  "checksum": "b238c6ce2791056e5cb4b961059ae865",
+  "sign": "2ebc45e7ef2b9a777b8c67880d9553ddb6e6d631fbd4a89cd12be1a4c1cb1e10bd1fa6ff286d25c0cd4c6d24a78159a593fba65ca1c0b296bc3648ea55a3bc563e3d13c47572eae20132bdfb586c5b8a3c4c64e382a436ef903623858e4d33636b9c8c19579ad9dab92e134766203738f30b1f9c31b73ea5d5cce73828da78ca660db692f85803c209e4e81eb0444332641829b273b820f4c0cd9b0b1eef35a3dcab89c3e180a3dca78f3134e11bf2f414ce808b8c162fca1d613256ca1daf06a4cd12a77efdacdde4a9f97e282e384720cb06846c5ae64de6d8589aac48a104397c00fb6edd4cc86ca8f42823c2a719a43644b54371aa6cd38f840be6880224",
+  "checksumAlgo": "md5",
+  "versionId": {
+    "major": 1,
+    "minor": 2,
+    "micro": 16
+  },
+  "build": "",
+  "description": "Stream transfer tools"
+}

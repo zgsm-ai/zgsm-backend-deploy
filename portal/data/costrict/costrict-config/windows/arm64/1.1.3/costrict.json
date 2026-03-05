@@ -1,0 +1,27 @@
+{
+  "listen": "localhost:6999",
+  "service": {
+    "min_port": 9000,
+    "max_port": 10000
+  },
+  "tunnel": {
+    "process_name": "cotun",
+    "command": "{{.ProcessPath}}",
+    "args": [
+      "--auth",
+      "costrict:zgsm@costrict.ai",
+      "--tls-skip-verify",
+      "--server",
+      "{{.RemoteAddr}}",
+      "--app-name",
+      "{{.AppName}}",
+      "R:{{.MappingPort}}:127.0.0.1:{{.LocalPort}}"
+    ],
+    "timeout": 0
+  },
+  "log": {
+    "level": "debug",
+    "path": "console",
+    "maxSize": 52428800
+  }
+}

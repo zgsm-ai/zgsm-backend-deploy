@@ -1,9 +1,0 @@
-__pycache__
-.git
-.gitignore
-.venv
-.env
-front
-Makefile
-dockerfile
-docker-compose.yml

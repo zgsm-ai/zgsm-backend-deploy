@@ -27,6 +27,7 @@ IndexTask:
     OverlapTokens: 100
     MaxTokensPerChunk: 1000
     EnableMarkdownParsing: false
+    EnableOpenAPIParsing: false
   GraphTask:
     MaxConcurrency: 100
     Timeout: 18000s

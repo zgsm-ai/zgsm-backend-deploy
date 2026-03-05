@@ -43,7 +43,7 @@ quota-backend-bytes: 0
 listen-peer-urls: http://localhost:2380
 
 # List of comma separated URLs to listen on for client traffic.
-listen-client-urls: http://localhost:{{PORT_ETCD}}
+listen-client-urls: http://localhost:2379
 
 # Maximum number of snapshot files to retain (0 is unlimited).
 max-snapshots: 5
@@ -60,7 +60,7 @@ initial-advertise-peer-urls: http://localhost:2380
 
 # List of this member's client URLs to advertise to the public.
 # The URLs needed to be a comma-separated list.
-advertise-client-urls: http://localhost:{{PORT_ETCD}}
+advertise-client-urls: http://localhost:2379
 
 # Discovery URL used to bootstrap the cluster.
 discovery:

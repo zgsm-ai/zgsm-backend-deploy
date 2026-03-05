@@ -1,0 +1,65 @@
+{
+    "configuration": "1.0.1",
+    "platform": "windows",
+    "arch": "amd64",
+    "version": "1.1.3",
+    "manager": {
+        "component": {
+            "name": "costrict",
+            "version": "^1.0.0"
+        },
+        "service": {
+            "name": "costrict",
+            "startup": "always",
+            "command": "{{.ProcessPath}}",
+            "args": [
+                "server",
+                "--listen",
+                "localhost:{{.LocalPort}}"
+            ],
+            "protocol": "http",
+            "port": 8999,
+            "metrics": "",
+            "accessible": "local"
+        }
+    },
+    "components": [
+        {
+            "name": "codebase-indexer",
+            "version": "^1.0.0"
+        },
+        {
+            "name": "cotun",
+            "version": "~1.0.0"
+        }
+    ],
+    "configurations": [
+        {
+            "name": "costrict-config",
+            "version": "^1.0.0"
+        },
+        {
+            "name": "system",
+            "version": "~1.0.0"
+        },
+        {
+            "name": "cotun-options",
+            "version": "~1.0.0"
+        }
+    ],
+    "services": [
+        {
+            "name": "codebase-indexer",
+            "startup": "always",
+            "command": "{{.ProcessPath}}",
+            "args": [
+                "-http",
+                "localhost:{{.LocalPort}}"
+            ],
+            "protocol": "http",
+            "port": 9001,
+            "metrics": "",
+            "accessible": "remote"
+        }
+    ]
+}

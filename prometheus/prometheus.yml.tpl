@@ -37,4 +37,4 @@ scrape_configs:
     scrape_interval: 5s
     metrics_path: "/apisix/prometheus/metrics"
     static_configs:
-      - targets: ["apisix:{{PORT_APISIX_PROMETHEUS}}"]
+      - targets: ["apisix:9091"]

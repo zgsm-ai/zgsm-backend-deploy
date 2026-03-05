@@ -1,0 +1,18 @@
+{
+  "packageName": "system",
+  "packageType": "conf",
+  "fileName": "share/system-spec.json",
+  "os": "darwin",
+  "arch": "arm64",
+  "size": 1566,
+  "checksum": "4fb8c1b43ca12885a43063dea0366566",
+  "sign": "18fdbb456190788a731f41929a98eae7d077c87fe90be4709abf644839813919160c971b0f58e22ca6773ec05cb75bae08b52c26412e034b9a89b6a5dcdcc61493339db419d7786109d19ea6b5bb9a75b34d8ee087c1569fe8d1d5938630a08646c9d4bd03645e25ac036880080f7bcf043c92c0b61b7b2d0f9964248c5d5b0585f1361e2ce739acc1c0137dea2e32f03ced82bc1cfdc051a1a51591492c019f74ad73477704e6449721392f0f20eef0a5cb00db00b8f83b087bd1e578d92e3217c9fcbcdeb271c9a45dc676f9ee372412fca2598cf6fdca662e2854541d468f611f46414e8d02d18285bf145a46cccd206b7c9523a2457e4dcf28de16b6e2ba",
+  "checksumAlgo": "md5",
+  "versionId": {
+    "major": 1,
+    "minor": 1,
+    "micro": 3
+  },
+  "build": "",
+  "description": "Client Subsystem Definition File"
+}

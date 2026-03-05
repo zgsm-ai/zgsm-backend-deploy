@@ -168,12 +168,12 @@
         "solution": "請重新登入，獲取有效的token"
     },
     "chat-rag.context_length_exceeded": {
-        "message": "請求超出了模型的最大上下文長度限制，請縮短輸入內容",
-        "solution": "您可以開啟自動壓縮上下文功能，或重新開啟新的對話任務。"
+        "message": "上下文過長",
+        "solution": "可能是由於對話輪數過多或讀取了大型文件/非文本文件，如需繼續請創建新任務。"
     },
     "chat-rag.model_services_unavailable": {
         "message": "大模型服務暫時不可用，請稍後重試。",
-        "solution": "可能由於模型壓力過大、模型排隊超時（180秒）、模型服務異常等原因造成服務不可用。如果您是等待很久後報錯，則是模型壓力過大，排隊失敗。建議請稍後重試。"
+        "solution": "可能是由於上下文過長、模型壓力過大、模型排隊超時(180秒)、模型服務異常等原因造成服務不可用，如果您等待很久後報錯，則是模型壓力過大，排隊失敗。請稍後重試。"
     },
     "chat-rag.internal_error": {
         "message": "内部服务器错误",
@@ -190,6 +190,14 @@
     "chat-rag.chat-rag.too_many_requests": {
         "message": "請求模型次數或者 token 數達到官方限制。",
         "solution": "請稍後重試。"
+    },
+    "chat-rag.context_too_long": {
+        "message": "上下文過長",
+        "solution": "可能是由於對話輪數過多或讀取了大型文件/非文本文件，如需繼續請創建新任務。"
+    },
+    "chat-rag.network_interrupt": {
+        "message": "內部網絡中斷",
+        "solution": "伺服器網路波動導致網路中斷，請稍後重試。"
     },
     "codebase-indexer.unsupported_language": {
         "message": "不支援的語言",

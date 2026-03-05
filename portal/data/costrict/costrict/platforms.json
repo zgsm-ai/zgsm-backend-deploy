@@ -3,27 +3,209 @@
   "platforms": [
     {
       "os": "darwin",
+      "arch": "arm64"
+    },
+    {
+      "os": "linux",
       "arch": "amd64"
+    },
+    {
+      "os": "linux",
+      "arch": "arm64"
+    },
+    {
+      "os": "windows",
+      "arch": "amd64"
+    },
+    {
+      "os": "windows",
+      "arch": "arm64"
     },
     {
       "os": "darwin",
-      "arch": "arm64"
-    },
-    {
-      "os": "linux",
       "arch": "amd64"
-    },
-    {
-      "os": "linux",
-      "arch": "arm64"
-    },
-    {
-      "os": "windows",
-      "arch": "amd64"
-    },
-    {
-      "os": "windows",
-      "arch": "arm64"
     }
-  ]
+  ],
+  "overviews": {
+    "darwin-amd64": {
+      "os": "darwin",
+      "arch": "amd64",
+      "newest": {
+        "versionId": {
+          "major": 1,
+          "minor": 1,
+          "micro": 18
+        },
+        "packageType": "exec",
+        "fileName": "costrict",
+        "size": 32014688,
+        "build": "",
+        "description": "Costrict client process management service"
+      },
+      "versions": [
+        {
+          "versionId": {
+            "major": 1,
+            "minor": 1,
+            "micro": 18
+          },
+          "packageType": "exec",
+          "fileName": "costrict",
+          "size": 32014688,
+          "build": "",
+          "description": "Costrict client process management service"
+        }
+      ]
+    },
+    "darwin-arm64": {
+      "os": "darwin",
+      "arch": "arm64",
+      "newest": {
+        "versionId": {
+          "major": 1,
+          "minor": 1,
+          "micro": 18
+        },
+        "packageType": "exec",
+        "fileName": "costrict",
+        "size": 31261298,
+        "build": "",
+        "description": "Costrict client process management service"
+      },
+      "versions": [
+        {
+          "versionId": {
+            "major": 1,
+            "minor": 1,
+            "micro": 18
+          },
+          "packageType": "exec",
+          "fileName": "costrict",
+          "size": 31261298,
+          "build": "",
+          "description": "Costrict client process management service"
+        }
+      ]
+    },
+    "linux-amd64": {
+      "os": "linux",
+      "arch": "amd64",
+      "newest": {
+        "versionId": {
+          "major": 1,
+          "minor": 1,
+          "micro": 18
+        },
+        "packageType": "exec",
+        "fileName": "costrict",
+        "size": 31930849,
+        "build": "",
+        "description": "Costrict client process management service"
+      },
+      "versions": [
+        {
+          "versionId": {
+            "major": 1,
+            "minor": 1,
+            "micro": 18
+          },
+          "packageType": "exec",
+          "fileName": "costrict",
+          "size": 31930849,
+          "build": "",
+          "description": "Costrict client process management service"
+        }
+      ]
+    },
+    "linux-arm64": {
+      "os": "linux",
+      "arch": "arm64",
+      "newest": {
+        "versionId": {
+          "major": 1,
+          "minor": 1,
+          "micro": 18
+        },
+        "packageType": "exec",
+        "fileName": "costrict",
+        "size": 31022829,
+        "build": "",
+        "description": "Costrict client process management service"
+      },
+      "versions": [
+        {
+          "versionId": {
+            "major": 1,
+            "minor": 1,
+            "micro": 18
+          },
+          "packageType": "exec",
+          "fileName": "costrict",
+          "size": 31022829,
+          "build": "",
+          "description": "Costrict client process management service"
+        }
+      ]
+    },
+    "windows-amd64": {
+      "os": "windows",
+      "arch": "amd64",
+      "newest": {
+        "versionId": {
+          "major": 1,
+          "minor": 1,
+          "micro": 18
+        },
+        "packageType": "exec",
+        "fileName": "costrict.exe",
+        "size": 32368640,
+        "build": "",
+        "description": "Costrict client process management service"
+      },
+      "versions": [
+        {
+          "versionId": {
+            "major": 1,
+            "minor": 1,
+            "micro": 18
+          },
+          "packageType": "exec",
+          "fileName": "costrict.exe",
+          "size": 32368640,
+          "build": "",
+          "description": "Costrict client process management service"
+        }
+      ]
+    },
+    "windows-arm64": {
+      "os": "windows",
+      "arch": "arm64",
+      "newest": {
+        "versionId": {
+          "major": 1,
+          "minor": 1,
+          "micro": 18
+        },
+        "packageType": "exec",
+        "fileName": "costrict.exe",
+        "size": 31142912,
+        "build": "",
+        "description": "Costrict client process management service"
+      },
+      "versions": [
+        {
+          "versionId": {
+            "major": 1,
+            "minor": 1,
+            "micro": 18
+          },
+          "packageType": "exec",
+          "fileName": "costrict.exe",
+          "size": 31142912,
+          "build": "",
+          "description": "Costrict client process management service"
+        }
+      ]
+    }
+  }
 }

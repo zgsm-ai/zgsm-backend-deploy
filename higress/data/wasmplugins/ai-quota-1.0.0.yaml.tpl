@@ -82,17 +82,6 @@ spec:
         supportsPromptCache: false
         supportsReasoningBudget: false
       type: zhipu
-    - id: aliyun-provider
-      models:
-      - contextWindow: {{CODEREVIEW_MODEL_CONTEXTSIZE}}
-        description: {{CODEREVIEW_MODEL_DESC}}
-        maxTokens: 8192
-        name: {{CODEREVIEW_MODEL}}
-        supportsComputerUse: true
-        supportsImages: false
-        supportsPromptCache: false
-        supportsReasoningBudget: false
-      type: aliyun
     quota_management:
       admin_quota_path: /check-quota
       cache_ttl_seconds: 5

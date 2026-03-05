@@ -5,30 +5,21 @@
   "newest": {
     "versionId": {
       "major": 1,
-      "minor": 1,
-      "micro": 0
+      "minor": 2,
+      "micro": 16
     },
-    "appUrl": "/cotun/darwin/arm64/1.1.0/cotun",
-    "infoUrl": "/cotun/darwin/arm64/1.1.0/package.json"
+    "appUrl": "/cotun/darwin/arm64/1.2.16/cotun",
+    "infoUrl": "/cotun/darwin/arm64/1.2.16/package.json"
   },
   "versions": [
     {
       "versionId": {
         "major": 1,
-        "minor": 0,
-        "micro": 250817
+        "minor": 2,
+        "micro": 16
       },
-      "appUrl": "/cotun/darwin/arm64/1.0.250817/cotun",
-      "infoUrl": "/cotun/darwin/arm64/1.0.250817/package.json"
-    },
-    {
-      "versionId": {
-        "major": 1,
-        "minor": 1,
-        "micro": 0
-      },
-      "appUrl": "/cotun/darwin/arm64/1.1.0/cotun",
-      "infoUrl": "/cotun/darwin/arm64/1.1.0/package.json"
+      "appUrl": "/cotun/darwin/arm64/1.2.16/cotun",
+      "infoUrl": "/cotun/darwin/arm64/1.2.16/package.json"
     }
   ]
 }

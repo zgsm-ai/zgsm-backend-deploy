@@ -100,7 +100,7 @@ proxy_config:
     override:                    # 需要覆盖的header
       Host: "localhost:8080"
   port_manager:                    # 端口管理器配置（新配置）
-    url: "http://tunnel-manager:8080"  # 端口管理器URL
+    url: "http://cotun:7890"  # 端口管理器URL
     forward_url: "http://cotun"
     timeout: 30s                  # 请求超时时间
     cache_exp: 5m                  # 缓存过期时间

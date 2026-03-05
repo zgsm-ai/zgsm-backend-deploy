@@ -4,27 +4,25 @@ Used for checking and verifying the preparation before deployment, configuration
 
 ## I. Pre-Deployment
 
-### 1.2 Models
+### 1.1 Models
 
-#### 1.2.1 Model GPU Resources (Recommended)
+#### 1.1.1 Model GPU Resources (Recommended)
 
-- **Chat Model**: 4 * H20 or 4 * RTX4090
-- **Code Review Model**: 2 * H20 or 2 * RTX4090
-- **Completion Model**: 1 * H20 or 1 * RTX4090
-- **Embedding Model**: 0.5 * H20 or 1 * RTX4090
-- **Rerank Model**: 0.5 * H20 or 0.5 * RTX4090
+- **Chat Model**: `4 * H20` or `4 * RTX4090`
+- **Completion Model**: `1 * H20` or `1 * RTX4090`
+- **Embedding Model**: `0.5 * H20` or `0.5 * RTX4090`
+- **Rerank Model**: `0.5 * H20` or `0.5 * RTX4090`
 
-#### 1.2.2 Model List (Recommended)
+#### 1.1.2 Model List (Recommended)
 
-- **Chat Model**: `GLM-4.5-FP8`, `GLM-4.5-106B-A12B-FP8`
-- **Code Review Model**: `Qwen2.5-Coder-32B-Instruct`
-- **Completion Model**: `DeepSeek-Coder-V2-Lite-Base`
+- **Chat Model**: `GLM-4.6-FP8`
+- **Completion Model**: `Qwen3-4B-Instruct-2507`
 - **Embedding Model**: `gte-modernbert-baseRAG/Embedding`
 - **Rerank Model**: `gte-reranker-modernbert-baseRAG/Rerank`
 
-**Note**: Confirm and record the model command names, APIKEYs, and context sizes are accurate.
+**Note**: Confirm and record the model `NAMES`, `APIKEYs`, and `CONTEXT LENGTHS` are accurate.
 
-#### 1.2.3 Checks
+#### 1.1.3 Checks
 
 - [ ] **GPU Resource Check**
 
@@ -34,28 +32,27 @@ Used for checking and verifying the preparation before deployment, configuration
 
 - [ ] **Model Interfaces**
   
-  - [ ] **Chat Model**: `/v1/chat/completions` interface
-  - [ ] **Code Review Model**: Same as chat `/v1/chat/completions` interface
-  - [ ] **Completion Model**: `/v1/completions` interface
-  - [ ] **Embedding Model**: `/v1/embeddings` interface
-  - [ ] **Rerank Model**: `/v1/embeddings` interface
+  - [ ] **Chat Model**: `{CHAT_BASEURL}/v1/chat/completions` interface
+  - [ ] **Completion Model**: `{COMPLETION_BASEURL}` interface
+  - [ ] **Embedding Model**: `{EMBEDDER_BASEURL}` interface
+  - [ ] **Rerank Model**: `{RERANKER_BASEURL}` interface
 
-### 1.1 Backend Server
+### 1.2 Backend Server
 
-#### 1.1.1 Hardware Requirements
+#### 1.2.1 Hardware Requirements
 
 - **CPU**: Intel x64 architecture, minimum 16 cores
 - **Memory**: Minimum 32GB RAM
 - **Storage**: Minimum 512GB available storage space
 
-#### 1.1.2 Software Requirements
+#### 1.2.2 Software Requirements
 
 - **Operating System**: CentOS 7+ or Ubuntu 18.04+
 - **Container Runtime**: Docker 20.10+
 - **Orchestration Tool**: Docker Compose 2.0+
 - **Git**: Not required if obtaining [Deployment Project](https://github.com/zgsm-ai/zgsm-backend-deploy) offline
 
-#### 1.1.3 Checks
+#### 1.2.3 Checks
 
 - [ ] **Check CPU**
 
@@ -95,7 +92,7 @@ Used for checking and verifying the preparation before deployment, configuration
 
 Project URL: https://github.com/zgsm-ai/zgsm-backend-deploy
 
-Project storage path: `/opt/zgsm-backend-deploy`
+Project storage path: `/opt/zgsm-backend-deploy` (Assuming the directory is `/opt/zgsm-backend-deploy`, modify according to the actual project storage path, the same below)
 
 #### 1.3.2 Service Port Requirements
 
@@ -103,7 +100,7 @@ Local port list: `/opt/zgsm-backend-deploy/configure.sh`
 
 Online port list: https://github.com/zgsm-ai/zgsm-backend-deploy/blob/main/configure.sh
 
-- Port list: Lines `6~34`
+- Port list: Lines `6~33`
 
 #### 1.3.4 Checks
 
@@ -116,7 +113,7 @@ Online port list: https://github.com/zgsm-ai/zgsm-backend-deploy/blob/main/confi
 - [ ] **Port Check**
 
   ```bash
-  sudo ss -tlnp | grep -E ':(9180|9080|9091|9092|9093|2382|6379|5432|5003|9081|5000|8765|5001|9090|3000|9200|8080|8001|9001|5173|9003|9004|9005|9006|9007|9008|9009|9010|9011) '
+  sudo ss -tlnp | grep -E ':(39180|39080|32382|36379|35432|35003|39090|33000|39200|38001|39009) '
   ```
 
 ## II. During Deployment
@@ -160,14 +157,15 @@ Online image list: https://github.com/zgsm-ai/zgsm-backend-deploy/blob/main/scri
 - [ ] **Image Check**
 
   ```bash
-  bash /opt/zgsm-backend-deploy/docker-download-images.sh
+  cd /opt/zgsm-backend-deploy
+  bash docker-download-images.sh
   ```
 
-### 2.2 Execute Script
+### 2.3 Execute Script
 
 Execution script: `/opt/zgsm-backend-deploy/deploy.sh`
 
-#### 2.2.1 Checks
+#### 2.3.1 Checks
 
 - [ ] **Check if file exists and has executable permissions**
 
@@ -175,13 +173,13 @@ Execution script: `/opt/zgsm-backend-deploy/deploy.sh`
   ls -l /opt/zgsm-backend-deploy | grep deploy.sh
   ```
 
-### 2.3 Service Configuration
+### 2.4 Service Configuration
 
-#### 2.3.1 AI Gateway Configuration
+#### 2.4.1 AI Gateway Configuration
 
 Local AI gateway configuration: `/opt/zgsm-backend-deploy/docs/higress.zh-CN.md`
 
-#### 2.3.2 Checks
+#### 2.4.2 Checks
 
 - [ ] **AI Gateway Configuration**
 
@@ -240,9 +238,8 @@ Login Baseurl: {COSTRICT_BACKEND_BASEURL}
 
 #### 3.2.3 CodeReview
 
+- Code block
 - File
-- Directory
-- Project
 
 #### 3.2.4 Completion
 
@@ -299,5 +296,6 @@ Online service image list: https://github.com/zgsm-ai/zgsm-backend-deploy/blob/m
 - [ ] **Service Log Check**
 
   ```bash
+  # Services: chat-rag,issue-manager,review-manager,review-checker,code-completion,codebase-embedder
   docker-compose logs [service_name]
   ```

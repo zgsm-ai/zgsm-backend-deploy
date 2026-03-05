@@ -2,14 +2,6 @@
   "packageName": "cotun",
   "platforms": [
     {
-      "os": "windows",
-      "arch": "amd64"
-    },
-    {
-      "os": "windows",
-      "arch": "arm64"
-    },
-    {
       "os": "darwin",
       "arch": "amd64"
     },
@@ -23,7 +15,197 @@
     },
     {
       "os": "linux",
+      "arch": "arm64"
+    },
+    {
+      "os": "windows",
+      "arch": "amd64"
+    },
+    {
+      "os": "windows",
       "arch": "arm64"
     }
-  ]
+  ],
+  "overviews": {
+    "darwin-amd64": {
+      "os": "darwin",
+      "arch": "amd64",
+      "newest": {
+        "versionId": {
+          "major": 1,
+          "minor": 2,
+          "micro": 16
+        },
+        "packageType": "exec",
+        "fileName": "cotun",
+        "size": 7094896,
+        "build": "",
+        "description": "Stream transfer tools"
+      },
+      "versions": [
+        {
+          "versionId": {
+            "major": 1,
+            "minor": 2,
+            "micro": 16
+          },
+          "packageType": "exec",
+          "fileName": "cotun",
+          "size": 7094896,
+          "build": "",
+          "description": "Stream transfer tools"
+        }
+      ]
+    },
+    "darwin-arm64": {
+      "os": "darwin",
+      "arch": "arm64",
+      "newest": {
+        "versionId": {
+          "major": 1,
+          "minor": 2,
+          "micro": 16
+        },
+        "packageType": "exec",
+        "fileName": "cotun",
+        "size": 6611680,
+        "build": "",
+        "description": "Stream transfer tools"
+      },
+      "versions": [
+        {
+          "versionId": {
+            "major": 1,
+            "minor": 2,
+            "micro": 16
+          },
+          "packageType": "exec",
+          "fileName": "cotun",
+          "size": 6611680,
+          "build": "",
+          "description": "Stream transfer tools"
+        }
+      ]
+    },
+    "linux-amd64": {
+      "os": "linux",
+      "arch": "amd64",
+      "newest": {
+        "versionId": {
+          "major": 1,
+          "minor": 2,
+          "micro": 16
+        },
+        "packageType": "exec",
+        "fileName": "cotun",
+        "size": 6824120,
+        "build": "",
+        "description": "Stream transfer tools"
+      },
+      "versions": [
+        {
+          "versionId": {
+            "major": 1,
+            "minor": 2,
+            "micro": 16
+          },
+          "packageType": "exec",
+          "fileName": "cotun",
+          "size": 6824120,
+          "build": "",
+          "description": "Stream transfer tools"
+        }
+      ]
+    },
+    "linux-arm64": {
+      "os": "linux",
+      "arch": "arm64",
+      "newest": {
+        "versionId": {
+          "major": 1,
+          "minor": 2,
+          "micro": 16
+        },
+        "packageType": "exec",
+        "fileName": "cotun",
+        "size": 6422712,
+        "build": "",
+        "description": "Stream transfer tools"
+      },
+      "versions": [
+        {
+          "versionId": {
+            "major": 1,
+            "minor": 2,
+            "micro": 16
+          },
+          "packageType": "exec",
+          "fileName": "cotun",
+          "size": 6422712,
+          "build": "",
+          "description": "Stream transfer tools"
+        }
+      ]
+    },
+    "windows-amd64": {
+      "os": "windows",
+      "arch": "amd64",
+      "newest": {
+        "versionId": {
+          "major": 1,
+          "minor": 2,
+          "micro": 16
+        },
+        "packageType": "exec",
+        "fileName": "cotun.exe",
+        "size": 7092848,
+        "build": "",
+        "description": "Stream transfer tools"
+      },
+      "versions": [
+        {
+          "versionId": {
+            "major": 1,
+            "minor": 2,
+            "micro": 16
+          },
+          "packageType": "exec",
+          "fileName": "cotun.exe",
+          "size": 7092848,
+          "build": "",
+          "description": "Stream transfer tools"
+        }
+      ]
+    },
+    "windows-arm64": {
+      "os": "windows",
+      "arch": "arm64",
+      "newest": {
+        "versionId": {
+          "major": 1,
+          "minor": 2,
+          "micro": 16
+        },
+        "packageType": "exec",
+        "fileName": "cotun.exe",
+        "size": 6533744,
+        "build": "",
+        "description": "Stream transfer tools"
+      },
+      "versions": [
+        {
+          "versionId": {
+            "major": 1,
+            "minor": 2,
+            "micro": 16
+          },
+          "packageType": "exec",
+          "fileName": "cotun.exe",
+          "size": 6533744,
+          "build": "",
+          "description": "Stream transfer tools"
+        }
+      ]
+    }
+  }
 }

@@ -6,20 +6,20 @@
     "versionId": {
       "major": 1,
       "minor": 1,
-      "micro": 7
+      "micro": 18
     },
-    "appUrl": "/costrict/windows/arm64/1.1.7/costrict.exe",
-    "infoUrl": "/costrict/windows/arm64/1.1.7/package.json"
+    "appUrl": "/costrict/windows/arm64/1.1.18/costrict.exe",
+    "infoUrl": "/costrict/windows/arm64/1.1.18/package.json"
   },
   "versions": [
     {
       "versionId": {
         "major": 1,
         "minor": 1,
-        "micro": 7
+        "micro": 18
       },
-      "appUrl": "/costrict/windows/arm64/1.1.7/costrict.exe",
-      "infoUrl": "/costrict/windows/arm64/1.1.7/package.json"
+      "appUrl": "/costrict/windows/arm64/1.1.18/costrict.exe",
+      "infoUrl": "/costrict/windows/arm64/1.1.18/package.json"
     }
   ]
 }

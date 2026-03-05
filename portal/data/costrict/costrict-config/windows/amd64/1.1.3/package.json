@@ -1,0 +1,18 @@
+{
+  "packageName": "costrict-config",
+  "packageType": "conf",
+  "fileName": "config/costrict.json",
+  "os": "windows",
+  "arch": "amd64",
+  "size": 542,
+  "checksum": "91954acf5e798deb0d0292bcbe9b28de",
+  "sign": "34e659b134be55faccc99a195703f1c88ec1962740b71f7c8b4c3b1888c0cc889c56b4c723efb71575cf24bb7c7f513856ec485c128961ff54c9a0d87eb08888c5f7a5853113f857b7dfd2545d224022ad7a823247c7e7e3d8b7e5400a3a153ebe0cf374dc873422a110456e72d4526155086c2d9001f0ac6020b52d7d02c264efb4b3bbf99ab03bea8f5f43aadd33fa92101fe1cc950be55391aaab6b8de1e55bf9ccbc53bd7143907d46dee9300f07bf8f484a37b3ded1f1e40919723498cbbcbde06fa2e323446f5c8c29621fbc13b123a845661931334ea604bead597c31cc66994178ba590f2c96d9e7f86d2d66bd54c42c63456d0e35dc213a1428b84e",
+  "checksumAlgo": "md5",
+  "versionId": {
+    "major": 1,
+    "minor": 1,
+    "micro": 3
+  },
+  "build": "",
+  "description": "Costrict configure file"
+}

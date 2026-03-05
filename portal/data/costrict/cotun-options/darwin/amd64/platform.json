@@ -1,0 +1,25 @@
+{
+  "packageName": "cotun-options",
+  "os": "darwin",
+  "arch": "amd64",
+  "newest": {
+    "versionId": {
+      "major": 1,
+      "minor": 0,
+      "micro": 0
+    },
+    "appUrl": "/cotun-options/darwin/amd64/1.0.0/cotun-options.json",
+    "infoUrl": "/cotun-options/darwin/amd64/1.0.0/package.json"
+  },
+  "versions": [
+    {
+      "versionId": {
+        "major": 1,
+        "minor": 0,
+        "micro": 0
+      },
+      "appUrl": "/cotun-options/darwin/amd64/1.0.0/cotun-options.json",
+      "infoUrl": "/cotun-options/darwin/amd64/1.0.0/package.json"
+    }
+  ]
+}

@@ -10,14 +10,15 @@ redis:
   port: 6379
   db: 2
 chat_rag:
-  model: "{{CODEREVIEW_MODEL}}"
-  stage_models:
-    check: "{{CODEREVIEW_MODEL}}"
-    review: "{{CODEREVIEW_MODEL}}"
-    annotation: "{{CODEREVIEW_MODEL}}"
-    title: "{{CODEREVIEW_MODEL}}"
+  model: "{{CHAT_DEFAULT_MODEL}}"
 context_types:
   allow_skip_context: true
+check_config:
+  enabled_template_tags:
+    - tag: "通用专家"
+    - tag: "内存专家"
+    - tag: "通用评审"
+    - tag: "标题生成"
 http_client:
   services:
     chatRag:

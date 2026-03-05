@@ -1,0 +1,107 @@
+{
+  "server": {
+    "registerExpireMinutes": 20,
+    "hashTreeExpireHours": 24
+  },
+  "scan": {
+    "maxFileSizeKB": 2048,
+    "maxFileCount": 10000,
+    "folderIgnorePatterns": [
+      ".*",
+      "logs/", "temp/", "tmp/", "node_modules/",
+      "bin/", "dist/", "build/", "out/",
+      "__pycache__/", "venv/", "target/", "vendor/"
+    ],
+    "fileIncludePatterns": [
+      
+    ],
+    "deepwikiFolderIgnorePatterns": [
+      ".*",
+      "logs/", "temp/", "tmp/", "node_modules/",
+      "bin/", "dist/", "build/", "out/",
+      "__pycache__/", "venv/", "target/", "vendor/"
+    ]
+  },
+  "sync": {
+    "intervalMinutes": 5,
+    "maxFileSizeMB": 1,
+    "maxFileSizeKB": 2048,
+    "maxFileCount": 10000,
+    "maxRetries": 3,
+    "retryDelaySeconds": 3,
+    "ignorePatterns": [
+     ".*",
+     "*.log", "*.tmp", "*.bak", "*.backup",
+     "*.swp", "*.swo", "*.ds_store",
+     "*.pyc", "*.class", "*.o",
+     "*.exe", "*.dll", "*.so", "*.dylib",
+     "*.sqlite", "*.db", "*.cache",
+     "*.key", "*.crt", "*.cert", "*.pem",
+
+     "*.jpg", "*.jpeg", "*.jpe", "*.png", "*.gif", "*.ico", "*.icns", "*.svg", "*.eps",
+     "*.bmp", "*.tif", "*.tiff", "*.tga", "*.xpm", "*.webp", "*.heif", "*.heic",
+     "*.raw", "*.arw", "*.cr2", "*.cr3", "*.nef", "*.nrw", "*.orf", "*.raf", "*.rw2", "*.rwl", "*.pef", "*.srw", "*.x3f", "*.erf", "*.kdc", "*.3fr", "*.mef", "*.mrw", "*.iiq", "*.gpr", "*.dng",
+
+     "*.mp4", "*.m4v", "*.mkv", "*.webm", "*.mov", "*.avi", "*.wmv", "*.flv",
+
+     "*.mp3", "*.wav", "*.m4a", "*.flac", "*.ogg", "*.wma", "*.weba", "*.aac", "*.pcm",
+
+     "*.7z", "*.bz2", "*.gz", "*.gz_", "*.tgz", "*.rar", "*.tar", "*.xz",
+     "*.zip", "*.vsix", "*.iso", "*.img", "*.pkg",
+
+     "*.woff", "*.woff2", "*.otf", "*.ttf", "*.eot",
+
+     "*.obj", "*.fbx", "*.stl", "*.3ds", "*.dae", "*.blend", "*.ply",
+     "*.glb", "*.gltf", "*.max", "*.c4d", "*.ma", "*.mb", "*.pcd",
+
+     "*.pdf", "*.ai", "*.ps", "*.indd", 
+     "*.doc", "*.docx", "*.xls", "*.xlsx", "*.ppt", "*.pptx", 
+     "*.rtf", "*.psd", "*.pbix", 
+     "*.odt", "*.ods", "*.odp", 
+
+     "logs/", "temp/", "tmp/", "node_modules/",
+     "bin/", "dist/", "build/", "out/",
+     "__pycache__/", "venv/", "target/"
+    ],
+    "fileIgnorePatterns": [
+      ".*",
+     "*.log", "*.tmp", "*.bak", "*.backup",
+     "*.swp", "*.swo", "*.ds_store",
+     "*.pyc", "*.class", "*.o",
+     "*.exe", "*.dll", "*.so", "*.dylib",
+     "*.sqlite", "*.db", "*.cache",
+     "*.key", "*.crt", "*.cert", "*.pem",
+
+     "*.jpg", "*.jpeg", "*.jpe", "*.png", "*.gif", "*.ico", "*.icns", "*.svg", "*.eps",
+     "*.bmp", "*.tif", "*.tiff", "*.tga", "*.xpm", "*.webp", "*.heif", "*.heic",
+     "*.raw", "*.arw", "*.cr2", "*.cr3", "*.nef", "*.nrw", "*.orf", "*.raf", "*.rw2", "*.rwl", "*.pef", "*.srw", "*.x3f", "*.erf", "*.kdc", "*.3fr", "*.mef", "*.mrw", "*.iiq", "*.gpr", "*.dng",
+
+     "*.mp4", "*.m4v", "*.mkv", "*.webm", "*.mov", "*.avi", "*.wmv", "*.flv",
+
+     "*.mp3", "*.wav", "*.m4a", "*.flac", "*.ogg", "*.wma", "*.weba", "*.aac", "*.pcm",
+
+     "*.7z", "*.bz2", "*.gz", "*.gz_", "*.tgz", "*.rar", "*.tar", "*.xz",
+     "*.zip", "*.vsix", "*.iso", "*.img", "*.pkg",
+
+     "*.woff", "*.woff2", "*.otf", "*.ttf", "*.eot",
+
+     "*.obj", "*.fbx", "*.stl", "*.3ds", "*.dae", "*.blend", "*.ply",
+     "*.glb", "*.gltf", "*.max", "*.c4d", "*.ma", "*.mb", "*.pcd",
+
+     "*.pdf", "*.ai", "*.ps", "*.indd", 
+     "*.doc", "*.docx", "*.xls", "*.xlsx", "*.ppt", "*.pptx", 
+     "*.rtf", "*.psd", "*.pbix", 
+     "*.odt", "*.ods", "*.odp"
+    ],
+    "folderIgnorePatterns": [
+      ".*",
+      "logs/", "temp/", "tmp/", "node_modules/",
+      "bin/", "dist/", "build/", "out/",
+      "__pycache__/", "venv/", "target/"
+    ],
+    "fileIncludePatterns": [
+      ".md", ".mdx",
+      ".json", ".yaml"
+    ]
+  }
+}

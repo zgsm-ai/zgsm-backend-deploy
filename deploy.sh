@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+# set -euo pipefail
 # -------------------------- Initialize Configuration --------------------------
 SCRIPT_NAME=$(basename "$0")
 LOG_FILE="${SCRIPT_NAME%.*}.log"
@@ -58,16 +58,13 @@ wait_for_apisix_ready() {
 validate_environment() {
     local required_files=(
         "configure.sh"
-        "chatgpt/custom.yml.tpl"
         "tpl-resolve.sh"
         "docker-download-images.sh"
         "db-initdb.sh"
         "docker-compose.yml.tpl"
         "apisix-ai-gateway.sh"
         "apisix-casdoor.sh"
-        "apisix-chatgpt.sh"
         "apisix-chatrag.sh"
-        "apisix-cli-tools.sh"
         "apisix-codereview.sh"
         "apisix-completion-v2.sh"
         "apisix-costrict-apps.sh"
@@ -77,8 +74,7 @@ validate_environment() {
         "apisix-grafana.sh"
         "apisix-issue.sh"
         "apisix-oidc-auth.sh"
-        "apisix-quota-manager.sh"
-        "apisix-tunnel-manager.sh"
+        #"apisix-quota-manager.sh"
     )
 
     [[ -d "$BASE_DIR" ]] || {
@@ -214,9 +210,7 @@ main() {
     local apisix_scripts=(
         "apisix-ai-gateway.sh"
         "apisix-casdoor.sh"
-        "apisix-chatgpt.sh"
         "apisix-chatrag.sh"
-        "apisix-cli-tools.sh"
         "apisix-codereview.sh"
         "apisix-completion-v2.sh"
         "apisix-costrict-apps.sh"
@@ -226,8 +220,7 @@ main() {
         "apisix-grafana.sh"
         "apisix-issue.sh"
         "apisix-oidc-auth.sh"
-        "apisix-quota-manager.sh"
-        "apisix-tunnel-manager.sh"
+        #"apisix-quota-manager.sh"
     )
     for script in "${apisix_scripts[@]}"; do
         log "INFO" "Executing APISIX configuration: $script"

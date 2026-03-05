@@ -25,5 +25,187 @@
       "os": "windows",
       "arch": "arm64"
     }
-  ]
+  ],
+  "overviews": {
+    "darwin-amd64": {
+      "os": "darwin",
+      "arch": "amd64",
+      "newest": {
+        "versionId": {
+          "major": 1,
+          "minor": 1,
+          "micro": 3
+        },
+        "packageType": "conf",
+        "fileName": "share/system-spec.json",
+        "size": 1566,
+        "build": "",
+        "description": "Client Subsystem Definition File"
+      },
+      "versions": [
+        {
+          "versionId": {
+            "major": 1,
+            "minor": 1,
+            "micro": 3
+          },
+          "packageType": "conf",
+          "fileName": "share/system-spec.json",
+          "size": 1566,
+          "build": "",
+          "description": "Client Subsystem Definition File"
+        }
+      ]
+    },
+    "darwin-arm64": {
+      "os": "darwin",
+      "arch": "arm64",
+      "newest": {
+        "versionId": {
+          "major": 1,
+          "minor": 1,
+          "micro": 3
+        },
+        "packageType": "conf",
+        "fileName": "share/system-spec.json",
+        "size": 1566,
+        "build": "",
+        "description": "Client Subsystem Definition File"
+      },
+      "versions": [
+        {
+          "versionId": {
+            "major": 1,
+            "minor": 1,
+            "micro": 3
+          },
+          "packageType": "conf",
+          "fileName": "share/system-spec.json",
+          "size": 1566,
+          "build": "",
+          "description": "Client Subsystem Definition File"
+        }
+      ]
+    },
+    "linux-amd64": {
+      "os": "linux",
+      "arch": "amd64",
+      "newest": {
+        "versionId": {
+          "major": 1,
+          "minor": 1,
+          "micro": 3
+        },
+        "packageType": "conf",
+        "fileName": "share/system-spec.json",
+        "size": 1566,
+        "build": "",
+        "description": "Client Subsystem Definition File"
+      },
+      "versions": [
+        {
+          "versionId": {
+            "major": 1,
+            "minor": 1,
+            "micro": 3
+          },
+          "packageType": "conf",
+          "fileName": "share/system-spec.json",
+          "size": 1566,
+          "build": "",
+          "description": "Client Subsystem Definition File"
+        }
+      ]
+    },
+    "linux-arm64": {
+      "os": "linux",
+      "arch": "arm64",
+      "newest": {
+        "versionId": {
+          "major": 1,
+          "minor": 1,
+          "micro": 3
+        },
+        "packageType": "conf",
+        "fileName": "share/system-spec.json",
+        "size": 1566,
+        "build": "",
+        "description": "Client Subsystem Definition File"
+      },
+      "versions": [
+        {
+          "versionId": {
+            "major": 1,
+            "minor": 1,
+            "micro": 3
+          },
+          "packageType": "conf",
+          "fileName": "share/system-spec.json",
+          "size": 1566,
+          "build": "",
+          "description": "Client Subsystem Definition File"
+        }
+      ]
+    },
+    "windows-amd64": {
+      "os": "windows",
+      "arch": "amd64",
+      "newest": {
+        "versionId": {
+          "major": 1,
+          "minor": 1,
+          "micro": 3
+        },
+        "packageType": "conf",
+        "fileName": "share/system-spec.json",
+        "size": 1566,
+        "build": "",
+        "description": "Client Subsystem Definition File"
+      },
+      "versions": [
+        {
+          "versionId": {
+            "major": 1,
+            "minor": 1,
+            "micro": 3
+          },
+          "packageType": "conf",
+          "fileName": "share/system-spec.json",
+          "size": 1566,
+          "build": "",
+          "description": "Client Subsystem Definition File"
+        }
+      ]
+    },
+    "windows-arm64": {
+      "os": "windows",
+      "arch": "arm64",
+      "newest": {
+        "versionId": {
+          "major": 1,
+          "minor": 1,
+          "micro": 3
+        },
+        "packageType": "conf",
+        "fileName": "share/system-spec.json",
+        "size": 1566,
+        "build": "",
+        "description": "Client Subsystem Definition File"
+      },
+      "versions": [
+        {
+          "versionId": {
+            "major": 1,
+            "minor": 1,
+            "micro": 3
+          },
+          "packageType": "conf",
+          "fileName": "share/system-spec.json",
+          "size": 1566,
+          "build": "",
+          "description": "Client Subsystem Definition File"
+        }
+      ]
+    }
+  }
 }

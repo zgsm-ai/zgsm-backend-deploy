@@ -2,19 +2,6 @@ Name: chat-rag
 Host: 0.0.0.0
 Port: 8888
 
-# Token processing configuration
-TokenThreshold: 500_000
-
-# Model configuration
-SummaryModel: "glm45-fp8"
-SummaryModelTokenThreshold: 72_000
-ClassifyModel: "gpt-oss-120b"
-
-# Split system prompt, used to compress system prompt
-SystemPromptSplitStr: "====\n\nRULES"
-
-# used recent user prompt messages nums
-RecentUserMsgUsedNums: 20
 
 # Logging configuration
 Log:
@@ -22,13 +9,26 @@ Log:
   LokiEndpoint: "http://loki:3100/loki/api/v1/push"
   LogScanIntervalSec: 10
   EnableClassification: false
-  
+  ClassifyModel: "gpt-oss-120b"
+
+
+# Context Compression
+ContextCompressConfig:
+  EnableCompress: false
+  TokenThreshold: 1000_000
+  SummaryModel: "glm45-fp8"
+  SummaryModelTokenThreshold: 72_000
+  RecentUserMsgUsedNums: 20
+
+
 # Models supported by function calling
 LLM:
   Endpoint: "http://higress:8080/v1/chat/completions"
 
+
 Redis:
   Addr: "redis:6379"
+
 
 # Semantic API configuration
 Tools:
@@ -38,8 +38,13 @@ Tools:
     TopK: 50
     ScoreThreshold: 0.7
   ReferenceSearch:
-    SearchEndpoint: "http://codebase-querier:8888/codebase-indexer/api/v1/search/reference"
+    SearchEndpoint: "http://codebase-querier:8888/codebase-indexer/api/v1/callgraph"
     ApiReadyEndpoint: "http://codebase-querier:8888/codebase-indexer/api/v1/index/summary"
   DefinitionSearch:
     SearchEndpoint: "http://codebase-querier:8888/codebase-indexer/api/v1/search/definition"
     ApiReadyEndpoint: "http://codebase-querier:8888/codebase-indexer/api/v1/index/summary"
+  KnowledgeSearch:
+    SearchEndpoint: "http://codebase-querier:8888/codebase-embedder/api/v1/search/document"
+    ApiReadyEndpoint: "http://codebase-querier:8888/codebase-embedder/api/v1/documents/summary"
+    TopK: 20
+    ScoreThreshold: 0.7

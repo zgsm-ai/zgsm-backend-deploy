@@ -25,5 +25,187 @@
       "os": "windows",
       "arch": "arm64"
     }
-  ]
+  ],
+  "overviews": {
+    "darwin-amd64": {
+      "os": "darwin",
+      "arch": "amd64",
+      "newest": {
+        "versionId": {
+          "major": 1,
+          "minor": 1,
+          "micro": 3
+        },
+        "packageType": "conf",
+        "fileName": "config/costrict.json",
+        "size": 542,
+        "build": "",
+        "description": "Costrict configure file"
+      },
+      "versions": [
+        {
+          "versionId": {
+            "major": 1,
+            "minor": 1,
+            "micro": 3
+          },
+          "packageType": "conf",
+          "fileName": "config/costrict.json",
+          "size": 542,
+          "build": "",
+          "description": "Costrict configure file"
+        }
+      ]
+    },
+    "darwin-arm64": {
+      "os": "darwin",
+      "arch": "arm64",
+      "newest": {
+        "versionId": {
+          "major": 1,
+          "minor": 1,
+          "micro": 3
+        },
+        "packageType": "conf",
+        "fileName": "config/costrict.json",
+        "size": 542,
+        "build": "",
+        "description": "Costrict configure file"
+      },
+      "versions": [
+        {
+          "versionId": {
+            "major": 1,
+            "minor": 1,
+            "micro": 3
+          },
+          "packageType": "conf",
+          "fileName": "config/costrict.json",
+          "size": 542,
+          "build": "",
+          "description": "Costrict configure file"
+        }
+      ]
+    },
+    "linux-amd64": {
+      "os": "linux",
+      "arch": "amd64",
+      "newest": {
+        "versionId": {
+          "major": 1,
+          "minor": 1,
+          "micro": 3
+        },
+        "packageType": "conf",
+        "fileName": "config/costrict.json",
+        "size": 542,
+        "build": "",
+        "description": "Costrict configure file"
+      },
+      "versions": [
+        {
+          "versionId": {
+            "major": 1,
+            "minor": 1,
+            "micro": 3
+          },
+          "packageType": "conf",
+          "fileName": "config/costrict.json",
+          "size": 542,
+          "build": "",
+          "description": "Costrict configure file"
+        }
+      ]
+    },
+    "linux-arm64": {
+      "os": "linux",
+      "arch": "arm64",
+      "newest": {
+        "versionId": {
+          "major": 1,
+          "minor": 1,
+          "micro": 3
+        },
+        "packageType": "conf",
+        "fileName": "config/costrict.json",
+        "size": 542,
+        "build": "",
+        "description": "Costrict configure file"
+      },
+      "versions": [
+        {
+          "versionId": {
+            "major": 1,
+            "minor": 1,
+            "micro": 3
+          },
+          "packageType": "conf",
+          "fileName": "config/costrict.json",
+          "size": 542,
+          "build": "",
+          "description": "Costrict configure file"
+        }
+      ]
+    },
+    "windows-amd64": {
+      "os": "windows",
+      "arch": "amd64",
+      "newest": {
+        "versionId": {
+          "major": 1,
+          "minor": 1,
+          "micro": 3
+        },
+        "packageType": "conf",
+        "fileName": "config/costrict.json",
+        "size": 542,
+        "build": "",
+        "description": "Costrict configure file"
+      },
+      "versions": [
+        {
+          "versionId": {
+            "major": 1,
+            "minor": 1,
+            "micro": 3
+          },
+          "packageType": "conf",
+          "fileName": "config/costrict.json",
+          "size": 542,
+          "build": "",
+          "description": "Costrict configure file"
+        }
+      ]
+    },
+    "windows-arm64": {
+      "os": "windows",
+      "arch": "arm64",
+      "newest": {
+        "versionId": {
+          "major": 1,
+          "minor": 1,
+          "micro": 3
+        },
+        "packageType": "conf",
+        "fileName": "config/costrict.json",
+        "size": 543,
+        "build": "",
+        "description": "Costrict configure file"
+      },
+      "versions": [
+        {
+          "versionId": {
+            "major": 1,
+            "minor": 1,
+            "micro": 3
+          },
+          "packageType": "conf",
+          "fileName": "config/costrict.json",
+          "size": 543,
+          "build": "",
+          "description": "Costrict configure file"
+        }
+      ]
+    }
+  }
 }

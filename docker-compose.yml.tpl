@@ -13,7 +13,7 @@ services:
     ports:
       - "{{PORT_APISIX_API}}:9180/tcp"
       - "{{PORT_APISIX_ENTRY}}:9080/tcp"
-      - "{{PORT_APISIX_PROMETHEUS}}:9091/tcp"
+    #  - "{{PORT_APISIX_PROMETHEUS}}:9091/tcp"
     networks:
       - shenma
 
@@ -27,8 +27,8 @@ services:
       TZ: "Asia/Shanghai"
       ETCD_ENABLE_V2: "true"
       ALLOW_NONE_AUTHENTICATION: "yes"
-      ETCD_ADVERTISE_CLIENT_URLS: "http://127.0.0.1:{{PORT_ETCD}}"
-      ETCD_LISTEN_CLIENT_URLS: "http://0.0.0.0:{{PORT_ETCD}}"
+      ETCD_ADVERTISE_CLIENT_URLS: "http://127.0.0.1:2379"
+      ETCD_LISTEN_CLIENT_URLS: "http://0.0.0.0:2379"
     ports:
       - "{{PORT_ETCD}}:2379/tcp"
     networks:
@@ -88,8 +88,8 @@ services:
     volumes:
       - ./portal/data:/var/www
       - ./portal/nginx.conf:/etc/nginx/nginx.conf
-    ports:
-      - "{{PORT_PORTAL}}:80/tcp"
+    #ports:
+    #  - "{{PORT_PORTAL}}:80/tcp"
     networks:
       - shenma
 
@@ -97,12 +97,15 @@ services:
     image: {{IMAGE_CHATRAG}}
     command: ["/app/chat-rag", "-f", "/app/etc/chat-api.yaml"]
     restart: always
-    ports:
-      - "{{PORT_CHAT_RAG}}:8888"
+    #ports:
+    #  - "{{PORT_CHAT_RAG}}:8888"
     volumes:
       - ./chat-rag/logs:/data/logs
       - ./chat-rag/chat-api.yaml:/app/etc/chat-api.yaml:ro
+      - ./chat-rag/rules.yaml:/app/etc/rules.yaml:ro
     depends_on:
+      - redis
+      - higress
       - codebase-querier
     networks:
       - shenma
@@ -110,11 +113,13 @@ services:
   review-manager:
     image: {{IMAGE_REVIEW_MANAGER}}
     restart: always
-    ports:
-      - "{{PORT_REVIEW_MANAGER}}:8080"
+    #ports:
+    #  - "{{PORT_REVIEW_MANAGER}}:8080"
     depends_on:
       - postgres
       - redis
+      - issue-manager
+      - codebase-querier
     environment:
       DATABASE_HOST: postgres
       DATABASE_PORT: 5432
@@ -154,8 +159,8 @@ services:
   issue-manager:
     image: {{IMAGE_ISSUE_MANAGER}}
     restart: always
-    ports:
-      - "{{PORT_ISSUE_MANAGER}}:8080"
+    #ports:
+    #  - "{{PORT_ISSUE_MANAGER}}:8080"
     depends_on:
       - postgres
     environment:
@@ -173,11 +178,13 @@ services:
   review-checker:
     image: {{IMAGE_REVIEW_CHECKER}}
     restart: always
-    ports:
-      - "{{PORT_REVIEW_CHECKER}}:8080"
+    #ports:
+    #  - "{{PORT_REVIEW_CHECKER}}:8080"
     depends_on:
       - postgres
       - redis
+      - chat-rag
+      - codebase-querier
     environment:
       DATABASE_HOST: postgres
       DATABASE_PORT: 5432
@@ -197,8 +204,8 @@ services:
     image: {{IMAGE_CREDIT_MANAGER}}
     command: ["nginx", "-g", "daemon off;"]
     restart: always
-    ports:
-      - "{{PORT_CREDIT_MANAGER}}:80"
+    #ports:
+    #  - "{{PORT_CREDIT_MANAGER}}:80"
     volumes:
       - ./credit-manager/config:/config
     networks:
@@ -207,8 +214,10 @@ services:
   oidc-auth:
     image: {{IMAGE_OIDC_AUTH}}
     restart: always
-    ports:
-      - "{{PORT_OIDC_AUTH}}:8080"
+    #ports:
+    #  - "{{PORT_OIDC_AUTH}}:8080"
+    depends_on:
+      - postgres
     environment:
       SERVER_BASEURL: "{{COSTRICT_BACKEND_BASEURL}}"
       PROVIDERS_CASDOOR_CLIENTID: {{OIDC_AUTH_CLIENT_ID}}
@@ -235,62 +244,11 @@ services:
     networks:
       - shenma
 
-  quota-manager:
-    image: {{IMAGE_QUOTA_MANAGER}}
-    command: ["/app/quota-manager", "-c", "/app/app-conf.yml"]
-    restart: always
-    ports:
-      - "{{PORT_QUOTA_MANAGER}}:8080"
-    environment:
-      TZ: Asia/Shanghai
-      INDEX_NODE: "0"
-    volumes:
-      - ./quota-manager/app-conf.yml:/app/app-conf.yml
-      - ./quota-manager/logs:/app/logs
-    networks:
-      - shenma
-
-  chatgpt:
-    image: {{IMAGE_CHAT_SERVER}}
-    command: ["/sbin/entrypoint.sh", "app:start"]
-    restart: always
-    volumes:
-      - ./chatgpt/server:/server
-      - ./chatgpt/supervisor:/var/log/supervisor
-      - ./chatgpt/logs:/server/logs
-      - ./chatgpt/custom.yml:/custom.yml
-    ports:
-      - "{{PORT_CHATGPT_API}}:5000/tcp"
-      - "{{PORT_CHATGPT_WS}}:8765/tcp"
-      - "5555:5555/tcp"
-    environment:
-      TZ: Asia/Shanghai
-      CACHE_DB: chatgpt
-      REDIS_URL: redis://redis:6379/0
-      SERVE_THREADS: 200
-      SERVE_CONNECTION_LIMIT: 512
-      PG_URL: postgres:5432
-      DB_NAME: chatgpt
-      DATABASE_URI: postgresext+pool://{{POSTGRES_USER}}:{{PASSWORD_POSTGRES}}@postgres/chatgpt
-      ES_SERVER: http://es:9200
-      ES_PASSWORD: {{PASSWORD_ELASTIC}}
-      CUSTOM_CONFIG_FILE: /custom.yml
-      DEFAULT_MODEL_NAME: {{CHAT_DEFAULT_MODEL}}
-      GEVENT_SUPPORT: True
-      NO_COLOR: 1
-      DEPLOYMENT_TYPE: all
-    depends_on:
-      - redis
-      - postgres
-      - es
-    networks:
-      - shenma
-
   code-completion:
     image: {{IMAGE_CODE_COMPLETION}}
     restart: always
-    ports:
-      - "{{PORT_COMPLETION}}:5000/tcp"
+    #ports:
+    #  - "{{PORT_COMPLETION}}:5000/tcp"
     environment:
       TZ: Asia/Shanghai
       THRESHOLD_SCORE: 0.3
@@ -321,9 +279,10 @@ services:
       # 模型名称
       OPENAI_MODEL: "{{COMPLETION_MODEL}}"
       # 认证头 Authorization 的值
-      OPENAI_MODEL_AUTHORIZATION: "{{COMPLETION_APIKEY}}"
+      OPENAI_MODEL_AUTHORIZATION: "Bearer {{COMPLETION_APIKEY}}"
     depends_on:
       - redis
+      - codebase-querier
     networks:
       - shenma
 
@@ -331,9 +290,10 @@ services:
     image: {{IMAGE_CODEBASE_QUERIER}}
     restart: always
     command: ["/app/server", "-f", "/app/conf/conf.yaml"]
-    ports:
-      - "8888:8888"
-      - "6060:6060"
+    #ports:
+    #  - "{{PORT_CODEBASE_QUERIER}}:8888"
+    depends_on:
+      - cotun
     environment:
       - TZ=Asia/Shanghai
     volumes:
@@ -360,9 +320,8 @@ services:
     image: {{IMAGE_CODEBASE_EMBEDDER}}
     restart: always
     command: ["/app/server", "-f", "/app/conf/conf.yaml"]
-    ports:
-      - "8889:8888"
-      - "6061:6060"
+    #ports:
+    #  - "{{PORT_CODEBASE_EMBEDDER}}:8888"
     environment:
       - TZ=Asia/Shanghai
       - INDEX_NODE=1
@@ -387,30 +346,21 @@ services:
       start_period: 15s
     depends_on:
       - codebase-querier
+      - postgres
+      - redis
+      - weaviate
 
   cotun:
     image: {{IMAGE_COTUN}}
     restart: always
-    command: ["server", "--reverse", "--port", "8080", "--authfile", "/cotun/users.json"]
+    command: ["--reverse", "--port", "8080", "--authfile", "/cotun/users.json"]
     environment:
       TZ: "Asia/Shanghai"
     volumes:
       - ./cotun/users.json:/cotun/users.json
-    ports:
-      - "{{PORT_COTUN}}:8080/tcp"
-    networks:
-      - shenma
-
-  tunnel-manager:
-    image: {{IMAGE_TUNNEL_MANAGER}}
-    restart: always
-    environment:
-      TZ: "Asia/Shanghai"
-    ports:
-      - "{{PORT_TUNNEL_MANAGER}}:8080"
-    volumes:
-      - ./tunnel-manager/config.yaml:/config.yaml
-      - ./tunnel-manager/data:/data
+    #ports:
+    #  - "{{PORT_COTUN}}:8080/tcp"
+    #  - "{{PORT_COTUN2}}:7890/tcp"
     networks:
       - shenma
 
@@ -431,7 +381,7 @@ services:
     image: {{IMAGE_HIGRESS}}
     restart: always
     ports:
-      - "{{PORT_AI_GATEWAY}}:8080"
+    #  - "{{PORT_AI_GATEWAY}}:8080"
       - "{{PORT_HIGRESS_CONTROL}}:8001"
     environment:
       MODE: full
@@ -442,6 +392,8 @@ services:
       CONSOLE_PORT: 8001
     volumes:
       - ./higress/data:/data
+    depends_on:
+      - portal
     networks:
       - shenma
 
@@ -494,7 +446,6 @@ services:
         hard: -1
     ports:
       - "{{PORT_ES}}:9200"
-      - "9300:9300"
     volumes:
       - ./es/data:/usr/share/elasticsearch/data
     networks:

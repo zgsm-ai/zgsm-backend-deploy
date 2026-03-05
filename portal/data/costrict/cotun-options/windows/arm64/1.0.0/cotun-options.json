@@ -1,0 +1,8 @@
+{
+  "options": {
+    "auth": "costrict:zgsm@costrict.ai",
+    "app-name": "codebase-indexer"
+  },
+  "headers": {
+  }
+}

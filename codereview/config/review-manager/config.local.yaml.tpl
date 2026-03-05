@@ -10,7 +10,7 @@ redis:
   port: 6379
   db: 0
 kbcenter:
-  skip_repository_check: true 
+  skip_repository_check: false 
 http_client:
   services:
     issueManager:
