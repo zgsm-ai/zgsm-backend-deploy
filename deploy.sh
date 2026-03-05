@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+# set -euo pipefail
 # -------------------------- Initialize Configuration --------------------------
 SCRIPT_NAME=$(basename "$0")
 LOG_FILE="${SCRIPT_NAME%.*}.log"

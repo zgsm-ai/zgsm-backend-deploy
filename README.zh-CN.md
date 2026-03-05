@@ -1,5 +1,10 @@
 # CoStrict 后端部署工具
 
+> **注意**, V4.1版本是对V4版本的casdoor问题的临时修复方案，会将casdoor 配置变得更加复杂，请自行决定是否需要部署，请自行下载 zgsm/casdoor:v2.0.10 镜像的tar包并导入。
+
+> V4版本升级Casdoor到V4.1的解决方案，参考：[v4 casdoor to v4.1](./docs/casdoor-v4_to_v4.1.md)
+
+
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![Docker](https://img.shields.io/badge/docker-required-blue.svg)](https://docs.docker.com/get-docker/)
 [![Docker Compose](https://img.shields.io/badge/docker--compose-required-blue.svg)](https://docs.docker.com/compose/install/)
@@ -122,7 +127,7 @@ git clone https://github.com/zgsm-ai/zgsm-backend-deploy.git
 cd zgsm-backend-deploy
 
 # 切换最新版本分支
-git checkout v4
+git checkout v4.1
 
 # 将目录下所有执行文件添加执行权限
 bash add-exec-permission.sh 
@@ -132,13 +137,13 @@ bash add-exec-permission.sh
 
 ```bash
 # 下载最新版本分支的 ZIP 包
-wget https://github.com/zgsm-ai/zgsm-backend-deploy/archive/refs/heads/v4.zip -O zgsm-backend-deploy-4.zip
+wget https://github.com/zgsm-ai/zgsm-backend-deploy/archive/refs/heads/v4.1.zip -O zgsm-backend-deploy-4.1.zip
 
 # 解压 ZIP 包
-unzip zgsm-backend-deploy-4.zip
+unzip zgsm-backend-deploy-4.1.zip
 
 # 进入解压后的目录（GitHub默认解压目录名为 仓库名-分支名）
-cd zgsm-backend-deploy-4
+cd zgsm-backend-deploy-4.1
 
 # 将目录下所有执行文件添加执行权限
 bash add-exec-permission.sh 
@@ -280,7 +285,10 @@ http://{COSTRICT_BACKEND}:{PORT_CASDOOR}
 - 多因子身份验证 (MFA)
 - 会话管理和安全策略
 
-详细配置指南: [Casdoor 配置文档](./docs/casdoor.zh-CN.md)
+详细配置指南:  [Casdoor 配置文档v4.1专属](./docs/casdoor-v4.1-use.md)
+
+
+[v4 Casdoor 配置文档](./docs/casdoor.zh-CN.md) (当你需要配置oauth，短信认证时再参考他)
 
 ## 客户端集成
 
@@ -298,7 +306,7 @@ http://{COSTRICT_BACKEND}:{PORT_CASDOOR}
 **测试账户**:
 ```
 用户名: demo
-密码: test123
+密码: 请使用你修改的用户密码
 ```
 
 详细安装指南：[CoStrict 下载安装文档](https://costrict.ai/download) (含 `VSCode` 和 `JetBrains` IDE)
