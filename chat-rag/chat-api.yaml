@@ -2,49 +2,47 @@ Name: chat-rag
 Host: 0.0.0.0
 Port: 8888
 
-
 # Logging configuration
 Log:
   LogFilePath: "/data/logs/"
-  LokiEndpoint: "http://loki:3100/loki/api/v1/push"
-  LogScanIntervalSec: 10
-  EnableClassification: false
-  ClassifyModel: "gpt-oss-120b"
-
-
-# Context Compression
-ContextCompressConfig:
-  EnableCompress: false
-  TokenThreshold: 1000_000
-  SummaryModel: "glm45-fp8"
-  SummaryModelTokenThreshold: 72_000
-  RecentUserMsgUsedNums: 20
-
 
 # Models supported by function calling
 LLM:
   Endpoint: "http://higress:8080/v1/chat/completions"
 
+LLMTimeout:
+  # 单次连续空闲阈值（毫秒），默认 30000ms
+  IdleTimeoutMs: 180000
+  # 总空闲预算（毫秒），跨重试/降级累计空闲时长上限，默认 30000ms
+  TotalIdleTimeoutMs: 180000
 
 Redis:
   Addr: "redis:6379"
 
+# 其他配置已迁移至Nacos，NodePort: 10.99.86.97，8080:30234/TCP
+# Nacos configuration center settings
+nacos:
+  # Nacos server address
+  serverAddr: "nacos"
+  # Nacos server port
+  serverPort: 8848
+  # Nacos gRPC port
+  # grpcPort: 9848
+  # Nacos namespace (leave empty for default namespace)
+  namespace: "8e96a146-756b-4d0c-888c-382fd792f55b"
+  # Nacos group for configuration
+  group: "CHAT_RAG"
+  # Timeout in seconds for Nacos operations
+  timeoutSec: 10
+  # Log directory for Nacos client
+  #logDir: "/data/logs/nacos"
+  # Cache directory for Nacos client
+  #cacheDir: "/data/logs/nacos/cache"
 
-# Semantic API configuration
-Tools:
-  SemanticSearch:
-    SearchEndpoint: "http://codebase-querier:8888/codebase-embedder/api/v1/search/semantic"
-    ApiReadyEndpoint: "http://codebase-querier:8888/codebase-embedder/api/v1/embeddings/summary"
-    TopK: 50
-    ScoreThreshold: 0.7
-  ReferenceSearch:
-    SearchEndpoint: "http://codebase-querier:8888/codebase-indexer/api/v1/callgraph"
-    ApiReadyEndpoint: "http://codebase-querier:8888/codebase-indexer/api/v1/index/summary"
-  DefinitionSearch:
-    SearchEndpoint: "http://codebase-querier:8888/codebase-indexer/api/v1/search/definition"
-    ApiReadyEndpoint: "http://codebase-querier:8888/codebase-indexer/api/v1/index/summary"
-  KnowledgeSearch:
-    SearchEndpoint: "http://codebase-querier:8888/codebase-embedder/api/v1/search/document"
-    ApiReadyEndpoint: "http://codebase-querier:8888/codebase-embedder/api/v1/documents/summary"
-    TopK: 20
-    ScoreThreshold: 0.7
+VIPPriority:
+  enabled: true
+
+chatMetrics:
+  enabled: false
+  url: ""
+  method: "PUT"

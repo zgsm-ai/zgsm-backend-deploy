@@ -1,6 +1,24 @@
 -- Create databases
-CREATE DATABASE quota_manager;
-CREATE DATABASE auth;
+DO $$
+BEGIN
+    -- 检查 quota_manager 是否存在
+    IF NOT EXISTS (SELECT 1 FROM pg_database WHERE datname = 'quota_manager') THEN
+        CREATE DATABASE quota_manager;
+        RAISE NOTICE 'Database quota_manager created';
+    ELSE
+        RAISE NOTICE 'Database quota_manager already exists, exiting...';
+        RETURN;  -- 直接退出
+    END IF;
+
+    -- 检查 auth 是否存在
+    IF NOT EXISTS (SELECT 1 FROM pg_database WHERE datname = 'auth') THEN
+        CREATE DATABASE auth;
+        RAISE NOTICE 'Database auth created';
+    ELSE
+        RAISE NOTICE 'Database auth already exists, exiting...';
+        RETURN;  -- 直接退出
+    END IF;
+END $$;
 
 -- Connect to auth database for auth_users table
 \c auth;

@@ -60,7 +60,70 @@ services:
       - "{{PORT_POSTGRES}}:5432/tcp"
     networks:
       - shenma
+  mysql:
+    image: {{IMAGE_MYSQL}}
+    container_name: mysql
+    restart: unless-stopped
+    
+    # 从环境变量读取配置
+    environment:
+      MYSQL_ROOT_PASSWORD: costrict-root
+      MYSQL_DATABASE: mysql
+      MYSQL_USER: nacos
+      MYSQL_PASSWORD: nacos
+    command: >
+      --sort_buffer_size=4194304
+      --read_rnd_buffer_size=8388608
+      --join_buffer_size=4194304
+      --tmp_table_size=67108864
+      --max_heap_table_size=67108864
+    ports:
+      - "33306:3306"
+    
+    volumes:
+      # 持久化数据
+      - ./mysql/data:/var/lib/mysql
+      # 初始化脚本（首次启动时执行）
+      - ./mysql/init-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - shenma
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
+  nacos:
+    image: {{IMAGE_NACOS}}
+    container_name: nacos
+    environment:
+      # 必选：使用外置 MySQL 模式
+      - MODE=standalone
+      - SPRING_DATASOURCE_PLATFORM=mysql
+      - MYSQL_SERVICE_HOST=mysql
+      - MYSQL_SERVICE_PORT=3306
+      - MYSQL_SERVICE_DB_NAME=nacos
+      - MYSQL_SERVICE_USER=nacos
+      - MYSQL_SERVICE_PASSWORD=nacos
+      - MYSQL_SERVICE_DB_PARAM=characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true
+      # 可选：JVM 内存配置（根据服务器资源调整）
+      - JVM_XMS=512m
+      - JVM_XMX=512m
+      - JVM_XMN=256m
+      - NACOS_AUTH_IDENTITY_KEY=nacos
+      - NACOS_AUTH_IDENTITY_VALUE=nacos
+      - NACOS_AUTH_TOKEN=MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI=
+    ports:
+    #   - "31848:8848"   # Nacos 主端口
+      - "31808:8080"   # 管理端口
+    #   - "9848:9848"   # gRPC 端口（Nacos 2.x+ 需要）
+    #   - "9849:9849"   # gRPC 端口（Nacos 2.x+ 需要）
+    restart: unless-stopped
+    depends_on:
+      - mysql
+    networks:
+      - shenma
   weaviate:
     image: {{IMAGE_WEAVIATE}}
     restart: always
@@ -98,7 +161,7 @@ services:
     command: ["/app/chat-rag", "-f", "/app/etc/chat-api.yaml"]
     restart: always
     #ports:
-    #  - "{{PORT_CHAT_RAG}}:8888"
+    #  - ":8888"
     volumes:
       - ./chat-rag/logs:/data/logs
       - ./chat-rag/chat-api.yaml:/app/etc/chat-api.yaml:ro
@@ -107,6 +170,7 @@ services:
       - redis
       - higress
       - codebase-querier
+      - nacos
     networks:
       - shenma
 
