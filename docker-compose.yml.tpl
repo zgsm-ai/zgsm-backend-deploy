@@ -169,98 +169,91 @@ services:
     depends_on:
       - redis
       - higress
-      - codebase-querier
       - nacos
     networks:
       - shenma
 
   review-manager:
     image: {{IMAGE_REVIEW_MANAGER}}
-    restart: always
-    #ports:
-    #  - "{{PORT_REVIEW_MANAGER}}:8080"
+    container_name: review-manager
+    # ports:
+    #   - "8080:8080"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./codereview/config/review-manager-config.yaml:/app/config/config.local.yaml:ro
+      - ./codereview/workspaces_data:/home/appuser/Workspaces
     depends_on:
       - postgres
       - redis
-      - issue-manager
-      - codebase-querier
-    environment:
-      DATABASE_HOST: postgres
-      DATABASE_PORT: 5432
-      DATABASE_USER: {{POSTGRES_USER}}
-      DATABASE_PASSWORD: {{PASSWORD_POSTGRES}}
-      DATABASE_NAME: codereview
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-    volumes:
-      - ./codereview/logs/review-manager:/app/logs
-      - ./codereview/config/review-manager:/app/config
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
     networks:
       - shenma
 
+  # Review Worker
   review-worker:
     image: {{IMAGE_REVIEW_MANAGER}}
-    command: ./review-manager worker
-    restart: always
+    container_name: review-worker
+    command: ["/bin/sh", "-c", "./review-manager worker"]
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./codereview/config/review-manager-config.yaml:/app/config/config.local.yaml:ro
+      - ./codereview/workspaces_data:/home/appuser/Workspaces
     depends_on:
       - postgres
       - redis
-      - review-manager
-    environment:
-      DATABASE_HOST: postgres
-      DATABASE_PORT: 5432
-      DATABASE_USER: {{POSTGRES_USER}}
-      DATABASE_PASSWORD: {{PASSWORD_POSTGRES}}
-      DATABASE_NAME: codereview
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-    volumes:
-      - ./codereview/logs/review-worker:/app/logs
-      - ./codereview/config/review-manager:/app/config
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
     networks:
       - shenma
 
+  # Issue Manager
   issue-manager:
     image: {{IMAGE_ISSUE_MANAGER}}
-    restart: always
-    #ports:
-    #  - "{{PORT_ISSUE_MANAGER}}:8080"
+    container_name: issue-manager
+    ports:
+      - "8081:8080"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./codereview/config/issue-manager-config.yaml:/app/config/config.local.yaml:ro
     depends_on:
       - postgres
-    environment:
-      DATABASE_HOST: postgres
-      DATABASE_PORT: 5432
-      DATABASE_USER: {{POSTGRES_USER}}
-      DATABASE_PASSWORD: {{PASSWORD_POSTGRES}}
-      DATABASE_NAME: codereview
-    volumes:
-      - ./codereview/logs/issue-manager:/app/logs
-      - ./codereview/config/issue-manager:/app/config
     networks:
       - shenma
 
+  # Review Checker
   review-checker:
     image: {{IMAGE_REVIEW_CHECKER}}
-    restart: always
-    #ports:
-    #  - "{{PORT_REVIEW_CHECKER}}:8080"
+    # container_name 在使用 --scale 时会冲突，已注释
+    # container_name: review-checker
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./codereview/config/review-checker-config.yaml:/app/config/config.local.yaml:ro
+      - ./codereview/config/base/config/costrict/costrict.json:/app/base/.config/costrict/costrict.json:ro
+      - ./codereview/config/base/cclsp.json:/app/base/cclsp.json:ro
+      - ./codereview/config/base/prompts/CodeReviewerPrompt.md:/app/base/prompts/CodeReviewerPrompt.md:ro
+      - ./codereview/config/base/prompts/ReflectionAgentPrompt.md:/app/base/prompts/ReflectionAgentPrompt.md:ro
+      - ./codereview/workspaces_data:/home/appuser/Workspaces
     depends_on:
+      - issue-manager
       - postgres
       - redis
-      - chat-rag
-      - codebase-querier
-    environment:
-      DATABASE_HOST: postgres
-      DATABASE_PORT: 5432
-      DATABASE_USER: {{POSTGRES_USER}}
-      DATABASE_PASSWORD: {{PASSWORD_POSTGRES}}
-      DATABASE_NAME: codereview
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      REDIS_DB: 2
-    volumes:
-      - ./codereview/logs/review-checker:/app/logs
-      - ./codereview/config/review-checker:/app/config
     networks:
       - shenma
 
@@ -315,37 +308,7 @@ services:
     #  - "{{PORT_COMPLETION}}:5000/tcp"
     environment:
       TZ: Asia/Shanghai
-      THRESHOLD_SCORE: 0.3
-      STR_PATTERN: import +.*|from +.*|from +.* import *.*
-      USER_CODE_UPLOAD_DELAY: 30
-      CODEBASE_DEFINITION_URL: http://codebase-querier:8888/codebase-indexer/api/v1/search/definition
-      CODEBASE_SEMANTIC_URL: http://codebase-querier:8888/codebase-embedder/api/v1/search/semantic
-      CONTEXT_LINES_LIMIT: 1000
-      SNIPPET_TOP_N: 0
-      MAX_TOKENS: 500
-      MAX_MODEL_LEN: 5000,1000
-      CONTEXT_COST_TIME: 1500
-      MAX_MODEL_COST_TIME: 2800
-      MAX_COST_TIME: 3000
-      MULTI_LINE_STREAM_K: 8
-      MIN_PREFIX_TOKEN: 2000
-      COMPLETION_CACHE_TIME: 86400
-      CONTINUE_COMPLETION_CACHE_EXPIRED: 30
-      DISABLED_REJECT_AUTHORIZATION: True
-      ENABLE_REDIS: False
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      REDIS_DB: 0
-      REDIS_PWD: "{{PASSWORD_REDIS}}"
-      MAIN_MODEL_TYPE: openai
-      # 模型地址
-      OPENAI_MODEL_HOST: "{{COMPLETION_BASEURL}}"
-      # 模型名称
-      OPENAI_MODEL: "{{COMPLETION_MODEL}}"
-      # 认证头 Authorization 的值
-      OPENAI_MODEL_AUTHORIZATION: "Bearer {{COMPLETION_APIKEY}}"
     depends_on:
-      - redis
       - codebase-querier
     networks:
       - shenma

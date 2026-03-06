@@ -2,6 +2,8 @@
 
 . ./configure.sh
 
+
+
 curl -i http://$APISIX_ADDR/apisix/admin/upstreams -H "$AUTH" -H "$TYPE" -X PUT -d '{
     "id": "review-manager",
     "nodes": {
@@ -53,35 +55,8 @@ curl -i http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d 
   }'
 
 curl -i http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d '{
-    "uri": "/issue-manager/*",
-    "id": "issue-manager-api",
-    "name": "issue-manager-api",
-    "upstream_id": "issue-manager",
-    "plugins": {
-      "openid-connect": {
-         "client_id": "'"$OIDC_CLIENT_ID"'",
-         "client_secret": "'"$OIDC_CLIENT_SECRET"'",
-         "discovery": "'"$OIDC_DISCOVERY_ADDR"'",
-         "introspection_endpoint": "'"$OIDC_INTROSPECTION_ENDPOINT"'",
-         "introspection_endpoint_auth_method": "client_secret_basic",
-         "bearer_only": true,
-         "set_userinfo_header": true,
-         "set_id_token_header": false,
-         "ssl_verify": false
-       },
-      "limit-req": {
-        "rate": 300,
-        "burst": 300,
-        "rejected_code": 429,
-        "key_type": "var_combination",
-        "key": "$remote_addr $http_x_forwarded_for"
-      },
-      "limit-count": {
-        "count": 10000,
-        "time_window": 86400,
-        "rejected_code": 429,
-        "key_type": "var_combination",
-        "key": "$remote_addr $http_x_forwarded_for"
-      }
-    }
+    "id": "issue-resources",
+    "name": "issue-resources",
+    "uris": ["/issue/*","/issue-manager/*"],
+    "upstream_id": "issue-manager"
   }'

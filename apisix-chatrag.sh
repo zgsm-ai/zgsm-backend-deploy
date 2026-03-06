@@ -44,7 +44,7 @@ curl -i http://$APISIX_ADDR/apisix/admin/routes -H "$AUTH" -H "$TYPE" -X PUT -d 
         "include_req_body": true,
         "include_resp_body": true,
         "log_labels": {"job": "apisix"}
-      },
+         },
       "openid-connect": {
         "client_id": "'"$OIDC_CLIENT_ID"'",
         "client_secret": "'"$OIDC_CLIENT_SECRET"'",

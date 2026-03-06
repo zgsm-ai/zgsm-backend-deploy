@@ -179,7 +179,7 @@ main() {
 
     # Execute subscripts
     local sub_scripts=(
-        "docker-download-images.sh"
+        # "docker-download-images.sh"
         "tpl-resolve.sh"
     )
     for script in "${sub_scripts[@]}"; do
@@ -189,52 +189,6 @@ main() {
             exit 1
         fi
     done
-
-    # Start Docker services
-    log "INFO" "Starting Docker containers"
-    if ! docker-compose -f docker-compose.yml up -d; then
-        log "ERROR" "Docker startup failed"
-        exit 1
-    fi
-
-    sleep 5
-    
-    # Wait for APISIX to be ready
-    if ! wait_for_apisix_ready; then
-        log "ERROR" "APISIX服务启动失败，无法继续配置"
-        exit 1
-    fi
-
-    # Configure APISIX
-    local apisix_scripts=(
-        "apisix-ai-gateway.sh"
-        "apisix-casdoor.sh"
-        "apisix-chatrag.sh"
-        "apisix-codereview.sh"
-        "apisix-completion-v2.sh"
-        "apisix-costrict-apps.sh"
-        "apisix-cotun.sh"
-        "apisix-credit-manager.sh"
-        "apisix-embedder.sh"
-        "apisix-grafana.sh"
-        "apisix-issue.sh"
-        "apisix-oidc-auth.sh"
-        #"apisix-quota-manager.sh"
-    )
-    for script in "${apisix_scripts[@]}"; do
-        log "INFO" "Executing APISIX configuration: $script"
-        if ! bash "$script"; then
-            log "ERROR" "APISIX configuration failed: $script"
-            exit 1
-        fi
-    done
-
-    sleep 10
-
-    source ./configure.sh
-
-    log "INFO" "All operations completed"
-    log "INFO" "Please login to the AI-GATEWAY backend [http://${COSTRICT_BACKEND}:${PORT_HIGRESS_CONTROL}] (default account: admin, password: test123), and add your LLM api-key in the Channels section! (If the page is blank, please wait as containers may take some time to start)"
 }
 
 main "$@"

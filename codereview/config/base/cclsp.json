@@ -1,0 +1,131 @@
+{
+  "servers": [
+    {
+      "extensions": [
+        "js",
+        "ts",
+        "jsx",
+        "tsx"
+      ],
+      "command": [
+        "npx",
+        "--",
+        "typescript-language-server",
+        "--stdio"
+      ],
+      "rootDir": "."
+    },
+    {
+      "extensions": [
+        "py",
+        "pyi"
+      ],
+      "command": [
+        "pylsp"
+      ],
+      "rootDir": ".",
+      "restartInterval": 5,
+      "initializationOptions": {
+        "settings": {
+          "pylsp": {
+            "plugins": {
+              "jedi_completion": {
+                "enabled": true
+              },
+              "jedi_definition": {
+                "enabled": true
+              },
+              "jedi_hover": {
+                "enabled": true
+              },
+              "jedi_references": {
+                "enabled": true
+              },
+              "jedi_signature_help": {
+                "enabled": true
+              },
+              "jedi_symbols": {
+                "enabled": true
+              },
+              "pylint": {
+                "enabled": false
+              },
+              "pycodestyle": {
+                "enabled": false
+              },
+              "pyflakes": {
+                "enabled": false
+              },
+              "yapf": {
+                "enabled": false
+              },
+              "rope_completion": {
+                "enabled": false
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "extensions": [
+        "go"
+      ],
+      "command": [
+        "gopls"
+      ],
+      "rootDir": "."
+    },
+    {
+      "extensions": [
+        "c",
+        "cpp",
+        "cc",
+        "h",
+        "hpp"
+      ],
+      "command": [
+        "clangd"
+      ],
+      "rootDir": "."
+    },
+    {
+      "extensions": [
+        "rb"
+      ],
+      "command": [
+        "solargraph",
+        "stdio"
+      ],
+      "rootDir": "."
+    },
+    {
+      "extensions": [
+        "php"
+      ],
+      "command": [
+        "intelephense",
+        "--stdio"
+      ],
+      "rootDir": "."
+    },
+    {
+      "extensions": [
+        "lua"
+      ],
+      "command": [
+        "lua-language-server"
+      ],
+      "rootDir": "."
+    },
+    {
+      "extensions": [
+        "java"
+      ],
+      "command": [
+        "jdtls"
+      ],
+      "rootDir": "."
+    }
+  ]
+}
