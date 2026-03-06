@@ -1,5 +1,7 @@
 # CoStrict 后端部署工具
 
+Version 4.2 is not a stable and usable version; it only upgrades some content. Please refer to it with caution.
+
 ## 项目概述
 
 CoStrict 后端部署工具是基于 Docker Compose 的企业级 AI 代码助手后端服务部署解决方案。该项目提供了完整的微服务架构，包含 AI 网关、身份认证、代码分析、聊天服务等核心组件，支持私有化部署和云端服务两种模式。

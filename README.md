@@ -1,5 +1,7 @@
 # CoStrict Backend Deployment Tool
 
+Version 4.2 is not a stable and usable version; it only upgrades some content. Please refer to it with caution.
+
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![Docker](https://img.shields.io/badge/docker-required-blue.svg)](https://docs.docker.com/get-docker/)
 [![Docker Compose](https://img.shields.io/badge/docker--compose-required-blue.svg)](https://docs.docker.com/compose/install/)
